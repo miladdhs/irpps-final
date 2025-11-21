@@ -1,0 +1,53 @@
+<svg width="480" height="360" viewBox="0 0 480 360" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="480" height="360" rx="36" fill="url(#paint0_linear)"/>
+  <g filter="url(#filter0_f)">
+    <ellipse cx="360" cy="96" rx="104" ry="82" fill="#845EF7" fill-opacity="0.28"/>
+  </g>
+  <g filter="url(#filter1_f)">
+    <ellipse cx="136" cy="272" rx="128" ry="96" fill="#0D6EFD" fill-opacity="0.24"/>
+  </g>
+  <g transform="translate(80 84)">
+    <rect width="320" height="208" rx="36" fill="url(#paint1_linear)"/>
+    <g transform="translate(52 52)">
+      <rect width="216" height="20" rx="10" fill="#EEF4FF" fill-opacity="0.28"/>
+      <rect y="36" width="216" height="20" rx="10" fill="#EEF4FF" fill-opacity="0.28"/>
+      <rect y="72" width="216" height="20" rx="10" fill="#EEF4FF" fill-opacity="0.28"/>
+      <rect y="108" width="216" height="20" rx="10" fill="#EEF4FF" fill-opacity="0.28"/>
+      <rect x="0" y="0" width="168" height="20" rx="10" fill="#EEF4FF" fill-opacity="0.85"/>
+      <rect x="0" y="36" width="180" height="20" rx="10" fill="#EEF4FF" fill-opacity="0.75"/>
+      <rect x="0" y="72" width="156" height="20" rx="10" fill="#EEF4FF" fill-opacity="0.65"/>
+      <rect x="0" y="108" width="188" height="20" rx="10" fill="#EEF4FF" fill-opacity="0.7"/>
+    </g>
+    <g transform="translate(236 36)">
+      <rect x="0" y="0" width="116" height="116" rx="32" fill="#FFFFFF" fill-opacity="0.2"/>
+      <path d="M32 46C32 31.6406 43.6406 20 58 20C72.3594 20 84 31.6406 84 46C84 60.3594 72.3594 72 58 72C43.6406 72 32 60.3594 32 46Z" fill="white"/>
+      <path d="M44 86C33.5081 86 25 94.5081 25 105V116H91V105C91 94.5081 82.4919 86 72 86H44Z" fill="white"/>
+    </g>
+  </g>
+  <g transform="translate(320 240)">
+    <rect x="-16" y="-16" width="104" height="104" rx="30" fill="#FFFFFF" fill-opacity="0.2"/>
+    <path d="M16 60C30.3594 60 42 48.3594 42 34C42 19.6406 30.3594 8 16 8C1.64064 8 -10 19.6406 -10 34C-10 48.3594 1.64064 60 16 60Z" fill="white"/>
+    <path d="M54.2 54L69.4 69.2C72.3 72.1 72.3 76.9 69.4 79.8C66.5 82.7 61.7 82.7 58.8 79.8L43.6 64.6" stroke="white" stroke-width="8" stroke-linecap="round"/>
+  </g>
+  <defs>
+    <filter id="filter0_f" x="176" y="-86" width="368" height="364" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+      <feGaussianBlur stdDeviation="50" result="effect1_foregroundBlur"/>
+    </filter>
+    <filter id="filter1_f" x="-92" y="96" width="456" height="352" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+      <feGaussianBlur stdDeviation="50" result="effect1_foregroundBlur"/>
+    </filter>
+    <linearGradient id="paint0_linear" x1="44" y1="28" x2="430" y2="328" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F4F7FF"/>
+      <stop offset="1" stop-color="#EAF3FF"/>
+    </linearGradient>
+    <linearGradient id="paint1_linear" x1="0" y1="0" x2="320" y2="208" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0D6EFD" stop-opacity="0.88"/>
+      <stop offset="1" stop-color="#845EF7" stop-opacity="0.74"/>
+    </linearGradient>
+  </defs>
+</svg>
+

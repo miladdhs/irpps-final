@@ -1,0 +1,94 @@
+<svg width="640" height="480" viewBox="0 0 640 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="640" height="480" rx="48" fill="url(#paint0_linear)"/>
+  <g filter="url(#filter0_f)">
+    <ellipse cx="504" cy="128" rx="136" ry="108" fill="#0D6EFD" fill-opacity="0.28"/>
+  </g>
+  <g filter="url(#filter1_f)">
+    <ellipse cx="148" cy="360" rx="168" ry="124" fill="#20C997" fill-opacity="0.26"/>
+  </g>
+  <g filter="url(#filter2_f)">
+    <ellipse cx="300" cy="312" rx="116" ry="72" fill="#845EF7" fill-opacity="0.18"/>
+  </g>
+  <g transform="translate(160 96)">
+    <rect width="320" height="256" rx="40" fill="url(#paint1_linear)"/>
+    <rect x="56" y="64" width="208" height="18" rx="9" fill="#EEF4FF" fill-opacity="0.55"/>
+    <rect x="56" y="96" width="224" height="18" rx="9" fill="#EEF4FF" fill-opacity="0.62"/>
+    <rect x="56" y="128" width="192" height="18" rx="9" fill="#EEF4FF" fill-opacity="0.5"/>
+    <rect x="56" y="160" width="176" height="18" rx="9" fill="#EEF4FF" fill-opacity="0.46"/>
+    <rect x="56" y="192" width="208" height="18" rx="9" fill="#EEF4FF" fill-opacity="0.52"/>
+    <g transform="translate(216 40)">
+      <rect width="120" height="120" rx="36" fill="#FFFFFF" fill-opacity="0.18"/>
+      <path d="M34 50C34 35.6406 45.6406 24 60 24C74.3594 24 86 35.6406 86 50C86 64.3594 74.3594 76 60 76C45.6406 76 34 64.3594 34 50Z" fill="white"/>
+      <path d="M44 90C34.0589 90 26 98.0589 26 108V120H94V108C94 98.0589 85.9411 90 76 90H44Z" fill="white"/>
+    </g>
+    <g transform="translate(32 188)">
+      <rect width="120" height="120" rx="34" fill="#FFFFFF" fill-opacity="0.2"/>
+      <path d="M60 34V86" stroke="white" stroke-width="8" stroke-linecap="round"/>
+      <path d="M34 60H86" stroke="white" stroke-width="8" stroke-linecap="round"/>
+    </g>
+  </g>
+  <g transform="translate(224 140)">
+    <circle cx="96" cy="96" r="96" fill="url(#paint2_radial)"/>
+    <circle cx="96" cy="96" r="82" fill="#FFFFFF" fill-opacity="0.96"/>
+    <g transform="translate(34 28)">
+      <path d="M62 10C44 20 28 46 24 78C22 98 26 124 38 140C48 154 64 160 78 156L96 150V0C82 0 72 2 62 10Z" fill="#4CAF50"/>
+      <path d="M130 10C148 20 164 46 168 78C170 98 166 124 154 140C144 154 128 160 114 156L96 150V0C110 0 120 2 130 10Z" fill="#1976D2"/>
+      <path d="M96 18C101.523 18 106 13.5228 106 8C106 2.47715 101.523 -2 96 -2C90.4772 -2 86 2.47715 86 8C86 13.5228 90.4772 18 96 18Z" fill="#2E7D32"/>
+      <path d="M96 26C104.837 26 112 33.1634 112 42C112 50.8366 104.837 58 96 58C87.1634 58 80 50.8366 80 42C80 33.1634 87.1634 26 96 26Z" fill="#2E7D32"/>
+      <path d="M90 50H102V142C102 150 96 150 96 150C96 150 90 150 90 142V50Z" fill="#2E7D32"/>
+      <path d="M96 64L62 92L72 104L96 86L120 104L130 92L96 64Z" fill="#2E7D32"/>
+      <path d="M76 84C82.0751 84 87 78.0751 87 72C87 65.9249 82.0751 61 76 61C69.9249 61 65 65.9249 65 72C65 78.0751 69.9249 84 76 84Z" fill="#0F5E9C"/>
+      <path d="M67 84H85V140C85 144 80 144 80 144C80 144 75 144 75 140V84H67Z" fill="#0F5E9C"/>
+      <path d="M116 84C109.925 84 105 78.0751 105 72C105 65.9249 109.925 61 116 61C122.075 61 127 65.9249 127 72C127 78.0751 122.075 84 116 84Z" fill="#2E7D32"/>
+      <path d="M125 84H107V140C107 144 112 144 112 144C112 144 117 144 117 140V84H125Z" fill="#2E7D32"/>
+      <path d="M56 92L68 104" stroke="#0F5E9C" stroke-width="8" stroke-linecap="round"/>
+      <path d="M136 92L124 104" stroke="#2E7D32" stroke-width="8" stroke-linecap="round"/>
+    </g>
+  </g>
+  <g transform="translate(424 284)">
+    <rect x="-18" y="-18" width="108" height="108" rx="32" fill="#FFFFFF" fill-opacity="0.2"/>
+    <path d="M18 62C32.2548 62 44 50.2548 44 36C44 21.7452 32.2548 10 18 10C3.74516 10 -8 21.7452 -8 36C-8 50.2548 3.74516 62 18 62Z" fill="white"/>
+    <path d="M56.6 56.2L72 71.6C74.9 74.5 74.9 79.2 72 82.1C69.1 85 64.4 85 61.5 82.1L46.1 66.7" stroke="white" stroke-width="8" stroke-linecap="round"/>
+  </g>
+  <defs>
+    <filter id="filter0_f" x="228" y="-118" width="552" height="492" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+      <feGaussianBlur stdDeviation="60" result="effect1_foregroundBlur"/>
+    </filter>
+    <filter id="filter1_f" x="-120" y="140" width="536" height="440" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+      <feGaussianBlur stdDeviation="60" result="effect1_foregroundBlur"/>
+    </filter>
+    <filter id="filter2_f" x="84" y="180" width="432" height="264" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+      <feGaussianBlur stdDeviation="48" result="effect1_foregroundBlur"/>
+    </filter>
+    <linearGradient id="paint0_linear" x1="64" y1="38" x2="576" y2="442" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F2F7FF"/>
+      <stop offset="1" stop-color="#E6F3FF"/>
+    </linearGradient>
+    <linearGradient id="paint1_linear" x1="0" y1="0" x2="320" y2="256" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0D6EFD" stop-opacity="0.88"/>
+      <stop offset="1" stop-color="#845EF7" stop-opacity="0.76"/>
+    </linearGradient>
+    <radialGradient id="paint2_radial" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(96 96) rotate(90) scale(96)">
+      <stop offset="0" stop-color="#0D6EFD" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#0D6EFD" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="paint3_linear" x1="28" y1="28" x2="164" y2="164" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0D6EFD" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#845EF7" stop-opacity="0.2"/>
+    </linearGradient>
+    <linearGradient id="paint4_linear" x1="40" y1="40" x2="152" y2="152" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" stop-opacity="0.96"/>
+      <stop offset="1" stop-color="#EAF3FF" stop-opacity="0.88"/>
+    </linearGradient>
+    <clipPath id="clip0">
+      <circle cx="96" cy="96" r="46"/>
+    </clipPath>
+  </defs>
+</svg>
+

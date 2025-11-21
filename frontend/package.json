@@ -1,0 +1,23 @@
+{
+  "name": "ispp-tst-copy",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "dev": "npx vite",
+    "build": "npx vite build",
+    "build:prod": "vite build && python update_template.py",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.5.10",
+    "vue-i18n": "^11.1.12",
+    "vue-router": "^4.4.5",
+    "vue3-persian-datetime-picker": "^1.2.2"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.1.4",
+    "sass-embedded": "^1.93.3",
+    "vite": "^5.4.10"
+  }
+}

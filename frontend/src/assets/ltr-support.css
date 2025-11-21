@@ -1,0 +1,133 @@
+/* LTR Support Styles */
+/* این فایل به صورت خودکار استایل‌های مورد نیاز برای زبان انگلیسی (LTR) را اعمال می‌کند */
+
+[dir="ltr"] {
+  font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+[dir="ltr"] .navbar-nav {
+  margin-right: auto !important;
+  margin-left: 0 !important;
+}
+
+[dir="ltr"] .ms-auto {
+  margin-left: auto !important;
+  margin-right: 0 !important;
+}
+
+[dir="ltr"] .me-1,
+[dir="ltr"] .me-2,
+[dir="ltr"] .me-3 {
+  margin-right: 0 !important;
+}
+
+[dir="ltr"] .me-1 {
+  margin-left: 0.25rem !important;
+}
+
+[dir="ltr"] .me-2 {
+  margin-left: 0.5rem !important;
+}
+
+[dir="ltr"] .me-3 {
+  margin-left: 1rem !important;
+}
+
+[dir="ltr"] .ms-2 {
+  margin-left: 0 !important;
+  margin-right: 0.5rem !important;
+}
+
+[dir="ltr"] .ms-3 {
+  margin-left: 0 !important;
+  margin-right: 1rem !important;
+}
+
+[dir="ltr"] .ms-4 {
+  margin-left: 0 !important;
+  margin-right: 1.5rem !important;
+}
+
+[dir="ltr"] .ms-md-4 {
+  margin-left: 0 !important;
+  margin-right: 1.5rem !important;
+}
+
+[dir="ltr"] .text-end {
+  text-align: left !important;
+}
+
+[dir="ltr"] .text-start {
+  text-align: right !important;
+}
+
+[dir="ltr"] .menu-links .nav-link::after {
+  left: 1.1rem;
+  right: auto;
+}
+
+[dir="ltr"] .hero-buttons {
+  justify-content: flex-start;
+}
+
+/* Fix icon directions for LTR */
+[dir="ltr"] .fa-arrow-right::before {
+  content: "\f061"; /* Right arrow */
+}
+
+[dir="ltr"] .btn-close {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+/* Social links alignment */
+[dir="ltr"] .social-links {
+  margin-left: 1.5rem !important;
+  margin-right: 0 !important;
+}
+
+/* Footer adjustments */
+[dir="ltr"] .footer-links {
+  text-align: left;
+}
+
+[dir="ltr"] .footer-brand {
+  text-align: left;
+}
+
+/* Modal adjustments */
+[dir="ltr"] .modal-header .btn-close {
+  margin: -0.5rem -0.5rem -0.5rem auto;
+}
+
+/* Animation adjustments for LTR */
+[dir="ltr"] .animate__fadeInRight {
+  animation-name: fadeInLeft;
+}
+
+[dir="ltr"] .animate__fadeInLeft {
+  animation-name: fadeInRight;
+}
+
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translate3d(-30px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes fadeInRight {
+  from {
+    opacity: 0;
+    transform: translate3d(30px, 0, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+

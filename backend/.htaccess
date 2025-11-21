@@ -1,0 +1,61 @@
+# Apache configuration for Django on cPanel with Passenger
+# This file should be placed in the public_html directory
+
+# Enable Rewrite Engine
+RewriteEngine On
+
+# Redirect to HTTPS (optional, uncomment if you have SSL)
+# RewriteCond %{HTTPS} off
+# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Serve static files from /staticfiles (Django STATIC_ROOT)
+# If /static/... is requested, map it to /staticfiles/...
+RewriteCond %{REQUEST_URI} ^/static/(.*)$
+RewriteCond %{DOCUMENT_ROOT}/staticfiles/%1 -f [OR]
+RewriteCond %{DOCUMENT_ROOT}/staticfiles/%1 -d
+RewriteRule ^static/(.*)$ /staticfiles/$1 [L]
+
+# Serve media files directly (if they exist as physical files)
+RewriteCond %{REQUEST_FILENAME} -f
+RewriteCond %{REQUEST_URI} ^/media/(.*)$
+RewriteRule ^media/(.*)$ - [L]
+
+# Map legacy/dist asset paths to collected static files
+# e.g. /assets/main-XXXX.js -> /staticfiles/assets/main-XXXX.js
+RewriteCond %{REQUEST_URI} ^/assets/(.*)$
+RewriteCond %{DOCUMENT_ROOT}/staticfiles/assets/%1 -f [OR]
+RewriteCond %{DOCUMENT_ROOT}/staticfiles/assets/%1 -d
+RewriteRule ^assets/(.*)$ /staticfiles/assets/$1 [L]
+
+# Map root-level bootstrap file to collected static file
+RewriteCond %{REQUEST_URI} ^/bootstrap\.bundle\.min\.js$
+RewriteCond %{DOCUMENT_ROOT}/staticfiles/bootstrap.bundle.min.js -f
+RewriteRule ^bootstrap\.bundle\.min\.js$ /staticfiles/bootstrap.bundle.min.js [L]
+
+# For Passenger, we don't need to rewrite to passenger_wsgi.py
+# Passenger automatically handles this based on the Python App configuration
+# But we can add rules to serve static/media files if they exist
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+
+# Disable directory browsing
+Options -Indexes
+
+# Prevent access to sensitive files
+<FilesMatch "^(\.env|\.git|requirements\.txt|manage\.py|settings\.py|passenger_wsgi\.py)$">
+    <RequireAll>
+        Require all denied
+    </RequireAll>
+</FilesMatch>
+
+# Alternative syntax for older Apache versions
+<FilesMatch "^(\.env|\.git|requirements\.txt|manage\.py|settings\.py|passenger_wsgi\.py)$">
+    Order allow,deny
+    Deny from all
+</FilesMatch>
+

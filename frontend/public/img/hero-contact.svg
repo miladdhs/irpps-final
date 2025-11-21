@@ -1,0 +1,54 @@
+<svg width="640" height="480" viewBox="0 0 640 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="640" height="480" rx="48" fill="url(#paint0_linear)"/>
+  <g filter="url(#filter0_f)">
+    <ellipse cx="500" cy="120" rx="128" ry="108" fill="#20C997" fill-opacity="0.3"/>
+  </g>
+  <g filter="url(#filter1_f)">
+    <ellipse cx="164" cy="360" rx="156" ry="120" fill="#0D6EFD" fill-opacity="0.26"/>
+  </g>
+  <g transform="translate(150 120)">
+    <rect x="0" y="0" width="340" height="240" rx="40" fill="url(#paint1_linear)"/>
+    <rect x="36" y="48" width="268" height="72" rx="20" fill="#FFFFFF" fill-opacity="0.16"/>
+    <rect x="36" y="136" width="200" height="18" rx="9" fill="#EEF4FF" fill-opacity="0.75"/>
+    <rect x="36" y="172" width="168" height="18" rx="9" fill="#EEF4FF" fill-opacity="0.6"/>
+    <rect x="36" y="208" width="228" height="18" rx="9" fill="#EEF4FF" fill-opacity="0.6"/>
+    <g transform="translate(230 80)">
+      <rect x="0" y="0" width="120" height="120" rx="30" fill="#0D6EFD"/>
+      <path d="M38 26H82C85.314 26 88 28.686 88 32V74C88 77.314 85.314 80 82 80H38C34.686 80 32 77.314 32 74V32C32 28.686 34.686 26 38 26Z" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M38 36L60.5 54C66.5 58.8 73.5 58.8 79.5 54L102 36" stroke="white" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M44 66H48" stroke="white" stroke-width="8" stroke-linecap="round"/>
+      <path d="M56 66H68" stroke="white" stroke-width="8" stroke-linecap="round"/>
+    </g>
+    <g transform="translate(68 84)">
+      <rect x="0" y="0" width="64" height="64" rx="20" fill="#FFFFFF" fill-opacity="0.2"/>
+      <path d="M32 20V44" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+      <path d="M20 32H44" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"/>
+    </g>
+  </g>
+  <g transform="translate(438 300)">
+    <rect x="-18" y="-18" width="108" height="108" rx="30" fill="#FFFFFF" fill-opacity="0.2"/>
+    <path d="M18 64C33.464 64 46 51.464 46 36C46 20.536 33.464 8 18 8C2.536 8 -10 20.536 -10 36C-10 51.464 2.536 64 18 64Z" fill="white"/>
+    <path d="M57.6 57.2L73.8 73.4C76.8 76.4 76.8 81.2 73.8 84.2C70.8 87.2 66 87.2 63 84.2L46.8 68" stroke="white" stroke-width="8" stroke-linecap="round"/>
+  </g>
+  <defs>
+    <filter id="filter0_f" x="232" y="-108" width="536" height="456" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+      <feGaussianBlur stdDeviation="60" result="effect1_foregroundBlur"/>
+    </filter>
+    <filter id="filter1_f" x="-132" y="144" width="592" height="432" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+      <feFlood flood-opacity="0" result="BackgroundImageFix"/>
+      <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape"/>
+      <feGaussianBlur stdDeviation="60" result="effect1_foregroundBlur"/>
+    </filter>
+    <linearGradient id="paint0_linear" x1="80" y1="32" x2="560" y2="456" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F1FBFF"/>
+      <stop offset="1" stop-color="#E2F4FF"/>
+    </linearGradient>
+    <linearGradient id="paint1_linear" x1="0" y1="0" x2="340" y2="240" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0D6EFD" stop-opacity="0.85"/>
+      <stop offset="1" stop-color="#20C997" stop-opacity="0.75"/>
+    </linearGradient>
+  </defs>
+</svg>
+
