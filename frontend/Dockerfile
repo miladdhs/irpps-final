@@ -1,15 +1,18 @@
-FROM docker.arvancloud.ir/node:25-alpine as builder 
+FROM docker.arvancloud.ir/node:20-alpine as builder 
 
 WORKDIR /app
 
-# Set npm registry BEFORE installing
-RUN npm config set registry "https://archive.ito.gov.ir/npm/"
-
-# Copy package files
+# Copy package files first
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Install dependencies with fallback registry
+# Try Iranian registry first, if fails use official npm registry
+RUN npm config set registry "https://archive.ito.gov.ir/npm/" && \
+    npm install || ( \
+        echo "Iranian registry failed, trying official npm registry..." && \
+        npm config set registry "https://registry.npmjs.org/" && \
+        npm install \
+    )
 
 # Install Python for build scripts if needed
 RUN apk add --no-cache python3
