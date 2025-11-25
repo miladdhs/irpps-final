@@ -1,0 +1,313 @@
+erorr messages =
+Error fetching user profile: TypeError: Failed to fetch
+    at Ie (Dashboard-CiKkZhpp.js:38:31005)
+    at Dashboard-CiKkZhpp.js:38:40362
+    at main-B1Gy1Bwo.js:15:7489
+    at Dn (main-B1Gy1Bwo.js:14:1385)
+    at Lt (main-B1Gy1Bwo.js:14:1456)
+    at Vi.t.__weh.t.__weh (main-B1Gy1Bwo.js:15:7369)
+    at pi (main-B1Gy1Bwo.js:14:2966)
+    at Jl (main-B1Gy1Bwo.js:14:3275)
+Ie	@	Dashboard-CiKkZhpp.js:38
+await in Ie		
+(anonymous)	@	Dashboard-CiKkZhpp.js:38
+(anonymous)	@	main-B1Gy1Bwo.js:15
+Dn	@	main-B1Gy1Bwo.js:14
+Lt	@	main-B1Gy1Bwo.js:14
+Vi.t.__weh.t.__weh	@	main-B1Gy1Bwo.js:15
+pi	@	main-B1Gy1Bwo.js:14
+Jl	@	main-B1Gy1Bwo.js:14
+Promise.then		
+Ql	@	main-B1Gy1Bwo.js:14
+cr	@	main-B1Gy1Bwo.js:14
+Z.x.scheduler	@	main-B1Gy1Bwo.js:15
+trigger	@	main-B1Gy1Bwo.js:10
+or	@	main-B1Gy1Bwo.js:10
+notify	@	main-B1Gy1Bwo.js:10
+trigger	@	main-B1Gy1Bwo.js:10
+set value	@	main-B1Gy1Bwo.js:10
+V	@	main-B1Gy1Bwo.js:27
+(anonymous)	@	main-B1Gy1Bwo.js:27
+Promise.then		
+S	@	main-B1Gy1Bwo.js:27
+p	@	main-B1Gy1Bwo.js:27
+l	@	main-B1Gy1Bwo.js:27
+Dn	@	main-B1Gy1Bwo.js:14
+Lt	@	main-B1Gy1Bwo.js:14
+s	@	main-B1Gy1Bwo.js:19
+
+
+Request URL
+https://api.irpps.org/api/accounts/profile/?t=1764091837408&v=0.9035501263755186
+Request Method
+OPTIONS
+Status Code
+200 OK
+Remote Address
+185.143.233.235:443
+Referrer Policy
+strict-origin-when-cross-origin
+accept-ranges
+bytes
+access-control-allow-credentials
+true
+access-control-allow-headers
+accept, accept-encoding, authorization, content-type, dnt, origin, user-agent, x-csrftoken, x-requested-with
+access-control-allow-methods
+DELETE, GET, OPTIONS, PATCH, POST, PUT
+access-control-allow-origin
+https://irpps.org
+access-control-max-age
+86400
+content-length
+0
+content-type
+text/html; charset=utf-8
+date
+Tue, 25 Nov 2025 17:30:36 GMT
+server
+ArvanCloud
+server-timing
+total;dur=27
+vary
+origin
+x-request-id
+c26acf2b402aeea2ca0e2d3804519064
+x-sid
+2462
+x-xss-protection
+1; mode=block
+:authority
+api.irpps.org
+:method
+OPTIONS
+:path
+/api/accounts/profile/?t=1764091837408&v=0.9035501263755186
+:scheme
+https
+accept
+*/*
+accept-encoding
+gzip, deflate, br, zstd
+accept-language
+en-US,en;q=0.9
+access-control-request-headers
+cache-control,expires,pragma
+access-control-request-method
+GET
+origin
+https://irpps.org
+priority
+u=1, i
+referer
+https://irpps.org/
+sec-fetch-dest
+empty
+sec-fetch-mode
+cors
+sec-fetch-site
+same-site
+user-agent
+Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36 Edg/142.0.0.0
+
+
+Request URL
+https://api.irpps.org/api/accounts/profile/?t=1764091837408&v=0.9035501263755186
+Referrer Policy
+strict-origin-when-cross-origin
+cache-control
+no-cache, no-store, must-revalidate
+expires
+0
+pragma
+no-cache
+referer
+https://irpps.org/
+sec-ch-ua
+"Chromium";v="142", "Microsoft Edge";v="142", "Not_A Brand";v="99"
+sec-ch-ua-mobile
+?1
+sec-ch-ua-platform
+"Android"
+user-agent
+Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Mobile Safari/537.36 Edg/142.0.0.0
+
+
+
+
+
+files =
+
+root@srv9461186756:/# cd ..
+root@srv9461186756:/# cd opt
+root@srv9461186756:/opt# cd irpps/
+root@srv9461186756:/opt/irpps# ls
+Accept:  GET  Host:  User-Agent:  data  docker-compose.yaml  src  src_old
+root@srv9461186756:/opt/irpps# cat docker-compose.yaml
+name: irpps
+
+services:
+  # Frontend Container (Vue.js + Nginx)
+  frontend:
+    build:
+      context: ./src/frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+  # Backend Container (Django + Gunicorn)
+  backend:
+    build:
+      context: ./src/backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src/backend:/app
+      - backend_static:/app/staticfiles
+      - backend_media:/app/media
+    env_file:
+      - ./src/backend/.env
+    environment:
+      - PYTHONUNBUFFERED=1
+      - IS_DOCKER=True
+      - DEBUG=${DEBUG:-False}
+    depends_on:
+      - mysql
+    networks:
+      - app-network
+
+  # MySQL Database
+  mysql:
+    image: docker.arvancloud.ir/mysql:8.3.0
+    environment:
+      MYSQL_DATABASE: irporg_DB
+      MYSQL_USER: irporg_admin
+      MYSQL_PASSWORD: tHPXArRfwrX3WH!*j
+      MYSQL_ROOT_PASSWORD: tHPXArRfwrX3WH!*j
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  backend_static:
+  backend_media:
+root@srv9461186756:/opt/irpps# cd
+.git/    data/    src/     src_old/
+root@srv9461186756:/opt/irpps# cd src
+root@srv9461186756:/opt/irpps/src# ls
+README.md  backend  frontend
+root@srv9461186756:/opt/irpps/src# cd backend/
+root@srv9461186756:/opt/irpps/src/backend# cat dashboard/
+__init__.py  __pycache__/ urls.py      views.py
+root@srv9461186756:/opt/irpps/src/backend# ls
+Dockerfile  dashboard        events                  ispp_project  media  passenger_wsgi.py  staticfiles  update_template.py
+accounts    env.example.txt  generate_secret_key.py  manage.py     news   requirements.txt   templates
+root@srv9461186756:/opt/irpps/src/backend# cat Dockerfile
+FROM docker.arvancloud.ir/python:3.9-slim
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install --fix-missing -y \
+    gcc \
+    pkg-config \
+    default-libmysqlclient-dev \
+    libssl-dev \
+    libffi-dev \
+    python3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirements and install Python dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY . .
+
+# Set environment variables
+ENV PYTHONUNBUFFERED=1
+ENV IS_DOCKER=True
+ENV DJANGO_SETTINGS_MODULE=ispp_project.settings
+
+# Create directories for static and media files
+RUN mkdir -p /app/staticfiles /app/media
+
+EXPOSE 8000
+
+# Use Gunicorn for production
+CMD ["gunicorn", "ispp_project.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "4", "--timeout", "120"]
+root@srv9461186756:/opt/irpps/src/backend# cd ..
+root@srv9461186756:/opt/irpps/src# cd frontend/
+root@srv9461186756:/opt/irpps/src/frontend# cat Dockerfile
+FROM docker.arvancloud.ir/node:20-alpine as builder
+
+WORKDIR /app
+
+# Copy package files first
+COPY package*.json ./
+
+# Install dependencies with fallback registry
+# Try Iranian registry first, if fails use official npm registry
+RUN npm config set registry "https://archive.ito.gov.ir/npm/" && \
+    npm install || ( \
+        echo "Iranian registry failed, trying official npm registry..." && \
+        npm config set registry "https://registry.npmjs.org/" && \
+        npm install \
+    )
+
+# Install Python for build scripts if needed
+RUN apk add --no-cache python3
+
+# Copy source code
+COPY . .
+
+# Build the application
+RUN npm run build:prod
+
+# Production stage with Nginx
+FROM docker.arvancloud.ir/nginx:alpine
+
+# Copy nginx configuration
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy built files from builder
+COPY --from=builder /app/dist /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
+root@srv9461186756:/opt/irpps/src/frontend# cd ..
+root@srv9461186756:/opt/irpps/src# cd ..
+root@srv9461186756:/opt/irpps# cd data/
+root@srv9461186756:/opt/irpps/data# ls
+ispp_db.sql  mysql
+root@srv9461186756:/opt/irpps/data# cd mysql/
+root@srv9461186756:/opt/irpps/data/mysql# ls
+'#ib_16384_0.dblwr'   binlog.000003   binlog.000010   binlog.000017   binlog.000024   binlog.000031     ib_buffer_pool   performance_schema   undo_002
+'#ib_16384_1.dblwr'   binlog.000004   binlog.000011   binlog.000018   binlog.000025   binlog.000032     ibdata1          private_key.pem
+'#innodb_redo'        binlog.000005   binlog.000012   binlog.000019   binlog.000026   binlog.index      ibtmp1           public_key.pem
+'#innodb_temp'        binlog.000006   binlog.000013   binlog.000020   binlog.000027   ca-key.pem        irporg_DB        server-cert.pem
+ auto.cnf             binlog.000007   binlog.000014   binlog.000021   binlog.000028   ca.pem            mysql            server-key.pem
+ binlog.000001        binlog.000008   binlog.000015   binlog.000022   binlog.000029   client-cert.pem   mysql.ibd        sys
+ binlog.000002        binlog.000009   binlog.000016   binlog.000023   binlog.000030   client-key.pem    mysql.sock       undo_001
+root@srv9461186756:/opt/irpps/data/mysql# cd ..
+root@srv9461186756:/opt/irpps/data# cd ..
+root@srv9461186756:/opt/irpps# cd ..
+root@srv9461186756:/opt# docker ps
+CONTAINER ID   IMAGE                              COMMAND                  CREATED          STATUS          PORTS                                         NAMES
+1676c5146d9f   irpps-frontend                     "/docker-entrypoint.…"   18 minutes ago   Up 18 minutes   0.0.0.0:80->80/tcp, [::]:80->80/tcp           irpps-frontend-1
+d2b124845cea   irpps-backend                      "gunicorn ispp_proje…"   18 minutes ago   Up 18 minutes   0.0.0.0:8000->8000/tcp, [::]:8000->8000/tcp   irpps-backend-1
+e771d3d7ba68   docker.arvancloud.ir/mysql:8.3.0   "docker-entrypoint.s…"   18 minutes ago   Up 18 minutes   3306/tcp, 33060/tcp                           irpps-mysql-1

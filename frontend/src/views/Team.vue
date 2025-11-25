@@ -289,7 +289,7 @@ import { ref, onMounted, computed, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { getAssetUrl } from '@/utils/assets';
-import { getApiUrl, getApiBaseUrl } from '@/utils/api';
+import { getApiUrl } from '@/utils/api';
 
 const { t } = useI18n();
 
@@ -366,14 +366,21 @@ function getMemberImage(member: Member | number): string | null {
     const imageUrl = memberObj.profile_image.trim();
     let finalUrl = '';
     
+    // If URL is already absolute, use it directly
     if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://')) {
       finalUrl = imageUrl;
-    } else if (imageUrl.startsWith('/')) {
-      finalUrl = `${getApiBaseUrl()}${imageUrl}`;
-    } else {
-      finalUrl = `${getApiBaseUrl()}/${imageUrl}`;
+    }
+    // If URL starts with /, it's a relative path (like /media/profile_images/...)
+    // Use it directly - nginx will proxy /media/ to backend
+    else if (imageUrl.startsWith('/')) {
+      finalUrl = imageUrl;
+    }
+    // Otherwise, prepend / to make it relative from root
+    else {
+      finalUrl = `/${imageUrl}`;
     }
     
+    // Add cache busting to force refresh
     const timestamp = Date.now();
     const separator = finalUrl.includes('?') ? '&' : '?';
     return `${finalUrl}${separator}t=${timestamp}`;

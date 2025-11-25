@@ -120,11 +120,23 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # 4. Cookie Security
 # Ensure cookies are sent only over HTTPS in production
+# CRITICAL: For cross-origin requests between irpps.org and api.irpps.org
 if not DEBUG or IS_DOCKER:
+    # Secure cookies (HTTPS only)
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
-    # Optional: helps with subdomain sharing if needed
-    # SESSION_COOKIE_DOMAIN = ".irpps.org"
+    
+    # SameSite=None is REQUIRED for cross-origin cookies (with Secure=True)
+    SESSION_COOKIE_SAMESITE = "None"
+    CSRF_COOKIE_SAMESITE = "None"
+    
+    # Domain sharing for subdomains (.irpps.org works for both irpps.org and api.irpps.org)
+    SESSION_COOKIE_DOMAIN = ".irpps.org"
+    CSRF_COOKIE_DOMAIN = ".irpps.org"
+else:
+    # Development: Allow cookies in localhost
+    SESSION_COOKIE_SAMESITE = "Lax"
+    CSRF_COOKIE_SAMESITE = "Lax"
 
 # ==========================================
 
