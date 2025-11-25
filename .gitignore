@@ -105,7 +105,7 @@ lerna-debug.log*
 *.swp
 *.swo
 *~
-
+UserPass.txt
 # cPanel / Server specific (optional - uncomment if needed)
 # .htaccess
 # passenger_wsgi.py
