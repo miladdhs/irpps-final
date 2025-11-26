@@ -106,6 +106,9 @@ lerna-debug.log*
 *.swo
 *~
 UserPass.txt
+ispp_db (1).sql
+ispp_db.csv
+ispp_db.json
 # cPanel / Server specific (optional - uncomment if needed)
 # .htaccess
 # passenger_wsgi.py

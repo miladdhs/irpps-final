@@ -1378,7 +1378,8 @@ const submitEventForm = async () => {
     return;
   }
 
-  const maxParticipantsRaw = eventForm.value.max_participants.trim();
+  // Ensure we always work with string values to safely call trim()
+  const maxParticipantsRaw = (eventForm.value.max_participants ?? '').toString().trim();
   let maxParticipants: number | null = null;
   if (maxParticipantsRaw) {
     maxParticipants = Number(maxParticipantsRaw);
@@ -1389,7 +1390,7 @@ const submitEventForm = async () => {
     }
   }
 
-  const priceRaw = eventForm.value.price.trim();
+  const priceRaw = (eventForm.value.price ?? '').toString().trim();
   let price: number | null = null;
   if (priceRaw) {
     price = Number(priceRaw);
