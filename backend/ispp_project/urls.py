@@ -18,9 +18,13 @@ urlpatterns = [
 ]
 
 # Serve static and media files in development
+# In production (Docker), Nginx handles static files, but we still need to serve media
 if settings.DEBUG:
     from django.contrib.staticfiles.urls import staticfiles_urlpatterns
     urlpatterns += staticfiles_urlpatterns()
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+else:
+    # In production, still serve media files (Nginx proxies to this)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # SPA catch-all route (must be last)
