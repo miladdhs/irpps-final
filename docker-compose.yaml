@@ -1,0 +1,79 @@
+name: irpps
+
+services:
+  # Frontend Container (Vue.js + Nginx)
+  frontend:
+    build:
+      context: ./src/frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    volumes:
+      - ./src/frontend/dist:/usr/share/nginx/html
+    environment:
+      - NODE_ENV=production
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  # Backend Container (Django + Gunicorn)
+  backend:
+    build:
+      context: ./src/backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src/backend:/app
+      - backend_static:/app/staticfiles
+      - backend_media:/app/media
+    env_file:
+      - ./src/backend/.env
+    environment:
+      - PYTHONUNBUFFERED=1
+      - IS_DOCKER=True
+      - DEBUG=${DEBUG:-False}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - app-network
+
+  # MySQL Database
+  mysql:
+    image: docker.arvancloud.ir/mysql:8.3.0
+    env_file:
+      - ./src/backend/.env
+    environment:
+      MYSQL_DATABASE: ${DB_NAME:-irporg_DB}
+      MYSQL_USER: ${DB_USER:-irporg_admin}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-${DB_PASSWORD}}
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    command: --default-authentication-plugin=mysql_native_password --max_connections=200 --innodb_buffer_pool_size=256M --max_allowed_packet=64M
+    # Don't expose port in production
+    # ports:
+    #   - "3306:3306"
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  mysql_data:
+  backend_static:
+  backend_media:
+
