@@ -5,6 +5,7 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db import transaction
 from django.utils.dateparse import parse_datetime
+from django.utils import timezone
 
 from accounts.models import CustomUser
 from news.models import News, Announcement
@@ -99,13 +100,18 @@ class Command(BaseCommand):
     def _parse_dt(self, value):
         """
         Parse a datetime string from MySQL (e.g. '2025-11-06 07:25:33.876259').
-        Returns a datetime or None.
+        Returns a timezone-aware datetime or None.
         """
         if not value:
             return None
         s = str(value).strip()
         # django.utils.dateparse.parse_datetime expects ISO-like format; replace space with 'T'
         dt = parse_datetime(s.replace(" ", "T"))
+        if dt is None:
+            return None
+        # If datetime is naive (no timezone), make it aware using the default timezone
+        if timezone.is_naive(dt):
+            dt = timezone.make_aware(dt, timezone.get_current_timezone())
         return dt
 
     def _import_users(self, rows):
