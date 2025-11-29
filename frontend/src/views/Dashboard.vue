@@ -1145,8 +1145,24 @@ const getProfileImageUrl = (): string | null => {
 
 const handleImageError = (event: Event) => {
   const img = event.target as HTMLImageElement;
-  // Hide the broken image
+  // Hide the broken image and show placeholder if available
   img.style.display = 'none';
+  
+  // Try to find or create a placeholder
+  const parent = img.parentElement;
+  if (parent) {
+    // Check if placeholder already exists
+    let placeholder = parent.querySelector('.no-image-placeholder') as HTMLElement;
+    if (!placeholder) {
+      // Create placeholder
+      placeholder = document.createElement('div');
+      placeholder.className = 'no-image-placeholder d-flex align-items-center justify-content-center';
+      placeholder.style.cssText = 'width: 100%; height: 100%; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 12px; border: 2px dashed #dee2e6;';
+      placeholder.innerHTML = '<i class="fa fa-user fa-2x text-muted"></i>';
+      parent.appendChild(placeholder);
+    }
+    placeholder.style.display = 'flex';
+  }
 };
 
 const handleImagePreview = (event: Event) => {

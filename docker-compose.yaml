@@ -8,8 +8,9 @@ services:
       dockerfile: Dockerfile
     ports:
       - "80:80"
-    volumes:
-      - ./src/frontend/dist:/usr/share/nginx/html
+    # Volume mount removed for production - files are copied during build
+    # volumes:
+    #   - ./src/frontend/dist:/usr/share/nginx/html
     environment:
       - NODE_ENV=production
     depends_on:
