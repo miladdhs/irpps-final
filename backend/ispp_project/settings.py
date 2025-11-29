@@ -47,6 +47,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'ispp_project.middleware.Media404HandlerMiddleware', # Handle 404 for media files
 ]
 
 ROOT_URLCONF = 'ispp_project.urls'

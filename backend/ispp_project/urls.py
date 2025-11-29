@@ -21,13 +21,34 @@ def serve_media_with_fallback(request, path):
     from django.conf import settings
     import os
     
-    file_path = os.path.join(settings.MEDIA_ROOT, path)
+    # Clean the path (remove any query strings that might be in the path)
+    # The path parameter should already be clean, but just in case
+    clean_path = path.split('?')[0] if '?' in path else path
+    
+    # Build full file path
+    file_path = os.path.join(settings.MEDIA_ROOT, clean_path)
+    
+    # Normalize the path to handle any path traversal issues
+    file_path = os.path.normpath(file_path)
+    media_root = os.path.normpath(settings.MEDIA_ROOT)
+    
+    # Security check: ensure the file is within MEDIA_ROOT
+    if not file_path.startswith(media_root):
+        # Path traversal attempt, return placeholder
+        svg_placeholder = '''<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="#f8f9fa"/>
+  <circle cx="100" cy="80" r="30" fill="#dee2e6"/>
+  <path d="M 50 150 Q 100 130 150 150" stroke="#dee2e6" stroke-width="3" fill="none"/>
+</svg>'''
+        response = HttpResponse(svg_placeholder, content_type='image/svg+xml')
+        response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        return response
     
     # Check if file exists
     if os.path.exists(file_path) and os.path.isfile(file_path):
         # File exists, serve it normally
         from django.views.static import serve
-        return serve(request, path, document_root=settings.MEDIA_ROOT)
+        return serve(request, clean_path, document_root=settings.MEDIA_ROOT)
     else:
         # File doesn't exist, return SVG placeholder
         svg_placeholder = '''<svg width="200" height="200" xmlns="http://www.w3.org/2000/svg">
@@ -37,6 +58,7 @@ def serve_media_with_fallback(request, path):
 </svg>'''
         response = HttpResponse(svg_placeholder, content_type='image/svg+xml')
         response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+        response.status_code = 200  # Return 200 instead of 404
         return response
 
 
