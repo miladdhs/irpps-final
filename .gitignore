@@ -114,3 +114,4 @@ ispp_db.csv
 # passenger_wsgi.py
 # But keep .htaccess and passenger_wsgi.py for deployment
 
+frontend\public\Content
