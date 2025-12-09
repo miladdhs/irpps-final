@@ -156,14 +156,30 @@ class Command(BaseCommand):
         self.stdout.write(self.style.NOTICE(f'\nImporting {len(news_list)} news items...'))
 
         for news_data in news_list:
-            slug = news_data.get('slug')
+            slug = news_data.get('slug', '').strip()
+            
+            # اگر slug خالی است، از title یک slug بساز
             if not slug:
-                self.stderr.write(self.style.WARNING(f'Skipping news item without slug: {news_data.get("title", "Unknown")}'))
+                title = news_data.get('title', '')
+                if title:
+                    # تبدیل title به slug (ساده)
+                    import re
+                    slug = re.sub(r'[^\w\s-]', '', title)
+                    slug = re.sub(r'[-\s]+', '-', slug)
+                    slug = slug.lower().strip('-')
+                else:
+                    self.stderr.write(self.style.WARNING(f'Skipping news item without title and slug'))
+                    continue
+            
+            # اطمینان از اینکه slug خالی نیست
+            if not slug:
+                self.stderr.write(self.style.WARNING(f'Skipping news item with empty slug: {news_data.get("title", "Unknown")}'))
                 continue
 
             # Prepare defaults
             defaults = {
                 'title': news_data.get('title', ''),
+                'slug': slug,  # اضافه کردن slug
                 'content': news_data.get('content', ''),
                 'short_content': news_data.get('short_content') or '',
                 'category': news_data.get('category') or '',
@@ -221,14 +237,30 @@ class Command(BaseCommand):
         self.stdout.write(self.style.NOTICE(f'\nImporting {len(announcements_list)} announcements...'))
 
         for ann_data in announcements_list:
-            slug = ann_data.get('slug')
+            slug = ann_data.get('slug', '').strip()
+            
+            # اگر slug خالی است، از title یک slug بساز
             if not slug:
-                self.stderr.write(self.style.WARNING(f'Skipping announcement without slug: {ann_data.get("title", "Unknown")}'))
+                title = ann_data.get('title', '')
+                if title:
+                    # تبدیل title به slug (ساده)
+                    import re
+                    slug = re.sub(r'[^\w\s-]', '', title)
+                    slug = re.sub(r'[-\s]+', '-', slug)
+                    slug = slug.lower().strip('-')
+                else:
+                    self.stderr.write(self.style.WARNING(f'Skipping announcement without title and slug'))
+                    continue
+            
+            # اطمینان از اینکه slug خالی نیست
+            if not slug:
+                self.stderr.write(self.style.WARNING(f'Skipping announcement with empty slug: {ann_data.get("title", "Unknown")}'))
                 continue
 
             # Prepare defaults
             defaults = {
                 'title': ann_data.get('title', ''),
+                'slug': slug,  # اضافه کردن slug
                 'content': ann_data.get('content', ''),
                 'is_published': ann_data.get('is_published', True),
                 'is_important': ann_data.get('is_important', False),
