@@ -13,6 +13,7 @@ from django.utils import timezone
 from django.conf import settings
 
 from news.models import News, Announcement
+from events.models import Event
 
 # Fix encoding for Windows console
 if sys.platform == 'win32':
@@ -115,11 +116,13 @@ class Command(BaseCommand):
         with transaction.atomic():
             news_count = self.import_news(data.get('news', []), author, update_existing)
             announcements_count = self.import_announcements(data.get('announcements', []), author, update_existing)
+            events_count = self.import_events(data.get('events', []), author, update_existing)
 
         self.stdout.write(self.style.SUCCESS(
             f'\nImport completed successfully!\n'
             f'  - News: {news_count["created"]} created, {news_count["updated"]} updated\n'
-            f'  - Announcements: {announcements_count["created"]} created, {announcements_count["updated"]} updated'
+            f'  - Announcements: {announcements_count["created"]} created, {announcements_count["updated"]} updated\n'
+            f'  - Events: {events_count["created"]} created, {events_count["updated"]} updated'
         ))
 
     def get_author(self, author_id):
@@ -300,6 +303,96 @@ class Command(BaseCommand):
                 Announcement.objects.create(**defaults)
                 created_count += 1
                 self.stdout.write(f'  + Created: {ann_data.get("title", slug)}')
+
+        return {'created': created_count, 'updated': updated_count}
+
+    def import_events(self, events_list, author, update_existing):
+        """Import event items"""
+        created_count = 0
+        updated_count = 0
+
+        if not events_list:
+            self.stdout.write(self.style.WARNING('No events found in JSON file'))
+            return {'created': 0, 'updated': 0}
+
+        self.stdout.write(self.style.NOTICE(f'\nImporting {len(events_list)} events...'))
+
+        for event_data in events_list:
+            slug = event_data.get('slug', '').strip()
+            
+            # اگر slug خالی است، از title یک slug بساز
+            if not slug:
+                title = event_data.get('title', '')
+                if title:
+                    import re
+                    slug = re.sub(r'[^\w\s-]', '', title)
+                    slug = re.sub(r'[-\s]+', '-', slug)
+                    slug = slug.lower().strip('-')
+                else:
+                    self.stderr.write(self.style.WARNING(f'Skipping event without title and slug'))
+                    continue
+            
+            if not slug:
+                self.stderr.write(self.style.WARNING(f'Skipping event with empty slug: {event_data.get("title", "Unknown")}'))
+                continue
+
+            # Prepare defaults
+            defaults = {
+                'title': event_data.get('title', ''),
+                'slug': slug,
+                'description': event_data.get('description', ''),
+                'short_description': event_data.get('short_description') or '',
+                'event_type': event_data.get('event_type', 'other'),
+                'location': event_data.get('location', ''),
+                'event_year': event_data.get('event_year'),
+                'event_month': event_data.get('event_month'),
+                'organizer': event_data.get('organizer') or '',
+                'target_audience': event_data.get('target_audience') or '',
+                'agenda': event_data.get('agenda') or '',
+                'speakers': event_data.get('speakers') or '',
+                'contact_info': event_data.get('contact_info') or '',
+                'is_published': event_data.get('is_published', True),
+                'is_featured': event_data.get('is_featured', False),
+                'views': event_data.get('views', 0),
+                'created_by': author,
+            }
+
+            # Handle image (if provided as path)
+            image = event_data.get('image')
+            if image and image not in (None, '', 'null'):
+                defaults['image'] = image
+
+            cover_image = event_data.get('cover_image')
+            if cover_image and cover_image not in (None, '', 'null'):
+                defaults['cover_image'] = cover_image
+
+            # Handle dates
+            if event_data.get('created_at'):
+                try:
+                    defaults['created_at'] = timezone.datetime.fromisoformat(
+                        event_data['created_at'].replace('Z', '+00:00')
+                    )
+                except:
+                    pass
+
+            # Check if exists
+            existing = Event.objects.filter(slug=slug).first()
+            
+            if existing and update_existing:
+                # Update existing
+                for key, value in defaults.items():
+                    setattr(existing, key, value)
+                existing.save()
+                updated_count += 1
+                self.stdout.write(f'  ✓ Updated: {event_data.get("title", slug)}')
+            elif existing:
+                # Skip existing
+                self.stdout.write(f'  ⊗ Skipped (exists): {event_data.get("title", slug)}')
+            else:
+                # Create new
+                Event.objects.create(**defaults)
+                created_count += 1
+                self.stdout.write(f'  + Created: {event_data.get("title", slug)}')
 
         return {'created': created_count, 'updated': updated_count}
 
