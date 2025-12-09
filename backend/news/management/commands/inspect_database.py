@@ -4,6 +4,7 @@ Usage: python manage.py inspect_database [--model MODEL_NAME] [--format FORMAT]
 """
 import sys
 import json
+import os
 from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
 from news.models import News, Announcement
@@ -44,6 +45,24 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
+        # Check database connection first
+        try:
+            from django.db import connection
+            connection.ensure_connection()
+        except Exception as e:
+            self.stderr.write(self.style.ERROR(
+                f'❌ خطا در اتصال به دیتابیس: {str(e)}\n\n'
+                '💡 راه حل:\n'
+                '1. اگر MySQL در Docker است، از داخل container اجرا کنید:\n'
+                '   docker exec -it irpps-backend-1 python3 manage.py inspect_database\n\n'
+                '2. یا IP Docker container را پیدا کنید:\n'
+                '   docker inspect irpps-mysql-1 | grep IPAddress\n'
+                '   سپس: export DB_HOST=<IP_ADDRESS>\n\n'
+                '3. یا از docker-compose exec استفاده کنید:\n'
+                '   docker-compose exec backend python3 manage.py inspect_database'
+            ))
+            return
+        
         model_name = options['model']
         output_format = options['format']
         limit = options['limit']

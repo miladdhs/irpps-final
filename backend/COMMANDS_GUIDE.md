@@ -250,11 +250,24 @@ source venv/bin/activate
 ### 4. اجرای کامند:
 ```bash
 # بررسی دیتابیس
-python manage.py inspect_database
+python3 manage.py inspect_database
 
 # وارد کردن محتوا
-python manage.py import_content_from_json --author-id 1
+python3 manage.py import_content_from_json --author-id 1
 ```
+
+### ⚠️ نکته مهم برای سرور لینوکس:
+- در سرور لینوکس معمولاً باید از `python3` استفاده کنید (نه `python`)
+- اگر خطای "ModuleNotFoundError: No module named 'django'" می‌گیرید:
+  ```bash
+  # فعال کردن محیط مجازی
+  source venv/bin/activate
+  
+  # یا نصب requirements
+  pip install -r requirements.txt
+  ```
+  
+  برای جزئیات بیشتر: `SERVER_COMMANDS.md`
 
 ---
 
