@@ -4,7 +4,7 @@ services:
   # Frontend Container (Vue.js + Nginx)
   frontend:
     build:
-      context: ./src/frontend
+      context: ./frontend
       dockerfile: Dockerfile
     ports:
       - "80:80"
@@ -22,16 +22,16 @@ services:
   # Backend Container (Django + Gunicorn)
   backend:
     build:
-      context: ./src/backend
+      context: ./backend
       dockerfile: Dockerfile
     ports:
       - "8000:8000"
     volumes:
-      - ./src/backend:/app
+      - ./backend:/app
       - backend_static:/app/staticfiles
       - backend_media:/app/media
     env_file:
-      - ./src/backend/.env
+      - ./backend/.env
     environment:
       - PYTHONUNBUFFERED=1
       - IS_DOCKER=True
@@ -47,7 +47,7 @@ services:
   mysql:
     image: docker.arvancloud.ir/mysql:8.3.0
     env_file:
-      - ./src/backend/.env
+      - ./backend/.env
     environment:
       MYSQL_DATABASE: ${DB_NAME:-irporg_DB}
       MYSQL_USER: ${DB_USER:-irporg_admin}

@@ -52,14 +52,42 @@ class Command(BaseCommand):
 
         # Determine file path
         if not file_path:
-            # Default path: frontend/public/Content/structured_content_complete.json
-            base_dir = Path(settings.BASE_DIR).parent
-            file_path = base_dir / 'frontend' / 'public' / 'Content' / 'structured_content_complete.json'
+            # Try multiple possible paths
+            base_dir = Path(settings.BASE_DIR)
+            possible_paths = [
+                # Docker container path (mounted volume)
+                base_dir.parent / 'frontend' / 'public' / 'Content' / 'structured_content_complete.json',
+                # Local development path
+                base_dir.parent.parent / 'frontend' / 'public' / 'Content' / 'structured_content_complete.json',
+                # Absolute path in container
+                Path('/app') / '..' / 'frontend' / 'public' / 'Content' / 'structured_content_complete.json',
+                # Alternative container path
+                Path('/opt/irpps/src/frontend/public/Content/structured_content_complete.json'),
+            ]
+            
+            file_path = None
+            for path in possible_paths:
+                if path.exists():
+                    file_path = path
+                    break
+            
+            if not file_path:
+                # Default to first path and let it fail with proper error
+                file_path = base_dir.parent / 'frontend' / 'public' / 'Content' / 'structured_content_complete.json'
         else:
             file_path = Path(file_path)
 
         if not file_path.exists():
-            self.stderr.write(self.style.ERROR(f'File not found: {file_path}'))
+            self.stderr.write(self.style.ERROR(
+                f'❌ File not found: {file_path}\n\n'
+                '💡 راه حل:\n'
+                '1. استفاده از مسیر کامل:\n'
+                '   python3 manage.py import_content_from_json --file /opt/irpps/src/frontend/public/Content/structured_content_complete.json --author-id 1\n\n'
+                '2. یا کپی فایل به داخل container:\n'
+                '   docker cp /opt/irpps/src/frontend/public/Content/structured_content_complete.json irpps-backend-1:/app/\n'
+                '   سپس: python3 manage.py import_content_from_json --file /app/structured_content_complete.json --author-id 1\n\n'
+                '3. یا mount کردن volume در docker-compose.yaml'
+            ))
             return
 
         self.stdout.write(self.style.SUCCESS(f'Loading data from: {file_path}'))
