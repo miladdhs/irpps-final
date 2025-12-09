@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from decimal import Decimal, InvalidOperation
 
 from django.shortcuts import get_object_or_404
@@ -11,6 +11,13 @@ from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 import json
 from .models import Event, EventRegistration
+
+# Try to import jdatetime for Persian date conversion
+try:
+    import jdatetime
+    HAS_JDATETIME = True
+except ImportError:
+    HAS_JDATETIME = False
 
 
 def _safe_positive_int(value, default, max_value=None):
@@ -31,6 +38,71 @@ def _safe_positive_int(value, default, max_value=None):
 
 def is_staff(user):
     return user.is_staff
+
+
+def calculate_event_dates(event_year, event_month):
+    """Calculate start_date and end_date from Persian year and month"""
+    if not event_year or not event_month:
+        return None, None
+    
+    try:
+        if HAS_JDATETIME:
+            # Convert Persian to Gregorian
+            # First day of the Persian month
+            persian_start = jdatetime.date(event_year, event_month, 1)
+            gregorian_start = persian_start.togregorian()
+            
+            # Last day of the Persian month (approximate - get next month and subtract 1 day)
+            if event_month < 12:
+                persian_end = jdatetime.date(event_year, event_month + 1, 1) - jdatetime.timedelta(days=1)
+            else:
+                persian_end = jdatetime.date(event_year + 1, 1, 1) - jdatetime.timedelta(days=1)
+            gregorian_end = persian_end.togregorian()
+            
+            start_date = timezone.make_aware(
+                datetime.combine(gregorian_start, datetime.min.time())
+            )
+            end_date = timezone.make_aware(
+                datetime.combine(gregorian_end, datetime.max.time())
+            )
+            
+            return start_date, end_date
+        else:
+            # Fallback: approximate conversion
+            approx_year = event_year + 621
+            approx_month = min(event_month, 12)
+            
+            # Start: first day of month
+            start_date = timezone.make_aware(
+                datetime(approx_year, approx_month, 1)
+            )
+            
+            # End: last day of month
+            if approx_month < 12:
+                end_month = approx_month + 1
+                end_year = approx_year
+            else:
+                end_month = 1
+                end_year = approx_year + 1
+            
+            # Get last day of current month
+            if end_month == 1:
+                last_day = 31
+            elif end_month in [4, 6, 9, 11]:
+                last_day = 30
+            elif end_month == 2:
+                last_day = 28
+            else:
+                last_day = 31
+            
+            end_date = timezone.make_aware(
+                datetime(approx_year, approx_month, last_day, 23, 59, 59)
+            )
+            
+            return start_date, end_date
+    except Exception as e:
+        # If conversion fails, return None
+        return None, None
 
 
 def _parse_datetime_or_none(value):
@@ -74,26 +146,36 @@ def event_list(request):
     paginator = Paginator(events, per_page)
     page_obj = paginator.get_page(page)
     
-    events_data = [{
-        'id': item.id,
-        'title': item.title,
-        'slug': item.slug,
-        'description': item.description[:200] + '...' if len(item.description) > 200 else item.description,
-        'event_type': item.get_event_type_display(),
-        'event_type_code': item.event_type,
-        'image': item.cover_image.url if item.cover_image else (item.image.url if item.image else None),
-        'location': item.location,
-        'event_month': item.event_month,
-        'event_year': item.event_year,
-        'registration_deadline': item.registration_deadline.isoformat() if item.registration_deadline else None,
-        'max_participants': item.max_participants,
-        'price': float(item.price),
-        'is_published': item.is_published,
-        'is_featured': item.is_featured,
-        'is_registration_open': item.is_registration_open,
-        'views': item.views,
-        'created_at': item.created_at.isoformat(),
-    } for item in page_obj]
+    events_data = []
+    for item in page_obj:
+        # Calculate start_date and end_date from event_year and event_month
+        start_date, end_date = calculate_event_dates(item.event_year, item.event_month)
+        
+        # Since all events are past, registration is closed
+        is_registration_open = False
+        
+        events_data.append({
+            'id': item.id,
+            'title': item.title,
+            'slug': item.slug,
+            'description': item.description[:200] + '...' if len(item.description) > 200 else item.description,
+            'event_type': item.get_event_type_display(),
+            'event_type_code': item.event_type,
+            'image': item.cover_image.url if item.cover_image else (item.image.url if item.image else None),
+            'location': item.location,
+            'event_month': item.event_month,
+            'event_year': item.event_year,
+            'start_date': start_date.isoformat() if start_date else None,
+            'end_date': end_date.isoformat() if end_date else None,
+            'registration_deadline': item.registration_deadline.isoformat() if item.registration_deadline else None,
+            'max_participants': item.max_participants,
+            'price': float(item.price),
+            'is_published': item.is_published,
+            'is_featured': item.is_featured,
+            'is_registration_open': is_registration_open,
+            'views': item.views,
+            'created_at': item.created_at.isoformat(),
+        })
     
     return JsonResponse({
         'success': True,
@@ -120,6 +202,12 @@ def event_detail(request, slug):
     if request.user.is_authenticated:
         is_registered = EventRegistration.objects.filter(event=event, user=request.user).exists()
     
+    # Calculate start_date and end_date from event_year and event_month
+    start_date, end_date = calculate_event_dates(event.event_year, event.event_month)
+    
+    # Since all events are past, registration is closed
+    is_registration_open = False
+    
     return JsonResponse({
         'success': True,
         'event': {
@@ -133,11 +221,13 @@ def event_detail(request, slug):
             'location': event.location,
             'event_month': event.event_month,
             'event_year': event.event_year,
+            'start_date': start_date.isoformat() if start_date else None,
+            'end_date': end_date.isoformat() if end_date else None,
             'registration_deadline': event.registration_deadline.isoformat() if event.registration_deadline else None,
             'max_participants': event.max_participants,
             'price': float(event.price),
             'is_featured': event.is_featured,
-            'is_registration_open': event.is_registration_open,
+            'is_registration_open': is_registration_open,
             'is_registered': is_registered,
             'views': event.views,
             'created_at': event.created_at.isoformat(),
