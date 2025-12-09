@@ -16,13 +16,13 @@
               <p class="lead mb-4">{{ $t('about.subtitle') }}</p>
               <p class="mb-4 text-muted">{{ $t('about.description') }}</p>
               <div class="about-hero-buttons d-flex flex-wrap gap-2">
-                <a class="soft-button primary animate__animated animate__pulse" href="#mission">
+                <a class="soft-button primary animate__animated animate__pulse" href="#establishment">
                   <i class="fa fa-arrow-right"></i>
-                  {{ $t('about.ourMission') }}
+                  {{ $t('about.establishmentTitle') }}
                 </a>
-                <a class="soft-button outline" href="#team">
+                <a class="soft-button outline" href="#founders">
                   <i class="fa fa-users"></i>
-                  {{ $t('about.teamMembers') }}
+                  {{ $t('about.foundersTitle') }}
                 </a>
               </div>
             </div>
@@ -168,7 +168,7 @@
       </div>
     </section>
 
-    <section id="skills" class="p_3 glass-section">
+    <section id="skills" class="p_3 glass-section mb-4">
       <div class="container-xl">
         <div class="row">
           <div class="col-md-12 text-center mb-5 section-heading">
@@ -223,6 +223,342 @@
             <div class="skills-image animate__animated animate__fadeInRight">
               <div class="skills-image-wrapper image-frame">
                 <img src="/img/about-skills.svg" class="img-fluid" alt="تخصص‌های انجمن علمی ریه کودکان ایران">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Establishment and Goals Section -->
+    <section id="establishment" class="p_3 glass-section mb-4">
+      <div class="container-xl">
+        <div class="row">
+          <div class="col-md-12 text-center mb-5 section-heading">
+            <h2 class="display-5 fw-bold mb-4 animate__animated animate__fadeInUp">{{ $t('about.establishmentTitle') }}</h2>
+            <p class="lead text-primary fw-bold animate__animated animate__fadeInUp animate__delay-1s">
+              <i class="fa fa-calendar-check-o me-2"></i>
+              {{ $t('about.establishmentDate') }}
+            </p>
+          </div>
+        </div>
+        <div class="row mb-5">
+          <div class="col-md-12">
+            <div class="goals-section glass-card p-5 animate__animated animate__fadeInUp">
+              <h3 class="fw-bold mb-4 text-center">
+                <i class="fa fa-bullseye col_blue me-2"></i>
+                {{ $t('about.goalsTitle') }}
+              </h3>
+              <div class="row g-3">
+                <div class="col-md-6">
+                  <div class="goal-item d-flex align-items-start mb-3">
+                    <i class="fa fa-check-circle col_blue me-3 mt-1 fa-lg"></i>
+                    <span>{{ $t('about.goal1') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="goal-item d-flex align-items-start mb-3">
+                    <i class="fa fa-check-circle col_blue me-3 mt-1 fa-lg"></i>
+                    <span>{{ $t('about.goal2') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="goal-item d-flex align-items-start mb-3">
+                    <i class="fa fa-check-circle col_blue me-3 mt-1 fa-lg"></i>
+                    <span>{{ $t('about.goal3') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="goal-item d-flex align-items-start mb-3">
+                    <i class="fa fa-check-circle col_blue me-3 mt-1 fa-lg"></i>
+                    <span>{{ $t('about.goal4') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="goal-item d-flex align-items-start mb-3">
+                    <i class="fa fa-check-circle col_blue me-3 mt-1 fa-lg"></i>
+                    <span>{{ $t('about.goal5') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="goal-item d-flex align-items-start mb-3">
+                    <i class="fa fa-check-circle col_blue me-3 mt-1 fa-lg"></i>
+                    <span>{{ $t('about.goal6') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="goal-item d-flex align-items-start mb-3">
+                    <i class="fa fa-check-circle col_blue me-3 mt-1 fa-lg"></i>
+                    <span>{{ $t('about.goal7') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="goal-item d-flex align-items-start mb-3">
+                    <i class="fa fa-check-circle col_blue me-3 mt-1 fa-lg"></i>
+                    <span>{{ $t('about.goal8') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="goal-item d-flex align-items-start mb-3">
+                    <i class="fa fa-check-circle col_blue me-3 mt-1 fa-lg"></i>
+                    <span>{{ $t('about.goal9') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="goal-item d-flex align-items-start mb-3">
+                    <i class="fa fa-check-circle col_blue me-3 mt-1 fa-lg"></i>
+                    <span>{{ $t('about.goal10') }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Founders Section -->
+    <section id="founders" class="p_3 glass-section mb-4">
+      <div class="container-xl">
+        <div class="row">
+          <div class="col-md-12 text-center mb-5 section-heading">
+            <h2 class="display-5 fw-bold mb-4 animate__animated animate__fadeInUp">{{ $t('about.foundersTitle') }}</h2>
+            <p class="lead animate__animated animate__fadeInUp animate__delay-1s">{{ $t('about.foundersSubtitle') }}</p>
+          </div>
+        </div>
+        <div class="row g-4">
+          <div class="col-md-12">
+            <div class="founders-card glass-card p-5 animate__animated animate__fadeInUp">
+              <div class="row g-4">
+                <div class="col-md-6 col-lg-4">
+                  <div class="founder-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر سهیلا خلیل زاده</h5>
+                    <span class="badge bg-primary">{{ $t('about.president') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                  <div class="founder-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر قمر تاج خانبابائی</h5>
+                    <span class="badge bg-success">{{ $t('about.vicePresident') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                  <div class="founder-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر محمدرضائی</h5>
+                    <span class="badge bg-info">{{ $t('about.secretary') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                  <div class="founder-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر مجید کیوانفر</h5>
+                    <span class="badge bg-warning text-dark">{{ $t('about.treasurer') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                  <div class="founder-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر سید احمد طباطبائی</h5>
+                    <span class="badge bg-secondary">{{ $t('about.boardMember') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                  <div class="founder-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر محسن علی سمیر</h5>
+                    <span class="badge bg-secondary">{{ $t('about.boardMember') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                  <div class="founder-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر حسینعلی غفاری پور</h5>
+                    <span class="badge bg-secondary">{{ $t('about.boardMember') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                  <div class="founder-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر محمد رضا مدرسی</h5>
+                    <span class="badge bg-dark">{{ $t('about.alternateBoardMember') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                  <div class="founder-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر سید جواد سیدی</h5>
+                    <span class="badge bg-dark">{{ $t('about.alternateBoardMember') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                  <div class="founder-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر روح الله شیرزادی</h5>
+                    <span class="badge bg-danger">{{ $t('about.mainInspector') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-4">
+                  <div class="founder-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر علیرضا اسدی</h5>
+                    <span class="badge bg-dark">{{ $t('about.alternateInspector') }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Board Members 1400 Section -->
+    <section id="board-1400" class="p_3 glass-section mb-4">
+      <div class="container-xl">
+        <div class="row">
+          <div class="col-md-12 text-center mb-5 section-heading">
+            <h2 class="display-5 fw-bold mb-4 animate__animated animate__fadeInUp">{{ $t('about.boardMembers1400Title') }}</h2>
+            <p class="lead animate__animated animate__fadeInUp animate__delay-1s">{{ $t('about.afterElection') }}</p>
+          </div>
+        </div>
+        <div class="row g-4">
+          <div class="col-md-12">
+            <div class="board-members-card glass-card p-5 animate__animated animate__fadeInUp">
+              <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                  <div class="member-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر مجید کیوانفر</h5>
+                    <span class="badge bg-primary">{{ $t('about.president') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                  <div class="member-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر محمد رضائی</h5>
+                    <span class="badge bg-success">{{ $t('about.vicePresident') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                  <div class="member-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر امیر رضائی</h5>
+                    <span class="badge bg-info">{{ $t('about.secretary') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                  <div class="member-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر علیرضا عشقی</h5>
+                    <span class="badge bg-warning text-dark">{{ $t('about.treasurer') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                  <div class="member-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر سید محمد رضا میرکریمی</h5>
+                    <span class="badge bg-secondary">{{ $t('about.boardMember') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                  <div class="member-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر بابک قالیباف</h5>
+                    <span class="badge bg-secondary">{{ $t('about.boardMember') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                  <div class="member-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر سید حسین میر لوحی</h5>
+                    <span class="badge bg-secondary">{{ $t('about.boardMember') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                  <div class="member-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر لعبت شاهکار</h5>
+                    <span class="badge bg-danger">{{ $t('about.mainInspector') }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Board Members 1403 Section -->
+    <section id="board-1403" class="p_3 glass-section mb-4">
+      <div class="container-xl">
+        <div class="row">
+          <div class="col-md-12 text-center mb-5 section-heading">
+            <h2 class="display-5 fw-bold mb-4 animate__animated animate__fadeInUp">{{ $t('about.boardMembers1403Title') }}</h2>
+            <p class="lead animate__animated animate__fadeInUp animate__delay-1s">{{ $t('about.afterElection') }}</p>
+          </div>
+        </div>
+        <div class="row g-4">
+          <div class="col-md-12">
+            <div class="board-members-card glass-card p-5 animate__animated animate__fadeInUp">
+              <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                  <div class="member-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر قمر تاج خانبابائی</h5>
+                    <span class="badge bg-primary">{{ $t('about.president') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                  <div class="member-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر سهیلا خلیل زاده</h5>
+                    <span class="badge bg-success">{{ $t('about.vicePresident') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                  <div class="member-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر محمد رضائی</h5>
+                    <span class="badge bg-info">{{ $t('about.secretary') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                  <div class="member-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر امیر رضائی</h5>
+                    <span class="badge bg-secondary">{{ $t('about.boardMember') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                  <div class="member-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر نازنین فرحبخش</h5>
+                    <span class="badge bg-warning text-dark">{{ $t('about.treasurer') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                  <div class="member-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر ذلفا مدرسی</h5>
+                    <span class="badge bg-secondary">{{ $t('about.boardMember') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                  <div class="member-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر علیرضا عشقی</h5>
+                    <span class="badge bg-secondary">{{ $t('about.boardMember') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                  <div class="member-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر معصومه قاسمپور علمداری</h5>
+                    <span class="badge bg-danger">{{ $t('about.mainInspector') }}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

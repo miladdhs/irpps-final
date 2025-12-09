@@ -1246,6 +1246,57 @@ font-size:16px;
  }
  }
 
+/* About Page - New Sections Styles */
+.goal-item {
+  transition: var(--transition-snappy);
+  padding: 12px;
+  border-radius: var(--radius-sm);
+}
+
+.goal-item:hover {
+  background: var(--gradient-soft);
+  transform: translateX(-5px);
+}
+
+.founder-item, .member-item {
+  transition: var(--transition-snappy);
+  height: 100%;
+  border-radius: var(--radius-md);
+}
+
+.founder-item:hover, .member-item:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--glass-shadow-hover);
+}
+
+.founder-item .badge, .member-item .badge {
+  font-size: 0.85rem;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+}
+
+.goals-section {
+  background: var(--gradient-soft);
+  border: 1px solid var(--glass-border);
+}
+
+.board-members-card, .founders-card {
+  background: var(--glass-bg);
+  backdrop-filter: var(--backdrop-soft);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--glass-shadow);
+}
+
+@media (max-width: 768px) {
+  .goal-item {
+    font-size: 0.9rem;
+  }
+  
+  .founder-item h5, .member-item h5 {
+    font-size: 1rem;
+  }
+}
+
 @media (min-width:1201px) and (max-width:1270px) {
 
  }
