@@ -7,4 +7,5 @@ openpyxl==3.1.2
 cryptography==46.0.3
 django-cors-headers==4.9.0
 gunicorn==21.2.0
+jdatetime==4.1.0
 

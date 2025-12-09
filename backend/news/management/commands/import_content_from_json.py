@@ -5,6 +5,8 @@ Usage: python manage.py import_content_from_json --file path/to/file.json [--aut
 import json
 import os
 import sys
+import re
+from datetime import datetime, timedelta
 from pathlib import Path
 from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
@@ -14,6 +16,13 @@ from django.conf import settings
 
 from news.models import News, Announcement
 from events.models import Event
+
+# Try to import jdatetime for Persian date conversion
+try:
+    import jdatetime
+    HAS_JDATETIME = True
+except ImportError:
+    HAS_JDATETIME = False
 
 # Fix encoding for Windows console
 if sys.platform == 'win32':
@@ -198,14 +207,21 @@ class Command(BaseCommand):
             if image and image not in (None, '', 'null'):
                 defaults['image'] = image
 
-            # Handle dates
+            # Handle dates - set created_at to one month before current time
+            # (or use provided date if exists, but subtract one month)
             if news_data.get('created_at'):
                 try:
-                    defaults['created_at'] = timezone.datetime.fromisoformat(
+                    provided_date = timezone.datetime.fromisoformat(
                         news_data['created_at'].replace('Z', '+00:00')
                     )
+                    # One month before provided date
+                    defaults['created_at'] = provided_date - timedelta(days=30)
                 except:
-                    pass
+                    # If parsing fails, use current time minus 30 days
+                    defaults['created_at'] = timezone.now() - timedelta(days=30)
+            else:
+                # Default: one month before current time
+                defaults['created_at'] = timezone.now() - timedelta(days=30)
 
             # Check if exists
             existing = News.objects.filter(slug=slug).first()
@@ -276,14 +292,20 @@ class Command(BaseCommand):
             if image and image not in (None, '', 'null'):
                 defaults['image'] = image
 
-            # Handle dates
+            # Handle dates - set created_at to one month before current time
             if ann_data.get('created_at'):
                 try:
-                    defaults['created_at'] = timezone.datetime.fromisoformat(
+                    provided_date = timezone.datetime.fromisoformat(
                         ann_data['created_at'].replace('Z', '+00:00')
                     )
+                    # One month before provided date
+                    defaults['created_at'] = provided_date - timedelta(days=30)
                 except:
-                    pass
+                    # If parsing fails, use current time minus 30 days
+                    defaults['created_at'] = timezone.now() - timedelta(days=30)
+            else:
+                # Default: one month before current time
+                defaults['created_at'] = timezone.now() - timedelta(days=30)
 
             # Check if exists
             existing = Announcement.objects.filter(slug=slug).first()
@@ -366,14 +388,57 @@ class Command(BaseCommand):
             if cover_image and cover_image not in (None, '', 'null'):
                 defaults['cover_image'] = cover_image
 
-            # Handle dates
-            if event_data.get('created_at'):
+            # Calculate event date from Persian year and month
+            event_year = event_data.get('event_year')
+            event_month = event_data.get('event_month')
+            
+            # Convert Persian date to Gregorian for registration_deadline calculation
+            # Since all events are past, set registration_deadline to None
+            defaults['registration_deadline'] = None
+            
+            # Calculate created_at: one month before event date
+            if event_year and event_month:
                 try:
-                    defaults['created_at'] = timezone.datetime.fromisoformat(
-                        event_data['created_at'].replace('Z', '+00:00')
-                    )
-                except:
-                    pass
+                    if HAS_JDATETIME:
+                        # Convert Persian to Gregorian
+                        # First day of the Persian month
+                        persian_date = jdatetime.date(event_year, event_month, 1)
+                        gregorian_date = persian_date.togregorian()
+                        
+                        # One month before (subtract ~30 days)
+                        event_start = datetime(gregorian_date.year, gregorian_date.month, 1)
+                        created_at_date = event_start - timedelta(days=30)
+                        
+                        # Make timezone aware
+                        defaults['created_at'] = timezone.make_aware(
+                            datetime.combine(created_at_date.date(), datetime.min.time())
+                        )
+                    else:
+                        # Fallback: approximate conversion (Persian year + 621/622)
+                        # This is approximate, but better than nothing
+                        approx_gregorian_year = event_year + 621
+                        # Approximate month (Persian months are similar to Gregorian)
+                        approx_month = event_month
+                        if approx_month > 12:
+                            approx_month = 12
+                        
+                        # One month before
+                        if approx_month > 1:
+                            created_month = approx_month - 1
+                            created_year = approx_gregorian_year
+                        else:
+                            created_month = 12
+                            created_year = approx_gregorian_year - 1
+                        
+                        defaults['created_at'] = timezone.make_aware(
+                            datetime(created_year, created_month, 1)
+                        )
+                except Exception as e:
+                    # If conversion fails, use current time minus 30 days
+                    defaults['created_at'] = timezone.now() - timedelta(days=30)
+            else:
+                # If no event date, use current time minus 30 days
+                defaults['created_at'] = timezone.now() - timedelta(days=30)
 
             # Check if exists
             existing = Event.objects.filter(slug=slug).first()
