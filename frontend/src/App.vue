@@ -23,6 +23,10 @@
                   <li><router-link class="dropdown-item" to="/about">{{ $t('nav.aboutForum') }}</router-link></li>
                   <li><router-link class="dropdown-item" to="/about/history">{{ $t('nav.aboutHistory') }}</router-link></li>
                   <li><router-link class="dropdown-item" to="/about/gallery">{{ $t('nav.aboutGallery') }}</router-link></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li><router-link class="dropdown-item" to="/about/board-third">{{ $t('nav.boardThird') }}</router-link></li>
+                  <li><router-link class="dropdown-item" to="/about/board-second">{{ $t('nav.boardSecond') }}</router-link></li>
+                  <li><router-link class="dropdown-item" to="/about/board-first">{{ $t('nav.boardFirst') }}</router-link></li>
                 </ul>
               </li>
               <li class="nav-item dropdown">
@@ -311,7 +315,8 @@ onMounted(() => {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow-y: visible;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .app-header {

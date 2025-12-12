@@ -82,6 +82,24 @@ html{
 html, body{
   overflow-x:hidden;
   overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #0d6efd #f1f1f1;
+}
+
+/* Hide scrollbar on left side for RTL */
+html[dir="rtl"] {
+  direction: rtl;
+}
+
+html[dir="rtl"] * {
+  scrollbar-width: thin;
+  scrollbar-color: #0d6efd #f1f1f1;
+}
+
+/* Ensure only right scrollbar for RTL */
+html[dir="rtl"] body {
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 body{

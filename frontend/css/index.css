@@ -527,9 +527,10 @@ Description: Modern animated website for Children's Lung Scientific Association
   }
 }
 
-/* Custom Scrollbar */
+/* Custom Scrollbar - Only on right side */
 ::-webkit-scrollbar {
   width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -543,6 +544,27 @@ Description: Modern animated website for Children's Lung Scientific Association
 
 ::-webkit-scrollbar-thumb:hover {
   background: #0574b3;
+}
+
+/* Hide scrollbar on left side for RTL */
+[dir="rtl"] ::-webkit-scrollbar {
+  width: 8px;
+}
+
+[dir="rtl"] * {
+  scrollbar-width: thin;
+  scrollbar-color: #0d6efd #f1f1f1;
+}
+
+/* Prevent double scrollbars */
+body {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+}
+
+html {
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
 }
 
 /* Loading Animation */
