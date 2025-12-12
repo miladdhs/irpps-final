@@ -110,11 +110,14 @@ body{
 
 .page-shell{
   position:relative;
-  height: 100vh;
+  min-height: 100vh;
+  height: auto;
   z-index:0;
   overflow-x: hidden !important;
   overflow-y: auto !important;
   width: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .page-shell::before,

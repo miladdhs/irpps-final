@@ -1,5 +1,5 @@
 <template>
-  <div class="page-shell event-detail-view">
+  <div class="event-detail-view">
     <section class="hero-section glass-section py-5 mb-4">
       <div class="container-xl">
         <nav class="breadcrumb-nav mb-3">

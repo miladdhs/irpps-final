@@ -1,5 +1,5 @@
 <template>
-  <div class="page-shell services-view position-relative">
+  <div class="services-view position-relative">
     <span class="services-bubble bubble-1 blurred-bubble"></span>
     <span class="services-bubble bubble-2 blurred-bubble"></span>
 

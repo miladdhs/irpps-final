@@ -1,5 +1,5 @@
 <template>
-  <div class="page-shell advertising-view position-relative">
+  <div class="advertising-view position-relative">
     <section class="page-hero glass-section pt-5 pb-5 mb-4">
       <div class="container-xl">
         <div class="row align-items-center">

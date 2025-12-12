@@ -1,5 +1,5 @@
 <template>
-  <div class="page-shell news-detail-view">
+  <div class="news-detail-view">
     <section class="hero-section glass-section py-5 mb-4">
       <div class="container-xl">
         <nav class="breadcrumb-nav mb-3">

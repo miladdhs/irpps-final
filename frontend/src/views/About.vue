@@ -1,5 +1,5 @@
 <template>
-  <div class="page-shell about-view position-relative">
+  <div class="about-view position-relative">
     <span class="about-bubble bubble-1 blurred-bubble"></span>
     <span class="about-bubble bubble-2 blurred-bubble"></span>
 

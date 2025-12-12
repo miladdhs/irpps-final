@@ -1,5 +1,6 @@
 <template>
-  <div class="app-frame page-shell">
+  <div class="page-shell">
+    <div class="app-frame">
     <header id="header" class="app-header">
       <nav class="glass-navbar navbar navbar-expand-md pt-3 pb-3" id="navbar_sticky">
         <div class="container-xl">
@@ -171,6 +172,7 @@
         </div>
       </div>
     </footer>
+    </div>
   </div>
 </template>
 
@@ -312,7 +314,7 @@ onMounted(() => {
 }
 
 .app-frame {
-  min-height: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   overflow: visible !important;
@@ -447,9 +449,9 @@ onMounted(() => {
 }
 
 .app-main {
-  flex: 1;
+  flex: 1 0 auto;
   display: block;
-  padding-bottom: 0;
+  padding-bottom: 2rem;
   overflow: visible !important;
   width: 100%;
 }
@@ -473,8 +475,10 @@ onMounted(() => {
 }
 
 .app-footer {
-  padding-top: 5%;
-  padding-bottom: 2%;
+  padding-top: 3rem;
+  padding-bottom: 2rem;
+  margin-top: auto;
+  width: 100%;
 }
 
 .footer-upper {
