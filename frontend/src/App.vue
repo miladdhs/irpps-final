@@ -284,6 +284,7 @@ onMounted(() => {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow-y: visible;
 }
 
 .app-header {
@@ -413,9 +414,9 @@ onMounted(() => {
 
 .app-main {
   flex: 1;
-  display: flex;
-  flex-direction: column;
+  display: block;
   padding-bottom: 0;
+  overflow-y: auto;
 }
 
 .auth-modal {

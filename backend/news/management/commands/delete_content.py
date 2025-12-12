@@ -118,3 +118,5 @@ class Command(BaseCommand):
             f'  - اطلاعیه: {deleted_announcements} رکورد'
         ))
 
+
+

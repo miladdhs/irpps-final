@@ -1,5 +1,5 @@
 <template>
-  <div class="page-shell team-view position-relative overflow-hidden">
+  <div class="page-shell team-view position-relative overflow-x-hidden">
     <span class="team-bubble bubble-1 blurred-bubble"></span>
     <span class="team-bubble bubble-2 blurred-bubble"></span>
     <span class="team-bubble bubble-3 blurred-bubble"></span>

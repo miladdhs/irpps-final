@@ -81,6 +81,7 @@ html{
 
 html, body{
   overflow-x:hidden;
+  overflow-y: auto;
 }
 
 body{
@@ -679,17 +680,13 @@ transform: translateX(5px);
  
 .sticky {
 position: fixed;
-top: 0;
+top: -40px;
 width: 100%!important;
 z-index: 9999;
 background-color: #fff;
 box-shadow: 0 2px 20px rgba(0,0,0,0.1);
-}
-.sticky {
-top: -40px;
 transform: translateY(40px);
 transition: transform .3s;
-z-index: 9999;
 }
 
 /*********************header_end****************/

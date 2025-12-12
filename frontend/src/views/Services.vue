@@ -1,5 +1,5 @@
 <template>
-  <div class="page-shell services-view position-relative overflow-hidden">
+  <div class="page-shell services-view position-relative overflow-x-hidden">
     <span class="services-bubble bubble-1 blurred-bubble"></span>
     <span class="services-bubble bubble-2 blurred-bubble"></span>
 
