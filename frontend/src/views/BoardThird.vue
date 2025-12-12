@@ -20,54 +20,62 @@
         <div class="row g-4">
           <div class="col-md-12">
             <div class="board-members-card glass-card p-5">
+              <h3 class="fw-bold mb-4 text-center">هیئت مدیره دوره ۱۴۰۳ (پس از انتخابات الکترونیکی)</h3>
               <div class="row g-4">
                 <div class="col-md-6 col-lg-3">
                   <div class="member-item text-center p-4 glass-chip">
                     <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
-                    <h5 class="fw-bold mb-2">دکتر مجید کیوانفر</h5>
+                    <h5 class="fw-bold mb-2">دکتر قمر تاج خانبابائی</h5>
                     <span class="badge bg-primary">{{ $t('about.president') }}</span>
                   </div>
                 </div>
                 <div class="col-md-6 col-lg-3">
                   <div class="member-item text-center p-4 glass-chip">
                     <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
-                    <h5 class="fw-bold mb-2">دکتر محمد رضائی</h5>
+                    <h5 class="fw-bold mb-2">دکتر سهیلا خلیل زاده</h5>
                     <span class="badge bg-success">{{ $t('about.vicePresident') }}</span>
                   </div>
                 </div>
                 <div class="col-md-6 col-lg-3">
                   <div class="member-item text-center p-4 glass-chip">
                     <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
-                    <h5 class="fw-bold mb-2">دکتر امیر رضائی</h5>
+                    <h5 class="fw-bold mb-2">دکتر محمد رضائی</h5>
                     <span class="badge bg-info">{{ $t('about.secretary') }}</span>
                   </div>
                 </div>
                 <div class="col-md-6 col-lg-3">
                   <div class="member-item text-center p-4 glass-chip">
                     <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
-                    <h5 class="fw-bold mb-2">دکتر علیرضا عشقی</h5>
+                    <h5 class="fw-bold mb-2">دکتر امیر رضائی</h5>
+                    <span class="badge bg-secondary">{{ $t('about.boardMember') }}</span>
+                  </div>
+                </div>
+                <div class="col-md-6 col-lg-3">
+                  <div class="member-item text-center p-4 glass-chip">
+                    <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
+                    <h5 class="fw-bold mb-2">دکتر نازنین فرحبخش</h5>
                     <span class="badge bg-warning text-dark">{{ $t('about.treasurer') }}</span>
                   </div>
                 </div>
                 <div class="col-md-6 col-lg-3">
                   <div class="member-item text-center p-4 glass-chip">
                     <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
-                    <h5 class="fw-bold mb-2">دکتر سید محمد رضا میرکریمی</h5>
+                    <h5 class="fw-bold mb-2">دکتر ذلفا مدرسی</h5>
                     <span class="badge bg-secondary">{{ $t('about.boardMember') }}</span>
                   </div>
                 </div>
                 <div class="col-md-6 col-lg-3">
                   <div class="member-item text-center p-4 glass-chip">
                     <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
-                    <h5 class="fw-bold mb-2">دکتر بابک قالیباف</h5>
+                    <h5 class="fw-bold mb-2">دکتر علیرضا عشقی</h5>
                     <span class="badge bg-secondary">{{ $t('about.boardMember') }}</span>
                   </div>
                 </div>
                 <div class="col-md-6 col-lg-3">
                   <div class="member-item text-center p-4 glass-chip">
                     <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
-                    <h5 class="fw-bold mb-2">دکتر سید حسین میر لوحی</h5>
-                    <span class="badge bg-secondary">{{ $t('about.boardMember') }}</span>
+                    <h5 class="fw-bold mb-2">دکتر معصومه قاسمپور علمداری</h5>
+                    <span class="badge bg-danger">{{ $t('about.mainInspector') }}</span>
                   </div>
                 </div>
               </div>

@@ -315,8 +315,10 @@ onMounted(() => {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
-  overflow-y: auto;
+  overflow-x: hidden !important;
+  overflow-y: visible !important;
+  width: 100%;
+  position: relative;
 }
 
 .app-header {
@@ -448,7 +450,9 @@ onMounted(() => {
   flex: 1;
   display: block;
   padding-bottom: 0;
-  overflow-y: auto;
+  overflow-x: hidden !important;
+  overflow-y: visible !important;
+  width: 100%;
 }
 
 .auth-modal {
