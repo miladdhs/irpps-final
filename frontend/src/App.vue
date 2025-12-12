@@ -15,10 +15,28 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav menu-links mb-0 ms-auto align-items-md-center">
               <li class="nav-item"><router-link class="nav-link" :class="{ active: $route.path === '/' }" to="/">{{ $t('nav.home') }}</router-link></li>
-              <li class="nav-item"><router-link class="nav-link" :class="{ active: $route.path === '/about' }" to="/about">{{ $t('nav.about') }}</router-link></li>
-              <li class="nav-item"><router-link class="nav-link" :class="{ active: $route.path === '/services' || $route.path.startsWith('/news') || $route.path.startsWith('/events') }" to="/services">{{ $t('nav.services') }}</router-link></li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="aboutDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  {{ $t('nav.about') }}
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="aboutDropdown">
+                  <li><router-link class="dropdown-item" to="/about">{{ $t('nav.aboutForum') }}</router-link></li>
+                  <li><router-link class="dropdown-item" to="/about/history">{{ $t('nav.aboutHistory') }}</router-link></li>
+                  <li><router-link class="dropdown-item" to="/about/gallery">{{ $t('nav.aboutGallery') }}</router-link></li>
+                </ul>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="newsEventsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  {{ $t('nav.news') }}
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="newsEventsDropdown">
+                  <li><router-link class="dropdown-item" to="/services?tab=news">{{ $t('nav.newsItem') }}</router-link></li>
+                  <li><router-link class="dropdown-item" to="/services?tab=events">{{ $t('nav.eventsItem') }}</router-link></li>
+                </ul>
+              </li>
               <li class="nav-item"><router-link class="nav-link" :class="{ active: $route.path === '/team' }" to="/team">{{ $t('nav.team') }}</router-link></li>
               <li class="nav-item"><router-link class="nav-link" :class="{ active: $route.path === '/contact' }" to="/contact">{{ $t('nav.contact') }}</router-link></li>
+              <li class="nav-item"><a class="nav-link" href="/english">{{ $t('nav.english') }}</a></li>
             </ul>
             <ul class="navbar-nav ms-md-4 flex-row gap-2 align-items-center social-links">
               <li class="nav-item"><a class="nav-link icon-link" href="https://www.instagram.com/pediatricpulmonarysociety" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa fa-instagram"></i></a></li>
@@ -104,30 +122,39 @@
                 <p class="text-muted mt-3 mb-0">{{ $t('footer.brandDesc') }}</p>
               </div>
             </div>
-            <div class="col-lg-5">
+            <div class="col-lg-8">
               <div class="footer-links row">
-                <div class="col-sm-6">
+                <div class="col-sm-6 col-md-3">
                   <h6>{{ $t('footer.quickAccess') }}</h6>
                   <ul class="list-unstyled">
                     <li><router-link to="/">{{ $t('nav.home') }}</router-link></li>
-                    <li><router-link to="/services">{{ $t('nav.services') }}</router-link></li>
                     <li><router-link to="/about">{{ $t('nav.about') }}</router-link></li>
+                    <li><router-link to="/services">{{ $t('nav.news') }}</router-link></li>
+                    <li><router-link to="/team">{{ $t('nav.team') }}</router-link></li>
                   </ul>
                 </div>
-                <div class="col-sm-6">
+                <div class="col-sm-6 col-md-3">
                   <h6>{{ $t('footer.quickContact') }}</h6>
                   <ul class="list-unstyled">
-                    <li><router-link to="/team">{{ $t('nav.team') }}</router-link></li>
                     <li><router-link to="/contact">{{ $t('nav.contact') }}</router-link></li>
                     <li><a href="#">{{ $t('footer.faq') }}</a></li>
                   </ul>
                 </div>
-              </div>
-            </div>
-            <div class="col-lg-3">
-              <h6>{{ $t('footer.socialMedia') }}</h6>
-              <div class="d-flex gap-2">
-                <a class="footer-social" href="https://www.instagram.com/pediatricpulmonarysociety" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa fa-instagram"></i></a>
+                <div class="col-sm-6 col-md-3">
+                  <h6>{{ $t('footer.additionalLinks') }}</h6>
+                  <ul class="list-unstyled">
+                    <li><router-link to="/education">{{ $t('nav.education') }}</router-link></li>
+                    <li><router-link to="/publications">{{ $t('nav.publications') }}</router-link></li>
+                    <li><router-link to="/associations">{{ $t('nav.associations') }}</router-link></li>
+                    <li><router-link to="/advertising">{{ $t('nav.advertising') }}</router-link></li>
+                  </ul>
+                </div>
+                <div class="col-sm-6 col-md-3">
+                  <h6>{{ $t('footer.socialMedia') }}</h6>
+                  <div class="d-flex gap-2 flex-wrap">
+                    <a class="footer-social" href="https://www.instagram.com/pediatricpulmonarysociety" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa fa-instagram"></i></a>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
