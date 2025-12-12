@@ -1,5 +1,5 @@
 <template>
-  <div class="page-shell home-view position-relative overflow-x-hidden">
+  <div class="page-shell home-view position-relative">
     <span class="home-bubble bubble-1 blurred-bubble"></span>
     <span class="home-bubble bubble-2 blurred-bubble"></span>
     <span class="home-bubble bubble-3 blurred-bubble"></span>

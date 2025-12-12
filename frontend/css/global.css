@@ -77,15 +77,13 @@ Licence: <a href="https://www.templateonweb.com/license">Website Template Licenc
 
 html{
   scroll-behavior:smooth;
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
+  overflow: hidden !important;
   height: 100%;
   width: 100%;
 }
 
 html, body{
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
+  overflow: hidden !important;
   scrollbar-width: thin;
   scrollbar-color: #0d6efd #f1f1f1;
   height: 100%;
@@ -103,20 +101,19 @@ body{
   font-family:'Vazirmatn','Poppins',sans-serif; 
   direction:rtl;
   text-align:right;
-  min-height:100vh;
+  height: 100vh;
   background:linear-gradient(135deg, rgba(240,244,255,0.95) 0%, rgba(228,243,255,0.95) 40%, rgba(239,245,255,0.92) 100%);
   color:#18253a;
   position: relative;
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
+  overflow: hidden !important;
 }
 
 .page-shell{
   position:relative;
-  min-height:100vh;
+  height: 100vh;
   z-index:0;
   overflow-x: hidden !important;
-  overflow-y: visible !important;
+  overflow-y: auto !important;
   width: 100%;
 }
 

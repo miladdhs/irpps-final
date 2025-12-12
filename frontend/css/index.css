@@ -552,37 +552,45 @@ Description: Modern animated website for Children's Lung Scientific Association
   display: none;
 }
 
-/* Prevent double scrollbars - Force single scrollbar on right */
+/* Force single scrollbar ONLY on .page-shell */
 html {
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
+  overflow: hidden !important;
   height: 100% !important;
   width: 100% !important;
 }
 
 body {
-  overflow-x: hidden !important;
-  overflow-y: auto !important;
-  height: 100% !important;
+  overflow: hidden !important;
+  height: 100vh !important;
   width: 100% !important;
   position: relative !important;
 }
 
-/* Remove scrollbars from all containers except body */
-.page-shell,
+/* ONLY .page-shell has scrollbar */
+.page-shell {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  height: 100vh !important;
+}
+
+/* Remove scrollbars from ALL other elements */
 .app-frame,
 .app-main,
+.app-header,
 .container-xl,
 .container,
 .row,
-[class*="col-"] {
-  overflow-x: hidden !important;
+[class*="col-"],
+section,
+div:not(.page-shell) {
+  overflow: visible !important;
 }
 
-/* Only allow vertical scroll on body */
-.app-main {
-  overflow-y: visible !important;
-  overflow-x: hidden !important;
+/* Remove navbar scrollbar */
+.navbar,
+.navbar-collapse,
+.navbar-nav {
+  overflow: visible !important;
 }
 
 /* Loading Animation */

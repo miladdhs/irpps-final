@@ -1,5 +1,5 @@
 <template>
-  <div class="page-shell contact-view position-relative overflow-x-hidden">
+  <div class="page-shell contact-view position-relative">
     <span class="contact-bubble bubble-1 blurred-bubble"></span>
     <span class="contact-bubble bubble-2 blurred-bubble"></span>
 

@@ -312,11 +312,10 @@ onMounted(() => {
 }
 
 .app-frame {
-  min-height: 100vh;
+  min-height: 100%;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden !important;
-  overflow-y: visible !important;
+  overflow: visible !important;
   width: 100%;
   position: relative;
 }
@@ -326,6 +325,7 @@ onMounted(() => {
   top: 0;
   z-index: 1020;
   padding: 0.75rem 0;
+  overflow: visible !important;
 }
 
 .glass-navbar {
@@ -450,8 +450,7 @@ onMounted(() => {
   flex: 1;
   display: block;
   padding-bottom: 0;
-  overflow-x: hidden !important;
-  overflow-y: visible !important;
+  overflow: visible !important;
   width: 100%;
 }
 
