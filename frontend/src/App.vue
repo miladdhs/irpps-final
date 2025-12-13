@@ -35,8 +35,8 @@
                   {{ $t('nav.news') }}
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="newsEventsDropdown">
-                  <li><router-link class="dropdown-item" to="/services?tab=news">{{ $t('nav.newsItem') }}</router-link></li>
-                  <li><router-link class="dropdown-item" to="/services?tab=events">{{ $t('nav.eventsItem') }}</router-link></li>
+                  <li><router-link class="dropdown-item" to="/news">{{ $t('nav.newsItem') }}</router-link></li>
+                  <li><router-link class="dropdown-item" to="/events">{{ $t('nav.eventsItem') }}</router-link></li>
                 </ul>
               </li>
               <li class="nav-item"><router-link class="nav-link" :class="{ active: $route.path === '/team' }" to="/team">{{ $t('nav.team') }}</router-link></li>

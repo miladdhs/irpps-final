@@ -120,13 +120,6 @@
               </button>
               <button
                 class="btn btn-soft-light"
-                :class="{ active: adminActiveTab === 'announcement' }"
-                @click="adminActiveTab = 'announcement'"
-              >
-                <i class="fa fa-bullhorn me-2"></i>اطلاعیه جدید
-              </button>
-              <button
-                class="btn btn-soft-light"
                 :class="{ active: adminActiveTab === 'event' }"
                 @click="adminActiveTab = 'event'"
               >
@@ -193,50 +186,6 @@
                       {{ newsSubmitLoading ? 'در حال ثبت...' : 'ثبت خبر' }}
                     </button>
                     <button type="button" class="btn btn-outline-secondary modern-btn" @click="resetNewsForm" :disabled="newsSubmitLoading">
-                      <i class="fa fa-undo me-2"></i>پاک‌کردن فرم
-                    </button>
-                  </div>
-                </form>
-              </div>
-
-              <div v-else-if="adminActiveTab === 'announcement'" key="announcement" class="admin-form-card">
-                <h6 class="admin-form-title">
-                  <i class="fa fa-bullhorn me-2 col_blue"></i>ثبت اطلاعیه جدید
-                </h6>
-                <div
-                  v-if="announcementSubmitMessage"
-                  :class="'alert alert-' + (announcementSubmitSuccess ? 'success' : 'danger') + ' alert-dismissible fade show'"
-                  role="alert"
-                >
-                  {{ announcementSubmitMessage }}
-                  <button type="button" class="btn-close" @click="announcementSubmitMessage = ''"></button>
-                </div>
-                <form class="modern-form" @submit.prevent="submitAnnouncementForm">
-                  <div class="row">
-                    <div class="col-md-6 mb-3">
-                      <label class="form-label" for="announcementTitle"><i class="fa fa-heading me-2 col_blue"></i>عنوان</label>
-                      <input v-model="announcementForm.title" type="text" id="announcementTitle" class="form-control modern-input" required placeholder="عنوان اطلاعیه را وارد کنید">
-                    </div>
-                    <div class="col-md-6 mb-3">
-                      <label class="form-label" for="announcementSlug"><i class="fa fa-link me-2 col_blue"></i>اسلاگ</label>
-                      <input v-model="announcementForm.slug" type="text" id="announcementSlug" class="form-control modern-input" required placeholder="مثلاً: urgent-meeting">
-                    </div>
-                    <div class="col-12 mb-3">
-                      <label class="form-label" for="announcementContent"><i class="fa fa-align-right me-2 col_blue"></i>متن اطلاعیه</label>
-                      <textarea v-model="announcementForm.content" id="announcementContent" class="form-control modern-input" rows="4" required placeholder="متن کامل اطلاعیه را بنویسید"></textarea>
-                    </div>
-                    <div class="col-md-6 mb-3 form-check form-switch">
-                      <input v-model="announcementForm.is_important" class="form-check-input" type="checkbox" id="announcementImportant">
-                      <label class="form-check-label" for="announcementImportant">برچسب مهم</label>
-                    </div>
-                  </div>
-                  <div class="d-flex flex-wrap gap-2">
-                    <button type="submit" class="btn btn-primary modern-btn" :disabled="announcementSubmitLoading">
-                      <i v-if="announcementSubmitLoading" class="fa fa-spinner fa-spin me-2"></i>
-                      <i v-else class="fa fa-save me-2"></i>
-                      {{ announcementSubmitLoading ? 'در حال ثبت...' : 'ثبت اطلاعیه' }}
-                    </button>
-                    <button type="button" class="btn btn-outline-secondary modern-btn" @click="resetAnnouncementForm" :disabled="announcementSubmitLoading">
                       <i class="fa fa-undo me-2"></i>پاک‌کردن فرم
                     </button>
                   </div>
@@ -687,7 +636,7 @@ const resumeForm = ref({
   languages: ''
 });
 
-type AdminTab = 'news' | 'announcement' | 'event';
+type AdminTab = 'news' | 'event';
 
 const adminStats = ref<Record<string, number> | null>(null);
 const adminStatsLoading = ref(false);
@@ -711,16 +660,6 @@ const newsSubmitLoading = ref(false);
 const newsSubmitMessage = ref('');
 const newsSubmitSuccess = ref(false);
 
-const announcementForm = ref({
-  title: '',
-  slug: '',
-  content: '',
-  is_published: true,
-  is_important: false,
-});
-const announcementSubmitLoading = ref(false);
-const announcementSubmitMessage = ref('');
-const announcementSubmitSuccess = ref(false);
 
 const eventForm = ref({
   title: '',
@@ -878,20 +817,6 @@ const adminStatCards = computed(() => {
       value: adminStats.value.published_news ?? 0,
       icon: 'fa-bullhorn',
       tone: 'success'
-    },
-    {
-      key: 'total_announcements',
-      title: 'اعلانات ثبت‌شده',
-      value: adminStats.value.total_announcements ?? 0,
-      icon: 'fa-bell',
-      tone: 'violet'
-    },
-    {
-      key: 'published_announcements',
-      title: 'اعلانات منتشر شده',
-      value: adminStats.value.published_announcements ?? 0,
-      icon: 'fa-broadcast-tower',
-      tone: 'warning'
     },
     {
       key: 'total_events',
@@ -1269,73 +1194,6 @@ const submitNewsForm = async () => {
   }
 };
 
-const resetAnnouncementForm = (keepMessage = false) => {
-  announcementForm.value = {
-    title: '',
-    slug: '',
-    content: '',
-    is_published: true,
-    is_important: false,
-  };
-  if (!keepMessage) {
-    announcementSubmitMessage.value = '';
-    announcementSubmitSuccess.value = false;
-  }
-};
-
-const submitAnnouncementForm = async () => {
-  if (
-    !announcementForm.value.title.trim() ||
-    !announcementForm.value.slug.trim() ||
-    !announcementForm.value.content.trim()
-  ) {
-    announcementSubmitSuccess.value = false;
-    announcementSubmitMessage.value = 'لطفاً همه فیلدهای ضروری اطلاعیه را تکمیل کنید.';
-    return;
-  }
-
-  announcementSubmitLoading.value = true;
-  announcementSubmitMessage.value = '';
-
-  const payload = {
-    title: announcementForm.value.title.trim(),
-    slug: announcementForm.value.slug.trim(),
-    content: announcementForm.value.content.trim(),
-    is_published: announcementForm.value.is_published,
-    is_important: announcementForm.value.is_important,
-  };
-
-  try {
-    const response = await fetch(getApiUrl('/api/news/announcements/create/'), {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify(payload),
-    });
-
-    const data = await response.json();
-
-    if (response.ok && data.success) {
-      announcementSubmitSuccess.value = true;
-      announcementSubmitMessage.value = data.message || 'اطلاعیه با موفقیت ثبت شد.';
-      resetAnnouncementForm(true);
-      if (isStaff.value) {
-        fetchAdminStats();
-      }
-    } else {
-      announcementSubmitSuccess.value = false;
-      announcementSubmitMessage.value = data.errors || 'خطا در ثبت اطلاعیه.';
-    }
-  } catch (error) {
-    console.error('Error creating announcement:', error);
-    announcementSubmitSuccess.value = false;
-    announcementSubmitMessage.value = 'خطا در ارتباط با سرور هنگام ثبت اطلاعیه.';
-  } finally {
-    announcementSubmitLoading.value = false;
-  }
-};
 
 const handleEventCoverImageChange = (event: Event) => {
   const input = event.target as HTMLInputElement;

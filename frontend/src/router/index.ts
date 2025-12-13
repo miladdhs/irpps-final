@@ -15,6 +15,8 @@ const routes = [
   { path: '/about/board-second', name: 'board-second', component: () => import('../views/BoardSecond.vue') },
   { path: '/about/board-third', name: 'board-third', component: () => import('../views/BoardThird.vue') },
   { path: '/services', name: 'services', component: Services },
+  { path: '/news', name: 'news', component: () => import('../views/News.vue') },
+  { path: '/events', name: 'events', component: () => import('../views/Events.vue') },
   { path: '/team', name: 'team', component: Team },
   { path: '/contact', name: 'contact', component: Contact },
   { path: '/register', name: 'register', component: Register },
