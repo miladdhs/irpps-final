@@ -21,10 +21,11 @@ const routes = [
   { path: '/contact', name: 'contact', component: Contact },
   { path: '/register', name: 'register', component: Register },
   { path: '/education', name: 'education', component: () => import('../views/Education.vue') },
+  { path: '/education/doctors', name: 'doctors', component: () => import('../views/Doctors.vue') },
+  { path: '/doctors', redirect: '/education/doctors' },
   { path: '/publications', name: 'publications', component: () => import('../views/Publications.vue') },
   { path: '/associations', name: 'associations', component: () => import('../views/Associations.vue') },
   { path: '/advertising', name: 'advertising', component: () => import('../views/Advertising.vue') },
-  { path: '/doctors', name: 'doctors', component: () => import('../views/Doctors.vue') },
   { path: '/news/:slug', name: 'news-detail', component: () => import('../views/NewsDetail.vue') },
   { path: '/events/:slug', name: 'event-detail', component: () => import('../views/EventDetail.vue') },
   { path: '/dashboard', name: 'dashboard', component: () => import('../views/Dashboard.vue') }

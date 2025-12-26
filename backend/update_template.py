@@ -57,9 +57,13 @@ def update_template():
         dist_content
     )
     
-    # افزودن {% load static %} در ابتدای <head>
+    # افزودن {% load static %} در ابتدای <head> (اگر وجود نداشته باشد)
     if '{% load static %}' not in dist_content:
         dist_content = dist_content.replace('<head>', '<head>\n\t{% load static %}')
+    
+    # حفظ محتوای SSR (اگر در template موجود باشد)
+    # این بخش محتوای Django template tags را حفظ می‌کند
+    # اگر می‌خواهید محتوای SSR حفظ شود، باید قبل از build آن را در template نگه دارید
     
     # اطمینان از وجود پوشه templates
     TEMPLATE_HTML.parent.mkdir(exist_ok=True)

@@ -5,16 +5,35 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>انجمن علمی ریه کودکان</title>
+	<title>{{ page_title|default:"انجمن علمی ریه کودکان" }}</title>
+	<meta name="description" content="{{ page_description|default:'مرکز تخصصی تحقیقات و درمان بیماری‌های ریوی کودکان' }}">
 	<link rel="icon" type="image/png" href="{% static 'img/image.png' %}">
 	<link rel="shortcut icon" type="image/png" href="{% static 'img/image.png' %}">
 	<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 	<link href="https://cdn.jsdelivr.net/npm/animate.css@4.1.1/animate.min.css" rel="stylesheet" crossorigin="anonymous">
   <script type="module" crossorigin src="{% static 'assets/main-NJERdD6E.js' %}"></script>
   <link rel="stylesheet" crossorigin href="{% static 'assets/main-DS0eCYR6.css' %}">
+  
+  {# Server-side rendered content - you can mask/override text here #}
+  <script id="ssr-data" type="application/json">
+  {
+    "pageTitle": "{{ page_title|default:'انجمن علمی ریه کودکان'|escapejs }}",
+    "pageDescription": "{{ page_description|default:'مرکز تخصصی تحقیقات و درمان بیماری‌های ریوی کودکان'|escapejs }}"
+  }
+  </script>
 </head>
 <body>
-	<div id="app"></div>
+	{# Server-side rendered content area - you can add content here that will be visible before Vue hydrates #}
+	<div id="app">
+		{# This content will be replaced by Vue, but can contain server-rendered content initially #}
+		<noscript>
+			<div style="padding: 2rem; text-align: center;">
+				<h1>{{ page_title|default:"انجمن علمی ریه کودکان" }}</h1>
+				<p>{{ page_description|default:"مرکز تخصصی تحقیقات و درمان بیماری‌های ریوی کودکان" }}</p>
+				<p>برای مشاهده کامل سایت، لطفاً JavaScript را فعال کنید.</p>
+			</div>
+		</noscript>
+	</div>
 	<script src="{% static 'bootstrap.bundle.min.js' %}"></script>
 </body>
 </html>

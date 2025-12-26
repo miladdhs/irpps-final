@@ -11,7 +11,17 @@ from django.views.decorators.http import require_http_methods
 from django.views.decorators.cache import never_cache
 import os
 
-spa_view = TemplateView.as_view(template_name='index.html')
+from django.shortcuts import render
+
+def spa_view(request):
+    """Render SPA with server-side content"""
+    context = {
+        'page_title': 'انجمن علمی ریه کودکان',
+        'page_description': 'مرکز تخصصی تحقیقات و درمان بیماری‌های ریوی کودکان',
+        # Add more server-side content here that you want to mask/override
+        # You can override any text content from here
+    }
+    return render(request, 'index.html', context)
 
 
 @never_cache

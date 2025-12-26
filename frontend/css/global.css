@@ -1305,13 +1305,233 @@ font-size:16px;
   box-shadow: var(--glass-shadow);
 }
 
-@media (max-width: 768px) {
+/* Fix overflow and z-index issues */
+.app-header {
+  z-index: 1030;
+}
+
+.modal {
+  z-index: 1055;
+}
+
+.dropdown-menu {
+  z-index: 1035;
+}
+
+/* Smooth scroll behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Prevent text selection issues on mobile */
+@media (max-width: 767.98px) {
+  * {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
+  
+  button, a, [role="button"] {
+    touch-action: manipulation;
+    -webkit-touch-callout: none;
+  }
+  
+  input, textarea, select {
+    font-size: 16px !important; /* Prevents zoom on iOS */
+  }
+}
+
+/* Mobile Optimizations - Spacing, Typography, Sizing */
+@media (max-width: 767.98px) {
+  /* Reduce hero section heights */
+  .min-vh-80 {
+    min-height: 50vh !important;
+  }
+  
+  .page-hero {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+  
+  /* Typography - Smaller fonts */
+  .display-4 {
+    font-size: 2rem !important;
+    line-height: 1.2;
+  }
+  
+  .display-5 {
+    font-size: 1.75rem !important;
+  }
+  
+  .display-6 {
+    font-size: 1.5rem !important;
+  }
+  
+  .lead {
+    font-size: 1rem !important;
+    margin-bottom: 1rem !important;
+  }
+  
+  h1, .h1 {
+    font-size: 1.75rem !important;
+  }
+  
+  h2, .h2 {
+    font-size: 1.5rem !important;
+  }
+  
+  h3, .h3 {
+    font-size: 1.25rem !important;
+  }
+  
+  h4, .h4 {
+    font-size: 1.1rem !important;
+  }
+  
+  h5, .h5 {
+    font-size: 1rem !important;
+  }
+  
+  /* Spacing - Reduced padding and margins */
+  .p_3 {
+    padding-top: 2rem !important;
+    padding-bottom: 2rem !important;
+  }
+  
+  .mb-4 {
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .mb-5 {
+    margin-bottom: 2rem !important;
+  }
+  
+  .mt-4 {
+    margin-top: 1.5rem !important;
+  }
+  
+  .mt-5 {
+    margin-top: 2rem !important;
+  }
+  
+  /* Cards - Reduced padding */
+  .glass-card.p-5 {
+    padding: 1.5rem !important;
+  }
+  
+  .glass-card.p-4 {
+    padding: 1.25rem !important;
+  }
+  
+  .glass-card.p-3 {
+    padding: 1rem !important;
+  }
+  
+  /* Section headings */
+  .section-heading {
+    margin-bottom: 1.5rem !important;
+  }
+  
+  .section-heading h2,
+  .section-heading .display-5 {
+    margin-bottom: 0.75rem !important;
+  }
+  
+  /* Buttons - Better touch targets */
+  .soft-button {
+    padding: 0.65rem 1.2rem !important;
+    font-size: 0.9rem !important;
+    min-height: 44px;
+  }
+  
+  .hero-buttons .soft-button {
+    min-width: 140px !important;
+    padding: 0.6rem 1rem !important;
+  }
+  
+  /* Glass effects - Reduced on mobile */
+  .glass-section,
+  .glass-card {
+    border-radius: 16px !important;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08) !important;
+  }
+  
+  .glass-section:hover,
+  .glass-card:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 15px 40px rgba(15, 23, 42, 0.12) !important;
+  }
+  
+  /* Navbar */
+  .glass-navbar {
+    padding-top: 0.75rem !important;
+    padding-bottom: 0.75rem !important;
+    border-radius: 16px !important;
+  }
+  
+  .navbar-brand {
+    font-size: 0.95rem !important;
+  }
+  
+  .navbar-logo-wrapper {
+    width: 36px !important;
+    height: 36px !important;
+  }
+  
+  .navbar-logo {
+    height: 24px !important;
+  }
+  
+  /* Badges */
+  .soft-badge {
+    padding: 0.3rem 0.85rem !important;
+    font-size: 0.85rem !important;
+  }
+  
+  /* Goals and founders */
   .goal-item {
     font-size: 0.9rem;
+    padding: 0.75rem !important;
   }
   
   .founder-item h5, .member-item h5 {
     font-size: 1rem;
+  }
+  
+  /* Feature cards */
+  .feature-card,
+  .service-card,
+  .testimonial-card {
+    margin-bottom: 1.5rem !important;
+  }
+  
+  /* Container padding */
+  .container-xl {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Text muted - Slightly darker on mobile */
+  .text-muted {
+    font-size: 0.9rem;
+  }
+  
+  /* Form inputs */
+  .form-control,
+  .form-select {
+    padding: 0.65rem 0.85rem !important;
+    font-size: 0.95rem !important;
+  }
+  
+  /* Footer */
+  .footer-upper {
+    padding: 1.5rem !important;
+  }
+  
+  /* Remove hover effects on touch devices */
+  @media (hover: none) {
+    .glass-card:hover,
+    .glass-section:hover {
+      transform: none !important;
+    }
   }
 }
 

@@ -24,11 +24,13 @@
               <p class="text-muted mb-4">دوره‌ها، کارگاه‌ها و محتوای آموزشی تخصصی برای پزشکان و خانواده‌ها</p>
               <div class="row g-4">
                 <div class="col-md-6">
-                  <div class="education-card glass-card p-4">
-                    <i class="fa fa-user-md fa-3x text-primary mb-3"></i>
-                    <h4 class="fw-bold mb-3">آموزش پزشکان</h4>
-                    <p>دوره‌ها و کارگاه‌های تخصصی برای پزشکان و متخصصان ریه کودکان</p>
-                  </div>
+                  <router-link to="/education/doctors" class="text-decoration-none">
+                    <div class="education-card glass-card p-4">
+                      <i class="fa fa-user-md fa-3x text-primary mb-3"></i>
+                      <h4 class="fw-bold mb-3">منابع و محتوای پزشکی</h4>
+                      <p>دسترسی به منابع آموزشی، ویدیوها، کتاب‌ها و محتوای علمی</p>
+                    </div>
+                  </router-link>
                 </div>
                 <div class="col-md-6">
                   <div class="education-card glass-card p-4">
@@ -63,6 +65,10 @@ onMounted(() => {
 .education-card {
   transition: var(--transition-snappy);
   text-align: center;
+}
+
+.education-card {
+  cursor: pointer;
 }
 
 .education-card:hover {

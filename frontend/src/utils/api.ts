@@ -5,16 +5,20 @@
 
 // Determine API base URL based on environment
 export const getApiBaseUrl = (): string => {
-  // In development, use relative path (Vite proxy will handle it)
+  // Check if VITE_API_BASE_URL is set (for local dev with production API)
+  // @ts-ignore - Vite provides import.meta.env
+  if (import.meta.env.VITE_API_BASE_URL) {
+    return import.meta.env.VITE_API_BASE_URL;
+  }
+  
+  // In development without VITE_API_BASE_URL, use relative path (Vite proxy will handle it)
   // @ts-ignore - Vite provides import.meta.env
   if (import.meta.env.DEV) {
     return '';
   }
   
   // In production, use the production API URL
-  // This can be overridden by environment variable if needed
-  // @ts-ignore - Vite provides import.meta.env
-  return import.meta.env.VITE_API_BASE_URL || 'https://api.irpps.org';
+  return 'https://api.irpps.org';
 };
 
 /**

@@ -10,24 +10,24 @@
             </span>
             <span class="brand-title">{{ $t('home.title') }}</span>
           </router-link>
-          <button class="navbar-toggler soft-button outline" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <i class="fa fa-bars"></i>
+          <button class="navbar-toggler soft-button outline" type="button" @click="toggleMobileMenu" :aria-expanded="isMobileMenuOpen" aria-label="Toggle navigation">
+            <i class="fa" :class="isMobileMenuOpen ? 'fa-times' : 'fa-bars'"></i>
           </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <div class="navbar-collapse mobile-menu" :class="{ 'mobile-menu-open': isMobileMenuOpen || windowWidth >= 768 }" id="navbarSupportedContent">
             <ul class="navbar-nav menu-links mb-0 ms-auto align-items-md-center">
-              <li class="nav-item"><router-link class="nav-link" :class="{ active: $route.path === '/' }" to="/">{{ $t('nav.home') }}</router-link></li>
+              <li class="nav-item"><router-link class="nav-link" :class="{ active: $route.path === '/' }" to="/" @click="closeMobileMenu">{{ $t('nav.home') }}</router-link></li>
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" href="#" id="aboutDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   {{ $t('nav.about') }}
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="aboutDropdown">
-                  <li><router-link class="dropdown-item" to="/about">{{ $t('nav.aboutForum') }}</router-link></li>
-                  <li><router-link class="dropdown-item" to="/about/history">{{ $t('nav.aboutHistory') }}</router-link></li>
-                  <li><router-link class="dropdown-item" to="/about/gallery">{{ $t('nav.aboutGallery') }}</router-link></li>
+                  <li><router-link class="dropdown-item" to="/about" @click="closeMobileMenu">{{ $t('nav.aboutForum') }}</router-link></li>
+                  <li><router-link class="dropdown-item" to="/about/history" @click="closeMobileMenu">{{ $t('nav.aboutHistory') }}</router-link></li>
+                  <li><router-link class="dropdown-item" to="/about/gallery" @click="closeMobileMenu">{{ $t('nav.aboutGallery') }}</router-link></li>
                   <li><hr class="dropdown-divider"></li>
-                  <li><router-link class="dropdown-item" to="/about/board-third">{{ $t('nav.boardThird') }}</router-link></li>
-                  <li><router-link class="dropdown-item" to="/about/board-second">{{ $t('nav.boardSecond') }}</router-link></li>
-                  <li><router-link class="dropdown-item" to="/about/board-first">{{ $t('nav.boardFirst') }}</router-link></li>
+                  <li><router-link class="dropdown-item" to="/about/board-third" @click="closeMobileMenu">{{ $t('nav.boardThird') }}</router-link></li>
+                  <li><router-link class="dropdown-item" to="/about/board-second" @click="closeMobileMenu">{{ $t('nav.boardSecond') }}</router-link></li>
+                  <li><router-link class="dropdown-item" to="/about/board-first" @click="closeMobileMenu">{{ $t('nav.boardFirst') }}</router-link></li>
                 </ul>
               </li>
               <li class="nav-item dropdown">
@@ -35,13 +35,12 @@
                   {{ $t('nav.news') }}
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="newsEventsDropdown">
-                  <li><router-link class="dropdown-item" to="/news">{{ $t('nav.newsItem') }}</router-link></li>
-                  <li><router-link class="dropdown-item" to="/events">{{ $t('nav.eventsItem') }}</router-link></li>
+                  <li><router-link class="dropdown-item" to="/news" @click="closeMobileMenu">{{ $t('nav.newsItem') }}</router-link></li>
+                  <li><router-link class="dropdown-item" to="/events" @click="closeMobileMenu">{{ $t('nav.eventsItem') }}</router-link></li>
                 </ul>
               </li>
-              <li class="nav-item"><router-link class="nav-link" :class="{ active: $route.path === '/team' }" to="/team">{{ $t('nav.team') }}</router-link></li>
-              <li class="nav-item"><router-link class="nav-link" :class="{ active: $route.path === '/doctors' }" to="/doctors">پزشکان</router-link></li>
-              <li class="nav-item"><router-link class="nav-link" :class="{ active: $route.path === '/contact' }" to="/contact">{{ $t('nav.contact') }}</router-link></li>
+              <li class="nav-item"><router-link class="nav-link" :class="{ active: $route.path === '/team' }" to="/team" @click="closeMobileMenu">{{ $t('nav.team') }}</router-link></li>
+              <li class="nav-item"><router-link class="nav-link" :class="{ active: $route.path === '/contact' }" to="/contact" @click="closeMobileMenu">{{ $t('nav.contact') }}</router-link></li>
             </ul>
             <ul class="navbar-nav ms-md-4 flex-row gap-2 align-items-center social-links">
               <li class="nav-item"><a class="nav-link icon-link" href="https://www.instagram.com/pediatricpulmonarysociety" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa fa-instagram"></i></a></li>
@@ -57,7 +56,7 @@
                 </button>
               </li>
               <li class="nav-item ms-3" v-else>
-                <router-link class="soft-button outline btn-login" to="/dashboard">
+                <router-link class="soft-button outline btn-login" to="/dashboard" @click="closeMobileMenu">
                   <i class="fa fa-user me-1"></i>
                   {{ userDisplayName }}
                 </router-link>
@@ -248,7 +247,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { getAssetUrl } from '@/utils/assets';
@@ -257,6 +256,41 @@ import { getApiUrl } from '@/utils/api';
 const route = useRoute();
 const router = useRouter();
 const { locale } = useI18n();
+
+const isMobileMenuOpen = ref(false);
+const windowWidth = ref(typeof window !== 'undefined' ? window.innerWidth : 1024);
+
+const toggleMobileMenu = () => {
+  isMobileMenuOpen.value = !isMobileMenuOpen.value;
+};
+
+const closeMobileMenu = () => {
+  if (windowWidth.value < 768) {
+    isMobileMenuOpen.value = false;
+  }
+};
+
+// Watch route changes to close menu
+watch(() => route.path, () => {
+  closeMobileMenu();
+});
+
+// Handle window resize for menu
+if (typeof window !== 'undefined') {
+  const handleResize = () => {
+    windowWidth.value = window.innerWidth;
+    if (windowWidth.value >= 768) {
+      isMobileMenuOpen.value = true;
+    } else {
+      isMobileMenuOpen.value = false;
+    }
+  };
+  window.addEventListener('resize', handleResize);
+  // Initialize based on screen size
+  if (windowWidth.value >= 768) {
+    isMobileMenuOpen.value = true;
+  }
+}
 
 const currentLocale = computed(() => locale.value);
 
@@ -432,6 +466,26 @@ onMounted(() => {
   document.documentElement.dir = locale.value === 'fa' ? 'rtl' : 'ltr';
   document.documentElement.lang = locale.value;
   
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      const href = this.getAttribute('href');
+      if (href && href !== '#' && href.length > 1) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          const offset = 80;
+          const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+          closeMobileMenu();
+        }
+      }
+    });
+  });
+  
   const navbarSticky = document.getElementById('navbar_sticky');
   if (!navbarSticky) return;
   const navbarHeight = document.querySelector('.navbar')?.clientHeight || 0;
@@ -448,7 +502,7 @@ onMounted(() => {
     }
   }
   
-  window.addEventListener('scroll', onScroll);
+  window.addEventListener('scroll', onScroll, { passive: true });
 });
 </script>
 
@@ -707,6 +761,81 @@ onMounted(() => {
   color: #fff;
 }
 
+/* Mobile Menu Styles */
+.navbar-collapse.mobile-menu {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (min-width: 768px) {
+  .navbar-collapse.mobile-menu {
+    display: flex !important;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .navbar-collapse.mobile-menu {
+    display: none !important;
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    margin-top: 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  
+  .navbar-collapse.mobile-menu.mobile-menu-open {
+    display: block !important;
+    opacity: 1;
+    max-height: 2000px;
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    padding: 1rem;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    z-index: 1025;
+  }
+  
+  .menu-links .nav-link {
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+  }
+  
+  .navbar-nav.menu-links {
+    gap: 0.25rem;
+  }
+  
+  .dropdown-menu {
+    border: none;
+    box-shadow: none;
+    background: rgba(248, 250, 255, 0.8);
+    border-radius: 12px;
+    margin-top: 0.5rem;
+    padding: 0.5rem 0;
+  }
+  
+  .dropdown-item {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    margin: 0.15rem 0.5rem;
+  }
+  
+  .dropdown-item:hover {
+    background: rgba(13, 110, 253, 0.1);
+  }
+  
+  .social-links {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    justify-content: center;
+  }
+  
+  .btn-login {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
 @media (max-width: 991.98px) {
   .menu-links .nav-link {
     padding: 0.6rem 0.9rem;
@@ -719,11 +848,51 @@ onMounted(() => {
 
 @media (max-width: 575.98px) {
   .app-main {
-    padding: 1.5rem 0;
+    padding: 1rem 0;
   }
 
   .footer-upper {
-    padding: 2rem;
+    padding: 1.5rem;
+  }
+  
+  .app-header {
+    padding: 0.5rem 0;
+  }
+  
+  .navbar-toggler {
+    padding: 0.5rem 0.75rem !important;
+    font-size: 1rem;
+  }
+  
+  .btn-lang {
+    width: 40px;
+    height: 40px;
+    font-size: 0.8rem;
+  }
+  
+  .btn-login {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.85rem;
+    min-width: auto;
+  }
+  
+  .modal-dialog {
+    margin: 0.5rem;
+    max-width: calc(100% - 1rem);
+  }
+  
+  .auth-modal {
+    padding: 1.25rem 1.5rem !important;
+  }
+  
+  .modal-title {
+    font-size: 1.25rem;
+  }
+  
+  .modal-icon {
+    width: 60px;
+    height: 60px;
+    font-size: 1.4rem;
   }
 }
 </style>
