@@ -330,28 +330,28 @@
           <div class="col-md-12">
             <div class="founders-card glass-card p-5 animate__animated animate__fadeInUp">
               <div class="row g-4">
-                <div class="col-md-6 col-lg-4">
+                <div class="col-12 col-sm-6 col-md-3">
                   <div class="founder-item text-center p-4 glass-chip">
                     <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
                     <h5 class="fw-bold mb-2">دکتر سهیلا خلیل زاده</h5>
                     <span class="badge bg-primary">{{ $t('about.president') }}</span>
                   </div>
                 </div>
-                <div class="col-md-6 col-lg-4">
+                <div class="col-12 col-sm-6 col-md-3">
                   <div class="founder-item text-center p-4 glass-chip">
                     <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
                     <h5 class="fw-bold mb-2">دکتر قمر تاج خانبابائی</h5>
                     <span class="badge bg-success">{{ $t('about.vicePresident') }}</span>
                   </div>
                 </div>
-                <div class="col-md-6 col-lg-4">
+                <div class="col-12 col-sm-6 col-md-3">
                   <div class="founder-item text-center p-4 glass-chip">
                     <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
                     <h5 class="fw-bold mb-2">دکتر محمدرضائی</h5>
                     <span class="badge bg-info">{{ $t('about.secretary') }}</span>
                   </div>
                 </div>
-                <div class="col-md-6 col-lg-4">
+                <div class="col-12 col-sm-6 col-md-3">
                   <div class="founder-item text-center p-4 glass-chip">
                     <i class="fa fa-user-md col_blue fa-3x mb-3"></i>
                     <h5 class="fw-bold mb-2">دکتر مجید کیوانفر</h5>
@@ -425,11 +425,5 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@media (min-width: 992px) {
-  #founders .col-lg-4 {
-    flex: 0 0 auto;
-    width: 25%;
-  }
-}
 </style>
 

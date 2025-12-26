@@ -3,9 +3,9 @@
     <section class="hero-section glass-section py-5 mb-4">
       <div class="container-xl">
         <nav class="breadcrumb-nav mb-3">
-          <router-link to="/services#events-section" class="breadcrumb-link">
+          <router-link to="/events" class="breadcrumb-link">
             <i class="fa fa-chevron-right"></i>
-            بازگشت به خدمات
+            بازگشت به رویدادها
           </router-link>
         </nav>
         <div class="row align-items-center">

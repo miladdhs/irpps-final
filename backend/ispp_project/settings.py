@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'news',
     'events',
     'dashboard',
+    'doctors',
 ]
 
 MIDDLEWARE = [

@@ -35,9 +35,6 @@
                   <div class="floating-icon floating-icon-2">
                     <i class="fa fa-envelope"></i>
                   </div>
-                  <div class="floating-icon floating-icon-3">
-                    <i class="fa fa-map-marker"></i>
-                  </div>
                 </div>
               </div>
             </div>
@@ -151,30 +148,6 @@
       </div>
     </section>
 
-    <section id="map-section" class="p_3 glass-section mb-4">
-      <div class="container-xl">
-        <div class="row">
-          <div class="col-md-12 text-center mb-5 section-heading">
-            <h2 class="display-5 fw-bold mb-4 animate__animated animate__fadeInUp">{{ $t('contact.locationTitle') }}</h2>
-            <p class="lead animate__animated animate__fadeInUp animate__delay-1s">{{ $t('contact.locationSubtitle') }}</p>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-12">
-            <div class="map-wrapper glass-card rounded-4 overflow-hidden animate__animated animate__fadeInUp animate__delay-2s">
-              <div class="map-placeholder text-white d-flex align-items-center justify-content-center" style="height: 400px;">
-                <div class="text-center">
-                  <i class="fa fa-map-marker fa-4x mb-3"></i>
-                  <h4>{{ $t('contact.mapTitle') }}</h4>
-                  <p class="mb-0">{{ $t('contact.mapAddress') }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
     <section id="faq" class="p_3">
       <div class="container-xl">
         <div class="row">
@@ -275,12 +248,6 @@ const contactCards = computed(() => [
     title: t('contact.emailTitle'),
     subtitle: t('contact.emailSubtitle'),
     lines: ['info@childrenlung.ir', 'support@childrenlung.ir', t('contact.emailResponse')]
-  },
-  {
-    icon: 'fa-map-marker',
-    title: t('contact.addressTitle'),
-    subtitle: t('contact.addressSubtitle'),
-    lines: [t('contact.addressLine1'), t('contact.addressLine2'), t('contact.addressLine3')]
   }
 ]);
 

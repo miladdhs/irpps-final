@@ -40,12 +40,13 @@
                 </ul>
               </li>
               <li class="nav-item"><router-link class="nav-link" :class="{ active: $route.path === '/team' }" to="/team">{{ $t('nav.team') }}</router-link></li>
+              <li class="nav-item"><router-link class="nav-link" :class="{ active: $route.path === '/doctors' }" to="/doctors">پزشکان</router-link></li>
               <li class="nav-item"><router-link class="nav-link" :class="{ active: $route.path === '/contact' }" to="/contact">{{ $t('nav.contact') }}</router-link></li>
             </ul>
             <ul class="navbar-nav ms-md-4 flex-row gap-2 align-items-center social-links">
               <li class="nav-item"><a class="nav-link icon-link" href="https://www.instagram.com/pediatricpulmonarysociety" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa fa-instagram"></i></a></li>
               <li class="nav-item ms-2">
-                <button class="btn-lang" @click="toggleLanguage" :title="currentLocale === 'fa' ? 'Switch to English' : 'تغییر به فارسی'">
+                <button class="btn-lang" @click="toggleLanguage" :title="currentLocale === 'fa' ? '' : 'تغییر به فارسی'">
                   <span class="lang-icon">{{ currentLocale === 'fa' ? 'EN' : 'FA' }}</span>
                 </button>
               </li>
@@ -75,37 +76,108 @@
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content auth-modal glass-card border-0">
           <div class="modal-header border-0 pb-0">
+            <ul class="nav nav-tabs border-0 w-100" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" :class="{ active: !showRegisterTab }" @click="showRegisterTab = false" type="button">
+                  {{ $t('auth.loginTitle') }}
+                </button>
+              </li>
+              <li class="nav-item" role="presentation">
+                <button class="nav-link" :class="{ active: showRegisterTab }" @click="showRegisterTab = true" type="button">
+                  درخواست عضویت
+                </button>
+              </li>
+            </ul>
             <button type="button" class="btn-close" @click="showLoginModal = false"></button>
           </div>
           <div class="modal-body pt-0">
-            <div class="text-center mb-4">
-              <div class="modal-icon">
-                <i class="fa fa-heartbeat"></i>
+            <!-- Login Tab -->
+            <div v-if="!showRegisterTab">
+              <div class="text-center mb-4">
+                <div class="modal-icon">
+                  <i class="fa fa-heartbeat"></i>
+                </div>
+                <h5 class="modal-title">{{ $t('auth.loginTitle') }}</h5>
+                <p class="text-muted small">{{ $t('auth.loginDesc') }}</p>
               </div>
-              <h5 class="modal-title">{{ $t('auth.loginTitle') }}</h5>
-              <p class="text-muted small">{{ $t('auth.loginDesc') }}</p>
+              <div v-if="loginMessage" :class="'alert alert-' + (loginSuccess ? 'success' : 'danger') + ' alert-dismissible fade show'" role="alert">
+                <i :class="(loginSuccess ? 'fa fa-check-circle' : 'fa fa-exclamation-circle') + ' me-2'"></i>{{ loginMessage }}
+                <button type="button" class="btn-close" @click="loginMessage = ''"></button>
+              </div>
+              <form @submit.prevent="handleLogin" class="modern-form">
+                <div class="mb-3">
+                  <label for="loginUsername" class="form-label"><i class="fa fa-user me-2 col_blue"></i>{{ $t('auth.username') }}</label>
+                  <input type="text" class="form-control modern-input" id="loginUsername" v-model="loginForm.username" :placeholder="$t('auth.usernamePlaceholder')" required>
+                </div>
+                <div class="mb-3">
+                  <label for="loginPassword" class="form-label"><i class="fa fa-lock me-2 col_blue"></i>{{ $t('auth.password') }}</label>
+                  <input type="password" class="form-control modern-input" id="loginPassword" v-model="loginForm.password" :placeholder="$t('auth.passwordPlaceholder')" required>
+                </div>
+                <div class="d-grid gap-2">
+                  <button type="submit" class="soft-button primary w-100" :disabled="loginLoading">
+                    <i v-if="loginLoading" class="fa fa-spinner fa-spin me-2"></i>
+                    <i v-else class="fa fa-sign-in me-2"></i>
+                    {{ loginLoading ? $t('auth.loggingIn') : $t('auth.loginButton') }}
+                  </button>
+                </div>
+              </form>
             </div>
-            <div v-if="loginMessage" :class="'alert alert-' + (loginSuccess ? 'success' : 'danger') + ' alert-dismissible fade show'" role="alert">
-              <i :class="(loginSuccess ? 'fa fa-check-circle' : 'fa fa-exclamation-circle') + ' me-2'"></i>{{ loginMessage }}
-              <button type="button" class="btn-close" @click="loginMessage = ''"></button>
+            
+            <!-- Register Tab -->
+            <div v-else>
+              <div class="text-center mb-4">
+                <div class="modal-icon">
+                  <i class="fa fa-user-plus"></i>
+                </div>
+                <h5 class="modal-title">درخواست عضویت</h5>
+                <p class="text-muted small">ثبت درخواست عضویت در انجمن علمی ریه کودکان</p>
+              </div>
+              <div v-if="registerMessage" :class="'alert alert-' + (registerSuccess ? 'success' : 'danger') + ' alert-dismissible fade show'" role="alert">
+                <i :class="(registerSuccess ? 'fa fa-check-circle' : 'fa fa-exclamation-circle') + ' me-2'"></i>{{ registerMessage }}
+                <button type="button" class="btn-close" @click="registerMessage = ''"></button>
+              </div>
+              <form @submit.prevent="handleRegister" class="modern-form">
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="registerFirstName" class="form-label"><i class="fa fa-user me-2 col_blue"></i>نام</label>
+                    <input type="text" class="form-control modern-input" id="registerFirstName" v-model="registerForm.first_name" placeholder="نام" required>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="registerLastName" class="form-label"><i class="fa fa-user me-2 col_blue"></i>نام خانوادگی</label>
+                    <input type="text" class="form-control modern-input" id="registerLastName" v-model="registerForm.last_name" placeholder="نام خانوادگی" required>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="registerUsername" class="form-label"><i class="fa fa-at me-2 col_blue"></i>نام کاربری</label>
+                  <input type="text" class="form-control modern-input" id="registerUsername" v-model="registerForm.username" placeholder="نام کاربری" required>
+                </div>
+                <div class="mb-3">
+                  <label for="registerEmail" class="form-label"><i class="fa fa-envelope me-2 col_blue"></i>ایمیل (اختیاری)</label>
+                  <input type="email" class="form-control modern-input" id="registerEmail" v-model="registerForm.email" placeholder="ایمیل">
+                </div>
+                <div class="mb-3">
+                  <label for="registerPhone" class="form-label"><i class="fa fa-phone me-2 col_blue"></i>شماره تلفن (اختیاری)</label>
+                  <input type="text" class="form-control modern-input" id="registerPhone" v-model="registerForm.phone" placeholder="شماره تلفن">
+                </div>
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label for="registerPassword" class="form-label"><i class="fa fa-lock me-2 col_blue"></i>رمز عبور</label>
+                    <input type="password" class="form-control modern-input" id="registerPassword" v-model="registerForm.password" placeholder="رمز عبور" required>
+                  </div>
+                  <div class="col-md-6 mb-3">
+                    <label for="registerPasswordConfirm" class="form-label"><i class="fa fa-lock me-2 col_blue"></i>تکرار رمز عبور</label>
+                    <input type="password" class="form-control modern-input" id="registerPasswordConfirm" v-model="registerForm.password_confirm" placeholder="تکرار رمز عبور" required>
+                  </div>
+                </div>
+                <div class="d-grid gap-2">
+                  <button type="submit" class="soft-button primary w-100" :disabled="registerLoading">
+                    <i v-if="registerLoading" class="fa fa-spinner fa-spin me-2"></i>
+                    <i v-else class="fa fa-user-plus me-2"></i>
+                    {{ registerLoading ? 'در حال ثبت...' : 'ثبت درخواست' }}
+                  </button>
+                </div>
+              </form>
             </div>
-            <form @submit.prevent="handleLogin" class="modern-form">
-              <div class="mb-3">
-                <label for="loginUsername" class="form-label"><i class="fa fa-user me-2 col_blue"></i>{{ $t('auth.username') }}</label>
-                <input type="text" class="form-control modern-input" id="loginUsername" v-model="loginForm.username" :placeholder="$t('auth.usernamePlaceholder')" required>
-              </div>
-              <div class="mb-3">
-                <label for="loginPassword" class="form-label"><i class="fa fa-lock me-2 col_blue"></i>{{ $t('auth.password') }}</label>
-                <input type="password" class="form-control modern-input" id="loginPassword" v-model="loginForm.password" :placeholder="$t('auth.passwordPlaceholder')" required>
-              </div>
-              <div class="d-grid gap-2">
-                <button type="submit" class="soft-button primary w-100" :disabled="loginLoading">
-                  <i v-if="loginLoading" class="fa fa-spinner fa-spin me-2"></i>
-                  <i v-else class="fa fa-sign-in me-2"></i>
-                  {{ loginLoading ? $t('auth.loggingIn') : $t('auth.loginButton') }}
-                </button>
-              </div>
-            </form>
           </div>
         </div>
       </div>
@@ -199,6 +271,7 @@ const toggleLanguage = () => {
 };
 
 const showLoginModal = ref(false);
+const showRegisterTab = ref(false);
 const loginForm = ref({
   username: '',
   password: ''
@@ -206,6 +279,18 @@ const loginForm = ref({
 const loginLoading = ref(false);
 const loginMessage = ref('');
 const loginSuccess = ref(false);
+const registerForm = ref({
+  username: '',
+  email: '',
+  phone: '',
+  first_name: '',
+  last_name: '',
+  password: '',
+  password_confirm: ''
+});
+const registerLoading = ref(false);
+const registerMessage = ref('');
+const registerSuccess = ref(false);
 const isLoggedIn = ref(false);
 const userInfo = ref<any>(null);
 
@@ -274,6 +359,68 @@ const handleLogin = async () => {
     loginMessage.value = t('auth.connectionError');
   } finally {
     loginLoading.value = false;
+  }
+};
+
+const handleRegister = async () => {
+  if (registerForm.value.password !== registerForm.value.password_confirm) {
+    registerMessage.value = 'رمزهای عبور مطابقت ندارند';
+    registerSuccess.value = false;
+    return;
+  }
+  
+  registerLoading.value = true;
+  registerMessage.value = '';
+  
+  try {
+    const response = await fetch(getApiUrl('/api/accounts/register/'), {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      credentials: 'include',
+      body: JSON.stringify(registerForm.value)
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      registerSuccess.value = true;
+      registerMessage.value = data.message || 'درخواست عضویت شما ثبت شد. لطفاً منتظر تایید مدیریت باشید.';
+      
+      // Reset form
+      registerForm.value = {
+        username: '',
+        email: '',
+        phone: '',
+        first_name: '',
+        last_name: '',
+        password: '',
+        password_confirm: ''
+      };
+      
+      // Don't close modal immediately, let user see the success message
+      setTimeout(() => {
+        showRegisterTab.value = false;
+      }, 3000);
+    } else {
+      registerSuccess.value = false;
+      if (data.errors) {
+        if (typeof data.errors === 'string') {
+          registerMessage.value = data.errors;
+        } else {
+          const firstError = Object.values(data.errors)[0];
+          registerMessage.value = Array.isArray(firstError) ? firstError[0] : firstError;
+        }
+      } else {
+        registerMessage.value = 'خطا در ثبت درخواست';
+      }
+    }
+  } catch (error) {
+    registerSuccess.value = false;
+    registerMessage.value = 'خطا در ارتباط با سرور';
+  } finally {
+    registerLoading.value = false;
   }
 };
 
@@ -458,6 +605,29 @@ onMounted(() => {
 .auth-modal {
   border-radius: var(--radius-lg);
   padding: 1.5rem 1.75rem 1.75rem;
+}
+
+.nav-tabs {
+  border-bottom: 2px solid rgba(0, 0, 0, 0.1);
+}
+
+.nav-tabs .nav-link {
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: rgba(17, 24, 39, 0.6);
+  padding: 0.75rem 1.5rem;
+  transition: var(--transition-snappy);
+}
+
+.nav-tabs .nav-link:hover {
+  border-color: transparent;
+  color: var(--brand-primary);
+}
+
+.nav-tabs .nav-link.active {
+  color: var(--brand-primary);
+  border-bottom-color: var(--brand-primary);
+  background: transparent;
 }
 
 .modal-icon {

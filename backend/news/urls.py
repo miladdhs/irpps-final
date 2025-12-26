@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from . import publications_views
 
 urlpatterns = [
     # News URLs
@@ -9,6 +10,9 @@ urlpatterns = [
     # Announcement URLs (must be before slug pattern to avoid conflicts)
     path('announcements/', views.announcement_list, name='announcement_list'),
     path('announcements/create/', views.announcement_create, name='announcement_create'),
+    
+    # Publications URLs
+    path('publications/files/', publications_views.publications_files_view, name='publications_files_api'),
     
     # News detail URLs (must be after specific paths)
     path('<int:id>/update/', views.news_update, name='news_update'),

@@ -50,18 +50,17 @@
 
           <div v-else class="row g-4">
             <div class="col-lg-4 col-md-6" v-for="event in eventItems" :key="event.id">
-              <article class="event-card glass-card h-100">
+              <article class="event-card glass-card h-100" :class="{ 'event-finished': isEventFinished(event) }">
                 <div class="event-card-image" v-if="event.image">
                   <img :src="event.image" :alt="event.title">
                 </div>
                 <div class="event-card-body">
                   <div class="event-card-meta">
-                    <span>
-                      <i class="fa fa-calendar-alt me-1"></i>
-                      {{ formatDateTime(event.start_date) }}
-                    </span>
                     <span class="badge rounded-pill" :class="event.is_featured ? 'bg-primary' : 'bg-secondary'">
                       {{ event.is_featured ? 'ویژه' : event.event_type }}
+                    </span>
+                    <span v-if="isEventFinished(event)" class="badge rounded-pill bg-dark text-white">
+                      تمام شده
                     </span>
                   </div>
                   <h3 class="event-card-title">{{ event.title }}</h3>
@@ -199,6 +198,18 @@ const formatPrice = (value: number) => {
   return `${value.toLocaleString('fa-IR')} ${t('services.currency')}`;
 };
 
+const isEventFinished = (event: EventItem): boolean => {
+  if (!event.is_registration_open) {
+    return true;
+  }
+  if (event.end_date) {
+    const endDate = new Date(event.end_date);
+    const now = new Date();
+    return endDate < now;
+  }
+  return false;
+};
+
 const loadPage = async (page: number) => {
   if (page < 1 || page > totalPages.value) return;
   
@@ -302,6 +313,7 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 0.5rem;
   font-size: 0.9rem;
   color: #5f6f8d;
 }
@@ -360,6 +372,21 @@ onMounted(() => {
 .pagination .page-item.disabled .page-link {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+.event-finished {
+  opacity: 0.65;
+  filter: grayscale(0.3);
+}
+
+.event-finished .event-card-image img {
+  filter: grayscale(0.4);
+}
+
+.event-finished .event-card-title,
+.event-finished .event-card-content,
+.event-finished .event-card-info {
+  color: #6b7280;
 }
 
 @media (max-width: 575.98px) {

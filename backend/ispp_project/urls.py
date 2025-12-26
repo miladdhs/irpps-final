@@ -68,6 +68,7 @@ urlpatterns = [
     path('api/news/', include('news.urls')),
     path('api/events/', include('events.urls')),
     path('api/dashboard/', include('dashboard.urls')),
+    path('api/doctors/', include('doctors.urls')),
     # Custom media serving with fallback
     re_path(r'^media/(?P<path>.*)$', serve_media_with_fallback, name='media_with_fallback'),
 ]

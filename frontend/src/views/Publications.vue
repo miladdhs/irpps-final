@@ -131,10 +131,14 @@
                     <h6 class="mb-1">{{ file.name }}</h6>
                     <small class="text-muted">{{ formatFileSize(file.size) }}</small>
                   </div>
-                  <button class="soft-button primary btn-sm" @click="downloadFile(file)">
+                  <a :href="file.url" target="_blank" class="soft-button primary btn-sm me-2" download>
                     <i class="fa fa-download me-1"></i>
                     دانلود
-                  </button>
+                  </a>
+                  <a v-if="file.type.includes('pdf')" :href="file.url" target="_blank" class="soft-button outline btn-sm">
+                    <i class="fa fa-eye me-1"></i>
+                    مشاهده
+                  </a>
                 </div>
               </div>
             </div>
@@ -168,14 +172,22 @@ const handleCategoryClick = async (category: string) => {
   files.value = [];
   
   try {
-    // For now, we'll show a placeholder message since the files API isn't implemented yet
-    // In the future, this would call the publications API endpoint
-    setTimeout(() => {
-      loading.value = false;
-      // Placeholder: no files found
-    }, 1000);
+    const response = await fetch(getApiUrl(`/api/news/publications/files/?category=${category}`), {
+      credentials: 'include'
+    });
+    
+    const data = await response.json();
+    
+    if (data.success) {
+      files.value = data.files || [];
+    } else {
+      console.error('Error loading files:', data.errors);
+      files.value = [];
+    }
   } catch (error) {
     console.error('Error loading files:', error);
+    files.value = [];
+  } finally {
     loading.value = false;
   }
 };
@@ -201,8 +213,8 @@ const formatFileSize = (bytes: number) => {
 };
 
 const downloadFile = (file: any) => {
-  // Implement file download logic
-  console.log('Downloading file:', file.name);
+  // Open file in new tab for download/view
+  window.open(file.url, '_blank');
 };
 
 onMounted(() => {
