@@ -46,10 +46,11 @@ docker-compose.yaml
 # !backend/media/.gitkeep
 
 # Frontend Build Files
-# frontend/dist/
-# frontend/.vite/
+frontend/dist/
+frontend/.vite/
 frontend/.cache/
-# frontend/build/
+frontend/build/
+frontend/node_modules/
 
 # IDE
 .vscode/
@@ -114,4 +115,13 @@ ispp_db.csv
 # passenger_wsgi.py
 # But keep .htaccess and passenger_wsgi.py for deployment
 
-frontend\public\Content
+# Large Content Files - PDFs, Images, Documents in Content folder
+# Keep directory structure but ignore large media files
+frontend/public/Content/**/*.pdf
+frontend/public/Content/**/*.jpg
+frontend/public/Content/**/*.jpeg
+frontend/public/Content/**/*.png
+frontend/public/Content/**/*.docx
+frontend/public/Content/**/*.doc
+frontend/public/Content/**/*.pptx
+frontend/public/Content/**/*.ppt
