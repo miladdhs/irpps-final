@@ -65,15 +65,16 @@ services:
   # MySQL Database
   mysql:
     image: docker.arvancloud.ir/mysql:8.3.0
-    env_file:
-      - ./backend/.env
+    container_name: mysql
     environment:
-      MYSQL_DATABASE: ${DB_NAME:-irporg_DB}
-      MYSQL_USER: ${DB_USER:-irporg_admin}
-      MYSQL_PASSWORD: ${DB_PASSWORD}
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-${DB_PASSWORD}}
+      MYSQL_DATABASE: irporg_DB
+      MYSQL_USER: irporg_admin
+      MYSQL_PASSWORD: tHPXArRfwrX3WH!*j
+      MYSQL_ROOT_PASSWORD: tHPXArRfwrX3WH!*j
     volumes:
-      - mysql_data:/var/lib/mysql
+      - ./mysql:/var/lib/mysql/
+    ports:
+      - "3306:3306"
     networks:
       - app-network
     restart: unless-stopped
@@ -92,16 +93,12 @@ services:
       - --log_error_verbosity=1
       - --general_log=0
       - --slow_query_log=0
-    # Don't expose port in production
-    # ports:
-    #   - "3306:3306"
 
 networks:
   app-network:
     driver: bridge
 
 volumes:
-  mysql_data:
   backend_static:
   backend_media:
 

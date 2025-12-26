@@ -127,8 +127,8 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 # 4. Cookie Security
 # Ensure cookies are sent only over HTTPS in production
 # CRITICAL: For cross-origin requests between irpps.org and api.irpps.org
-if not DEBUG or IS_DOCKER:
-    # Secure cookies (HTTPS only)
+if IS_DOCKER or not DEBUG:
+    # Secure cookies (HTTPS only) - required for production and Docker
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     
@@ -140,7 +140,9 @@ if not DEBUG or IS_DOCKER:
     SESSION_COOKIE_DOMAIN = ".irpps.org"
     CSRF_COOKIE_DOMAIN = ".irpps.org"
 else:
-    # Development: Allow cookies in localhost
+    # Development (local, not Docker): Allow cookies in localhost
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
     SESSION_COOKIE_SAMESITE = "Lax"
     CSRF_COOKIE_SAMESITE = "Lax"
 
@@ -150,10 +152,10 @@ else:
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': config('DB_NAME', default='fjjedatu_newdbb'),
-        'USER': config('DB_USER', default='fjjedatu_newdbb'),
-        'PASSWORD': config('DB_PASSWORD', default='fjjedatu_newdbb'),
-        'HOST': config('DB_HOST', default='localhost'),
+        'NAME': config('DB_NAME', default='irporg_DB'),
+        'USER': config('DB_USER', default='irporg_admin'),
+        'PASSWORD': config('DB_PASSWORD', default=''),
+        'HOST': config('DB_HOST', default='mysql' if IS_DOCKER else 'localhost'),
         'PORT': config('DB_PORT', default='3306'),
         'CONN_MAX_AGE': 600,  # Connection pooling - keep connections alive for 10 minutes
         'OPTIONS': {
