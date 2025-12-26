@@ -424,3 +424,12 @@ onMounted(() => {
 });
 </script>
 
+<style scoped>
+@media (min-width: 992px) {
+  #founders .col-lg-4 {
+    flex: 0 0 auto;
+    width: 25%;
+  }
+}
+</style>
+

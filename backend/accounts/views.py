@@ -3,8 +3,12 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth import get_user_model
 import json
 from .forms import CustomUserCreationForm
+
+User = get_user_model()
 
 
 @csrf_exempt
@@ -65,7 +69,7 @@ def login_view(request):
 @csrf_exempt
 @require_http_methods(["POST"])
 def register_view(request):
-    """Handle user registration"""
+    """Handle user registration with approval workflow"""
     try:
         data = json.loads(request.body)
         
@@ -90,11 +94,16 @@ def register_view(request):
         form = CustomUserCreationForm(form_data)
         
         if form.is_valid():
-            user = form.save()
-            login(request, user)
+            user = form.save(commit=False)
+            # Set user as inactive and pending approval
+            user.is_active = False
+            user.approval_status = 'pending'
+            user.save()
+            
+            # DO NOT login the user automatically
             return JsonResponse({
                 'success': True,
-                'message': 'ثبت نام موفقیت‌آمیز بود',
+                'message': 'درخواست عضویت شما ثبت شد. لطفاً منتظر تایید مدیریت باشید.',
                 'user': {
                     'id': user.id,
                     'username': user.username,
@@ -102,6 +111,7 @@ def register_view(request):
                     'last_name': user.last_name,
                     'email': user.email,
                     'phone': user.phone,
+                    'approval_status': user.approval_status,
                 }
             })
         else:
@@ -416,6 +426,132 @@ def update_resume_view(request):
             }
         })
         
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'success': False,
+            'errors': 'خطا در پردازش درخواست'
+        }, status=400)
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'errors': str(e)
+        }, status=500)
+
+
+# Membership Management API Endpoints
+
+@staff_member_required
+@require_http_methods(["GET"])
+def pending_members_view(request):
+    """Get list of pending membership requests (admin only)"""
+    try:
+        pending_users = User.objects.filter(
+            approval_status='pending',
+            is_superuser=False
+        ).order_by('-requested_at')
+        
+        members_data = []
+        for user in pending_users:
+            members_data.append({
+                'id': user.id,
+                'username': user.username,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'email': user.email,
+                'phone': user.phone,
+                'city': user.city,
+                'specialty': user.specialty,
+                'experience': user.experience,
+                'bio': user.bio,
+                'requested_at': user.requested_at.isoformat(),
+                'approval_status': user.approval_status,
+            })
+        
+        return JsonResponse({
+            'success': True,
+            'pending_members': members_data,
+            'count': len(members_data)
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'errors': str(e)
+        }, status=500)
+
+
+@staff_member_required
+@csrf_exempt
+@require_http_methods(["POST"])
+def approve_member_view(request, user_id):
+    """Approve a pending member (admin only)"""
+    try:
+        user = User.objects.get(id=user_id, approval_status='pending')
+        admin_user = request.user
+        
+        # Approve the user
+        user.approve_membership(admin_user)
+        
+        return JsonResponse({
+            'success': True,
+            'message': f'عضویت {user.first_name} {user.last_name} تایید شد',
+            'user': {
+                'id': user.id,
+                'username': user.username,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'approval_status': user.approval_status,
+                'is_active': user.is_active,
+                'approved_at': user.approved_at.isoformat() if user.approved_at else None,
+            }
+        })
+        
+    except User.DoesNotExist:
+        return JsonResponse({
+            'success': False,
+            'errors': 'کاربر یافت نشد یا قبلاً پردازش شده است'
+        }, status=404)
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'errors': str(e)
+        }, status=500)
+
+
+@staff_member_required
+@csrf_exempt
+@require_http_methods(["POST"])
+def reject_member_view(request, user_id):
+    """Reject a pending member (admin only)"""
+    try:
+        data = json.loads(request.body) if request.body else {}
+        reason = data.get('reason', '')
+        
+        user = User.objects.get(id=user_id, approval_status='pending')
+        admin_user = request.user
+        
+        # Reject the user
+        user.reject_membership(reason, admin_user)
+        
+        return JsonResponse({
+            'success': True,
+            'message': f'عضویت {user.first_name} {user.last_name} رد شد',
+            'user': {
+                'id': user.id,
+                'username': user.username,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'approval_status': user.approval_status,
+                'is_active': user.is_active,
+                'rejection_reason': user.rejection_reason,
+            }
+        })
+        
+    except User.DoesNotExist:
+        return JsonResponse({
+            'success': False,
+            'errors': 'کاربر یافت نشد یا قبلاً پردازش شده است'
+        }, status=404)
     except json.JSONDecodeError:
         return JsonResponse({
             'success': False,

@@ -41,7 +41,6 @@
               </li>
               <li class="nav-item"><router-link class="nav-link" :class="{ active: $route.path === '/team' }" to="/team">{{ $t('nav.team') }}</router-link></li>
               <li class="nav-item"><router-link class="nav-link" :class="{ active: $route.path === '/contact' }" to="/contact">{{ $t('nav.contact') }}</router-link></li>
-              <li class="nav-item"><a class="nav-link" href="/english">{{ $t('nav.english') }}</a></li>
             </ul>
             <ul class="navbar-nav ms-md-4 flex-row gap-2 align-items-center social-links">
               <li class="nav-item"><a class="nav-link icon-link" href="https://www.instagram.com/pediatricpulmonarysociety" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><i class="fa fa-instagram"></i></a></li>

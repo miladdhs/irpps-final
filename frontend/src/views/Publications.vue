@@ -23,25 +23,78 @@
               <h2 class="fw-bold mb-4">انتشارات انجمن</h2>
               <p class="text-muted mb-4">مجلات، کتاب‌ها و مقالات علمی منتشر شده توسط انجمن</p>
               <div class="row g-4">
-                <div class="col-md-4">
-                  <div class="publication-card glass-card p-4 text-center">
-                    <i class="fa fa-newspaper-o fa-3x text-primary mb-3"></i>
+                <!-- Newsletters -->
+                <div class="col-lg-4 col-md-6">
+                  <div class="publication-card glass-card p-4 text-center h-100" @click="handleCategoryClick('newsletters')">
+                    <div class="publication-icon mb-3">
+                      <i class="fa fa-newspaper-o fa-3x text-primary"></i>
+                    </div>
                     <h5 class="fw-bold mb-2">خبرنامه‌ها</h5>
-                    <p class="text-muted">خبرنامه‌های سالانه انجمن</p>
+                    <p class="text-muted mb-3">خبرنامه‌های سالانه انجمن</p>
+                    <button class="soft-button primary btn-sm">
+                      <i class="fa fa-download me-1"></i>
+                      مشاهده و دانلود
+                    </button>
                   </div>
                 </div>
-                <div class="col-md-4">
-                  <div class="publication-card glass-card p-4 text-center">
-                    <i class="fa fa-book fa-3x text-primary mb-3"></i>
-                    <h5 class="fw-bold mb-2">کتابچه کنگره‌ها</h5>
-                    <p class="text-muted">کتابچه‌های کنگره‌ها و همایش‌ها</p>
+
+                <!-- Congress Booklets -->
+                <div class="col-lg-4 col-md-6">
+                  <div class="publication-card glass-card p-4 text-center h-100" @click="handleCategoryClick('congress')">
+                    <div class="publication-icon mb-3">
+                      <i class="fa fa-book fa-3x text-primary"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">کتابچه کنگره‌ها و همایش‌ها</h5>
+                    <p class="text-muted mb-3">کتابچه‌های کنگره‌ها و همایش‌های علمی</p>
+                    <button class="soft-button primary btn-sm">
+                      <i class="fa fa-download me-1"></i>
+                      مشاهده و دانلود
+                    </button>
                   </div>
                 </div>
-                <div class="col-md-4">
-                  <div class="publication-card glass-card p-4 text-center">
-                    <i class="fa fa-file-text fa-3x text-primary mb-3"></i>
+
+                <!-- Association Journal -->
+                <div class="col-lg-4 col-md-6">
+                  <div class="publication-card glass-card p-4 text-center h-100" @click="handleJournalClick">
+                    <div class="publication-icon mb-3">
+                      <i class="fa fa-file-text fa-3x text-primary"></i>
+                    </div>
                     <h5 class="fw-bold mb-2">مجله انجمن</h5>
-                    <p class="text-muted">مجله علمی انجمن</p>
+                    <p class="text-muted mb-3">مجله علمی انجمن در سایت Brieflands</p>
+                    <button class="soft-button primary btn-sm">
+                      <i class="fa fa-external-link me-1"></i>
+                      مشاهده در سایت
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Other Products -->
+                <div class="col-lg-4 col-md-6">
+                  <div class="publication-card glass-card p-4 text-center h-100" @click="handleCategoryClick('products')">
+                    <div class="publication-icon mb-3">
+                      <i class="fa fa-archive fa-3x text-primary"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">سایر محصولات</h5>
+                    <p class="text-muted mb-3">سایر انتشارات و محصولات علمی</p>
+                    <button class="soft-button primary btn-sm">
+                      <i class="fa fa-download me-1"></i>
+                      مشاهده و دانلود
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Research -->
+                <div class="col-lg-4 col-md-6">
+                  <div class="publication-card glass-card p-4 text-center h-100" @click="handleCategoryClick('research')">
+                    <div class="publication-icon mb-3">
+                      <i class="fa fa-flask fa-3x text-primary"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">تحقیقات و پژوهش</h5>
+                    <p class="text-muted mb-3">مقالات و تحقیقات علمی انجمن</p>
+                    <button class="soft-button primary btn-sm">
+                      <i class="fa fa-download me-1"></i>
+                      مشاهده و دانلود
+                    </button>
                   </div>
                 </div>
               </div>
@@ -50,11 +103,107 @@
         </div>
       </div>
     </section>
+
+    <!-- Files Modal -->
+    <div v-if="showFilesModal" class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);" @click.self="showFilesModal = false">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content glass-card border-0">
+          <div class="modal-header border-0">
+            <h5 class="modal-title">{{ currentCategoryTitle }}</h5>
+            <button type="button" class="btn-close" @click="showFilesModal = false"></button>
+          </div>
+          <div class="modal-body">
+            <div v-if="loading" class="text-center py-4">
+              <i class="fa fa-spinner fa-spin fa-2x text-primary"></i>
+              <p class="mt-2">در حال بارگذاری...</p>
+            </div>
+            <div v-else-if="files.length === 0" class="text-center py-4">
+              <i class="fa fa-folder-open fa-2x text-muted"></i>
+              <p class="mt-2 text-muted">فایلی در این دسته یافت نشد</p>
+            </div>
+            <div v-else class="row g-3">
+              <div v-for="file in files" :key="file.name" class="col-12">
+                <div class="file-item glass-card p-3 d-flex align-items-center">
+                  <div class="file-icon me-3">
+                    <i :class="getFileIcon(file.type)" class="fa-2x text-primary"></i>
+                  </div>
+                  <div class="file-info flex-grow-1">
+                    <h6 class="mb-1">{{ file.name }}</h6>
+                    <small class="text-muted">{{ formatFileSize(file.size) }}</small>
+                  </div>
+                  <button class="soft-button primary btn-sm" @click="downloadFile(file)">
+                    <i class="fa fa-download me-1"></i>
+                    دانلود
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
+import { getApiUrl } from '@/utils/api';
+
+const showFilesModal = ref(false);
+const currentCategoryTitle = ref('');
+const files = ref<any[]>([]);
+const loading = ref(false);
+
+const categoryTitles: Record<string, string> = {
+  newsletters: 'خبرنامه‌ها',
+  congress: 'کتابچه کنگره‌ها و همایش‌ها',
+  products: 'سایر محصولات',
+  research: 'تحقیقات و پژوهش'
+};
+
+const handleCategoryClick = async (category: string) => {
+  currentCategoryTitle.value = categoryTitles[category];
+  showFilesModal.value = true;
+  loading.value = true;
+  files.value = [];
+  
+  try {
+    // For now, we'll show a placeholder message since the files API isn't implemented yet
+    // In the future, this would call the publications API endpoint
+    setTimeout(() => {
+      loading.value = false;
+      // Placeholder: no files found
+    }, 1000);
+  } catch (error) {
+    console.error('Error loading files:', error);
+    loading.value = false;
+  }
+};
+
+const handleJournalClick = () => {
+  // Redirect to external journal website
+  window.open('https://brieflands.com/journals/jcp', '_blank');
+};
+
+const getFileIcon = (fileType: string) => {
+  if (fileType.includes('pdf')) return 'fa fa-file-pdf-o';
+  if (fileType.includes('doc')) return 'fa fa-file-word-o';
+  if (fileType.includes('image')) return 'fa fa-file-image-o';
+  return 'fa fa-file-o';
+};
+
+const formatFileSize = (bytes: number) => {
+  if (bytes === 0) return '0 Bytes';
+  const k = 1024;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+};
+
+const downloadFile = (file: any) => {
+  // Implement file download logic
+  console.log('Downloading file:', file.name);
+};
 
 onMounted(() => {
   window.scrollTo(0, 0);
@@ -69,10 +218,51 @@ onMounted(() => {
 
 .publication-card {
   transition: var(--transition-snappy);
+  cursor: pointer;
+  border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .publication-card:hover {
   transform: translateY(-5px);
+  box-shadow: var(--glass-shadow-hover);
+  border-color: rgba(13, 110, 253, 0.3);
+}
+
+.publication-icon {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.file-item {
+  transition: var(--transition-snappy);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.file-item:hover {
+  border-color: rgba(13, 110, 253, 0.3);
+  transform: translateX(5px);
+}
+
+.file-icon {
+  width: 50px;
+  text-align: center;
+}
+
+.modal-content {
+  border-radius: var(--radius-lg);
+  backdrop-filter: blur(20px);
+}
+
+@media (max-width: 768px) {
+  .publication-card {
+    margin-bottom: 1rem;
+  }
+  
+  .modal-dialog {
+    margin: 1rem;
+  }
 }
 </style>
 

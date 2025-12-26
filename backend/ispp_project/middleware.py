@@ -1,8 +1,47 @@
 """
-Custom middleware for handling media file 404 errors
+Custom middleware for handling media file 404 errors and database connection retry
 """
-from django.http import HttpResponse
+import time
+import logging
+from django.http import HttpResponse, HttpResponseServerError
 from django.utils.deprecation import MiddlewareMixin
+from django.db import connection
+from django.db.utils import OperationalError, DatabaseError
+
+logger = logging.getLogger(__name__)
+
+
+class DatabaseRetryMiddleware(MiddlewareMixin):
+    """Handle database connection failures with retry logic and exponential backoff"""
+    
+    def __init__(self, get_response):
+        self.get_response = get_response
+        self.max_retries = 3
+        self.base_delay = 1.0  # Base delay in seconds
+        super().__init__(get_response)
+    
+    def process_request(self, request):
+        """Check database connection before processing request"""
+        for attempt in range(self.max_retries + 1):
+            try:
+                # Test database connection
+                connection.ensure_connection()
+                break
+            except (OperationalError, DatabaseError) as e:
+                if attempt == self.max_retries:
+                    # All retry attempts exhausted
+                    logger.error(f"Database connection failed after {self.max_retries} attempts: {str(e)}")
+                    return HttpResponseServerError(
+                        "Service temporarily unavailable. Please try again later.",
+                        content_type="text/plain"
+                    )
+                
+                # Calculate exponential backoff delay
+                delay = self.base_delay * (2 ** attempt)
+                logger.warning(f"Database connection attempt {attempt + 1} failed, retrying in {delay}s: {str(e)}")
+                time.sleep(delay)
+        
+        return None
 
 
 class Media404HandlerMiddleware(MiddlewareMixin):
