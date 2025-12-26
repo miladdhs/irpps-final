@@ -19,6 +19,25 @@ services:
     networks:
       - app-network
 
+  # API Nginx Container (for api.irpps.org subdomain)
+  api-nginx:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.api
+    ports:
+      - "8001:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD-SHELL", "nginx -t || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
   # Backend Container (Django + Gunicorn)
   backend:
     build:

@@ -17,8 +17,8 @@ export const getApiBaseUrl = (): string => {
     return '';
   }
   
-  // In production, use the production API URL
-  return 'https://api.irpps.org';
+  // In production, use relative URLs (nginx proxy will forward /api/ to backend)
+  return '';
 };
 
 /**
