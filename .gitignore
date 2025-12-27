@@ -117,11 +117,16 @@ ispp_db.csv
 
 # Large Content Files - PDFs, Images, Documents in Content folder
 # Keep directory structure but ignore large media files
-frontend/public/Content/**/*.pdf
-frontend/public/Content/**/*.jpg
-frontend/public/Content/**/*.jpeg
-frontend/public/Content/**/*.png
-frontend/public/Content/**/*.docx
-frontend/public/Content/**/*.doc
-frontend/public/Content/**/*.pptx
-frontend/public/Content/**/*.ppt
+# Allow Content/Books, Content/Broshour, and Content/Other
+!frontend/public/Content/Books/**/*
+!frontend/public/Content/Broshour/**/*
+!frontend/public/Content/Other/**/*
+# Ignore other Content subdirectories if needed
+# frontend/public/Content/**/*.pdf
+# frontend/public/Content/**/*.jpg
+# frontend/public/Content/**/*.jpeg
+# frontend/public/Content/**/*.png
+# frontend/public/Content/**/*.docx
+# frontend/public/Content/**/*.doc
+# frontend/public/Content/**/*.pptx
+# frontend/public/Content/**/*.ppt
