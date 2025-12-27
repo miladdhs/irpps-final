@@ -1,0 +1,82 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Virtual environments
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Django
+*.log
+*.pot
+*.pyc
+db.sqlite3
+db.sqlite3-journal
+/media/
+/staticfiles/
+/logs/
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Git
+.git/
+.gitignore
+.gitattributes
+
+# Documentation
+*.md
+!README.md
+
+# Backup files
+*.bak
+*.backup
+*.old
+
+# Test files
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.hypothesis/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Project specific
+backups/
+*.json
+!package*.json
+ispp_db.json
+structured_content_complete.json
+
+# Scripts (keep only essential)
+*.sh
+!docker-entrypoint.sh
+
+# Temporary files
+*.tmp
+*.temp
+

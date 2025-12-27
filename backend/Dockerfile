@@ -19,15 +19,19 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy application code
 COPY . .
 
+# Copy and set permissions for entrypoint script
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
+
 # Set environment variables
 ENV PYTHONUNBUFFERED=1
 ENV IS_DOCKER=True
 ENV DJANGO_SETTINGS_MODULE=ispp_project.settings
 
 # Create directories for static and media files
-RUN mkdir -p /app/staticfiles /app/media
+RUN mkdir -p /app/staticfiles /app/media /app/media/profile_images /app/logs
 
 EXPOSE 8000
 
-# Use Gunicorn for production
-CMD ["gunicorn", "ispp_project.wsgi:application", "--bind", "0.0.0.0:8000", "--workers", "4", "--timeout", "120"]
+# Use entrypoint script
+ENTRYPOINT ["/app/docker-entrypoint.sh"]

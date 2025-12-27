@@ -26,11 +26,18 @@ RUN npm run build:prod
 # Production stage with Nginx
 FROM docker.arvancloud.ir/nginx:alpine
 
+# Install wget for health checks
+RUN apk add --no-cache wget
+
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy built files from builder
 COPY --from=builder /app/dist /usr/share/nginx/html
+
+# Create necessary directories
+RUN mkdir -p /usr/share/nginx/html/assets
+RUN mkdir -p /usr/share/nginx/html/img
 
 EXPOSE 80
 
