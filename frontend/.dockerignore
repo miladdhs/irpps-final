@@ -53,13 +53,21 @@ logs/
 .vite/
 
 # Project specific - exclude large content files
-public/Content/
+# BUT: We MUST include public/Content/ for Books, Broshour, Other
+# IMPORTANT: public/Content/ is NOT excluded - we need it for the app
+
+# Exclude large files in root and other locations (but NOT in public/Content/)
+# These patterns exclude files at root level, not in subdirectories
+# Note: public/Content/ will be copied separately in Dockerfile
 *.pdf
 *.docx
 *.doc
 *.jpg
 *.jpeg
 *.png
+# But explicitly include Content directory (negation must come after exclusion)
+!public/Content/
+!public/Content/**
+# Keep these specific files
 !public/img/*.svg
 !public/image.png
-
