@@ -245,15 +245,77 @@ const formatFileSize = (bytes: number) => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 };
 
-const downloadFile = (file: any) => {
-  // Create a temporary anchor element to trigger download
-  const link = document.createElement('a');
-  link.href = file.url;
-  link.download = file.name;
-  link.target = '_blank';
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+const downloadFile = async (file: any) => {
+  try {
+    // Split URL into parts and encode each part properly
+    const urlParts = file.url.split('/');
+    const encodedParts = urlParts.map((part: string, index: number) => {
+      // Don't encode the first empty part or protocol/domain parts
+      if (index === 0 || part === '' || part.startsWith('http')) {
+        return part;
+      }
+      // Encode each part separately to handle Persian characters
+      return encodeURIComponent(part);
+    });
+    const encodedUrl = encodedParts.join('/');
+    
+    // Fetch the file as blob
+    const response = await fetch(encodedUrl);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to download file: ${response.status} ${response.statusText}`);
+    }
+    
+    // Check if response is actually a file (not HTML)
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('text/html')) {
+      throw new Error('Server returned HTML instead of file');
+    }
+    
+    const blob = await response.blob();
+    
+    // Create a temporary URL for the blob
+    const blobUrl = window.URL.createObjectURL(blob);
+    
+    // Create a temporary anchor element to trigger download
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = file.name;
+    document.body.appendChild(link);
+    link.click();
+    
+    // Clean up
+    setTimeout(() => {
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    }, 100);
+  } catch (error) {
+    console.error('Error downloading file:', error);
+    // Try fallback method with direct link
+    try {
+      const urlParts = file.url.split('/');
+      const encodedParts = urlParts.map((part: string, index: number) => {
+        if (index === 0 || part === '' || part.startsWith('http')) {
+          return part;
+        }
+        return encodeURIComponent(part);
+      });
+      const encodedUrl = encodedParts.join('/');
+      
+      const link = document.createElement('a');
+      link.href = encodedUrl;
+      link.download = file.name;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => {
+        document.body.removeChild(link);
+      }, 100);
+    } catch (fallbackError) {
+      console.error('Fallback download also failed:', fallbackError);
+      alert('خطا در دانلود فایل. لطفاً دوباره تلاش کنید.');
+    }
+  }
 };
 
 onMounted(() => {

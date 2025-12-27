@@ -127,7 +127,7 @@
             <h5 class="modal-title">{{ currentCategoryTitle }}</h5>
             <button type="button" class="btn-close" @click="showFilesModal = false"></button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body modal-body-scrollable">
             <div v-if="loading" class="text-center py-4">
               <i class="fa fa-spinner fa-spin fa-2x text-primary"></i>
               <p class="mt-2">در حال بارگذاری...</p>
@@ -368,6 +368,117 @@ const handleCategoryClick = async (category: string) => {
     return;
   }
   
+  // Handle "Broshour" from local files
+  if (category === 'broshour') {
+    // Load broshour files from local Content/Broshour directory
+    files.value = [
+      {
+        name: 'picture-1-scaled.jpg',
+        url: '/Content/Broshour/picture-1-scaled.jpg',
+        type: 'image/jpeg',
+        size: 0
+      },
+      {
+        name: 'picture-2-scaled.jpg',
+        url: '/Content/Broshour/picture-2-scaled.jpg',
+        type: 'image/jpeg',
+        size: 0
+      },
+      {
+        name: 'picture-4-scaled.jpg',
+        url: '/Content/Broshour/picture-4-scaled.jpg',
+        type: 'image/jpeg',
+        size: 0
+      },
+      {
+        name: 'picture-4-scaled (1).jpg',
+        url: '/Content/Broshour/picture-4-scaled (1).jpg',
+        type: 'image/jpeg',
+        size: 0
+      },
+      {
+        name: 'picture-7-scaled.jpg',
+        url: '/Content/Broshour/picture-7-scaled.jpg',
+        type: 'image/jpeg',
+        size: 0
+      },
+      {
+        name: 'picture-8-scaled.jpg',
+        url: '/Content/Broshour/picture-8-scaled.jpg',
+        type: 'image/jpeg',
+        size: 0
+      },
+      {
+        name: 'picture-9-scaled.jpg',
+        url: '/Content/Broshour/picture-9-scaled.jpg',
+        type: 'image/jpeg',
+        size: 0
+      },
+      {
+        name: 'picture-10-scaled.jpg',
+        url: '/Content/Broshour/picture-10-scaled.jpg',
+        type: 'image/jpeg',
+        size: 0
+      },
+      {
+        name: 'picture-11-scaled.jpg',
+        url: '/Content/Broshour/picture-11-scaled.jpg',
+        type: 'image/jpeg',
+        size: 0
+      },
+      {
+        name: 'picture-12-1-scaled.jpg',
+        url: '/Content/Broshour/picture-12-1-scaled.jpg',
+        type: 'image/jpeg',
+        size: 0
+      },
+      {
+        name: 'picture-13-scaled.jpg',
+        url: '/Content/Broshour/picture-13-scaled.jpg',
+        type: 'image/jpeg',
+        size: 0
+      },
+      {
+        name: 'picture-14-scaled.jpg',
+        url: '/Content/Broshour/picture-14-scaled.jpg',
+        type: 'image/jpeg',
+        size: 0
+      },
+      {
+        name: 'picture-16-scaled.jpg',
+        url: '/Content/Broshour/picture-16-scaled.jpg',
+        type: 'image/jpeg',
+        size: 0
+      },
+      {
+        name: 'picture-17-scaled.jpg',
+        url: '/Content/Broshour/picture-17-scaled.jpg',
+        type: 'image/jpeg',
+        size: 0
+      },
+      {
+        name: 'picture-18-scaled.jpg',
+        url: '/Content/Broshour/picture-18-scaled.jpg',
+        type: 'image/jpeg',
+        size: 0
+      },
+      {
+        name: 'pictute-6-scaled.jpg',
+        url: '/Content/Broshour/pictute-6-scaled.jpg',
+        type: 'image/jpeg',
+        size: 0
+      },
+      {
+        name: 'Screenshot-811.png',
+        url: '/Content/Broshour/Screenshot-811.png',
+        type: 'image/png',
+        size: 0
+      }
+    ];
+    loading.value = false;
+    return;
+  }
+  
   // Handle other categories from API
   try {
     const response = await fetch(getApiUrl(`/api/doctors/files/?category=${category}`), {
@@ -407,15 +518,77 @@ const formatFileSize = (bytes: number) => {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 };
 
-const downloadFile = (file: any) => {
-  // Create a temporary anchor element to trigger download
-  const link = document.createElement('a');
-  link.href = file.url;
-  link.download = file.name;
-  link.target = '_blank';
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
+const downloadFile = async (file: any) => {
+  try {
+    // Split URL into parts and encode each part properly
+    const urlParts = file.url.split('/');
+    const encodedParts = urlParts.map((part: string, index: number) => {
+      // Don't encode the first empty part or protocol/domain parts
+      if (index === 0 || part === '' || part.startsWith('http')) {
+        return part;
+      }
+      // Encode each part separately to handle Persian characters
+      return encodeURIComponent(part);
+    });
+    const encodedUrl = encodedParts.join('/');
+    
+    // Fetch the file as blob
+    const response = await fetch(encodedUrl);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to download file: ${response.status} ${response.statusText}`);
+    }
+    
+    // Check if response is actually a file (not HTML)
+    const contentType = response.headers.get('content-type');
+    if (contentType && contentType.includes('text/html')) {
+      throw new Error('Server returned HTML instead of file');
+    }
+    
+    const blob = await response.blob();
+    
+    // Create a temporary URL for the blob
+    const blobUrl = window.URL.createObjectURL(blob);
+    
+    // Create a temporary anchor element to trigger download
+    const link = document.createElement('a');
+    link.href = blobUrl;
+    link.download = file.name;
+    document.body.appendChild(link);
+    link.click();
+    
+    // Clean up
+    setTimeout(() => {
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    }, 100);
+  } catch (error) {
+    console.error('Error downloading file:', error);
+    // Try fallback method with direct link
+    try {
+      const urlParts = file.url.split('/');
+      const encodedParts = urlParts.map((part: string, index: number) => {
+        if (index === 0 || part === '' || part.startsWith('http')) {
+          return part;
+        }
+        return encodeURIComponent(part);
+      });
+      const encodedUrl = encodedParts.join('/');
+      
+      const link = document.createElement('a');
+      link.href = encodedUrl;
+      link.download = file.name;
+      link.target = '_blank';
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => {
+        document.body.removeChild(link);
+      }, 100);
+    } catch (fallbackError) {
+      console.error('Fallback download also failed:', fallbackError);
+      alert('خطا در دانلود فایل. لطفاً دوباره تلاش کنید.');
+    }
+  }
 };
 
 onMounted(() => {
@@ -466,6 +639,34 @@ onMounted(() => {
 .modal-content {
   border-radius: var(--radius-lg);
   backdrop-filter: blur(20px);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-body-scrollable {
+  max-height: 60vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1.5rem;
+}
+
+.modal-body-scrollable::-webkit-scrollbar {
+  width: 8px;
+}
+
+.modal-body-scrollable::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.modal-body-scrollable::-webkit-scrollbar-thumb {
+  background: rgba(13, 110, 253, 0.5);
+  border-radius: 4px;
+}
+
+.modal-body-scrollable::-webkit-scrollbar-thumb:hover {
+  background: rgba(13, 110, 253, 0.7);
 }
 
 @media (max-width: 768px) {
