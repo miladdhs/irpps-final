@@ -548,7 +548,7 @@ const downloadFile = async (file: any) => {
       throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
     
-    // Check content type
+    // Check content type - if HTML, file doesn't exist
     const contentType = response.headers.get('content-type') || '';
     if (contentType.includes('text/html')) {
       throw new Error('Server returned HTML instead of file. File may not exist.');
@@ -562,24 +562,29 @@ const downloadFile = async (file: any) => {
       throw new Error('Downloaded file is empty');
     }
     
-    // Create download link
+    // Create download link with proper MIME type
     const blobUrl = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = blobUrl;
     link.download = file.name;
     link.style.display = 'none';
+    link.setAttribute('download', file.name);
+    
+    // Force download by setting download attribute
     document.body.appendChild(link);
     link.click();
     
-    // Clean up
+    // Clean up immediately
     setTimeout(() => {
-      document.body.removeChild(link);
+      if (document.body.contains(link)) {
+        document.body.removeChild(link);
+      }
       window.URL.revokeObjectURL(blobUrl);
-    }, 200);
+    }, 100);
   } catch (error: any) {
     console.error('Download error:', error);
     
-    // Fallback: try direct download with encoded URL
+    // Fallback: create direct download link with download attribute
     try {
       const urlParts = file.url.split('/').filter((part: string) => part !== '');
       const encodedParts = urlParts.map((part: string) => {
@@ -590,8 +595,20 @@ const downloadFile = async (file: any) => {
       });
       const encodedUrl = '/' + encodedParts.join('/');
       
-      // Try opening in new tab as last resort
-      window.open(encodedUrl, '_blank');
+      // Create link with download attribute to force download
+      const link = document.createElement('a');
+      link.href = encodedUrl;
+      link.download = file.name;
+      link.style.display = 'none';
+      link.setAttribute('download', file.name);
+      document.body.appendChild(link);
+      link.click();
+      
+      setTimeout(() => {
+        if (document.body.contains(link)) {
+          document.body.removeChild(link);
+        }
+      }, 100);
     } catch (fallbackError) {
       console.error('Fallback failed:', fallbackError);
       alert(`خطا در دانلود فایل "${file.name}". لطفاً دوباره تلاش کنید.`);
@@ -638,11 +655,13 @@ onMounted(() => {
 
 .modal-dialog {
   max-height: 90vh;
-  height: auto;
+  max-width: 90vw;
+  width: 100%;
   margin: 1.75rem auto;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
 }
 
 .modal-content {
@@ -654,6 +673,9 @@ onMounted(() => {
   flex-direction: column;
   overflow: hidden;
   position: relative;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .modal-header {
@@ -661,6 +683,8 @@ onMounted(() => {
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding: 1rem 1.5rem;
   min-height: 60px;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .modal-body-scrollable {
@@ -671,22 +695,33 @@ onMounted(() => {
   min-height: 0;
   max-height: calc(90vh - 60px);
   position: relative;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .modal-body-scrollable > div {
   width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .modal-body-scrollable .row {
   margin: 0;
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .modal-body-scrollable .col-12 {
-  padding: 0;
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
   width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
+  min-width: 0;
+  flex: 0 0 100%;
 }
 
 .modal-body-scrollable::-webkit-scrollbar {
@@ -709,8 +744,10 @@ onMounted(() => {
 
 .file-item {
   width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
   margin-bottom: 0.75rem;
+  min-width: 0;
 }
 
 .file-item:last-child {
@@ -721,12 +758,36 @@ onMounted(() => {
   transition: var(--transition-snappy);
   border: 1px solid rgba(255, 255, 255, 0.2);
   width: 100%;
+  max-width: 100%;
   box-sizing: border-box;
+  min-width: 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.file-item-inner h6 {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  min-width: 0;
 }
 
 .file-item:hover .file-item-inner {
   border-color: rgba(13, 110, 253, 0.3);
   transform: translateX(5px);
+}
+
+.file-info {
+  min-width: 0;
+  flex: 1 1 auto;
+  overflow: hidden;
+}
+
+.file-info h6 {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
 
 @media (max-width: 768px) {
