@@ -171,6 +171,111 @@ const handleCategoryClick = async (category: string) => {
   loading.value = true;
   files.value = [];
   
+  // Handle "Congress" booklets from local files
+  if (category === 'congress') {
+    try {
+      // Try to load files list from JSON file
+      const response = await fetch('/Content/Other/congress.json');
+      
+      if (!response.ok) {
+        throw new Error('JSON file not found');
+      }
+      
+      const fileList = await response.json();
+      
+      // Fetch file sizes for each file
+      const filesWithSize = await Promise.all(
+        fileList.map(async (file: any) => {
+          try {
+            const headResponse = await fetch(file.url, { method: 'HEAD' });
+            const size = parseInt(headResponse.headers.get('content-length') || '0', 10);
+            return {
+              ...file,
+              size: size
+            };
+          } catch {
+            return {
+              ...file,
+              size: 0
+            };
+          }
+        })
+      );
+      
+      files.value = filesWithSize;
+    } catch (error) {
+      console.error('Error loading congress files, using fallback:', error);
+      // Fallback to hardcoded list if JSON fails
+      files.value = [
+        {
+          name: '1_23033290624.pdf',
+          url: '/Content/Other/1_23033290624.pdf',
+          type: 'application/pdf',
+          size: 0
+        }
+      ];
+    } finally {
+      loading.value = false;
+    }
+    return;
+  }
+  
+  // Handle "Other" products from local files
+  if (category === 'products') {
+    try {
+      // Try to load files list from JSON file
+      const response = await fetch('/Content/Other/files.json');
+      
+      if (!response.ok) {
+        throw new Error('JSON file not found');
+      }
+      
+      const fileList = await response.json();
+      
+      // Fetch file sizes for each file
+      const filesWithSize = await Promise.all(
+        fileList.map(async (file: any) => {
+          try {
+            const headResponse = await fetch(file.url, { method: 'HEAD' });
+            const size = parseInt(headResponse.headers.get('content-length') || '0', 10);
+            return {
+              ...file,
+              size: size
+            };
+          } catch {
+            return {
+              ...file,
+              size: 0
+            };
+          }
+        })
+      );
+      
+      files.value = filesWithSize;
+    } catch (error) {
+      console.error('Error loading other products, using fallback:', error);
+      // Fallback to hardcoded list if JSON fails
+      files.value = [
+        {
+          name: 'DOC-20251227-WA0007.pdf',
+          url: '/Content/Other/DOC-20251227-WA0007.pdf',
+          type: 'application/pdf',
+          size: 0
+        },
+        {
+          name: 'خلاصه مقالات 5 همایش 403.pdf',
+          url: '/Content/Other/خلاصه مقالات 5 همایش 403.pdf',
+          type: 'application/pdf',
+          size: 0
+        }
+      ];
+    } finally {
+      loading.value = false;
+    }
+    return;
+  }
+  
+  // Handle other categories from API
   try {
     const response = await fetch(getApiUrl(`/api/news/publications/files/?category=${category}`), {
       credentials: 'include'

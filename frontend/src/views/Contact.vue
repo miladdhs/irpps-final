@@ -241,7 +241,7 @@ const contactCards = computed(() => [
     icon: 'fa-phone',
     title: t('contact.phoneTitle'),
     subtitle: t('contact.phoneSubtitle'),
-    lines: ['+989013684856', t('contact.phoneHours')]
+    lines: ['09013684856', t('contact.phoneHours')]
   },
   {
     icon: 'fa-envelope',
