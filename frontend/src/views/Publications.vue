@@ -131,10 +131,10 @@
                     <h6 class="mb-1">{{ file.name }}</h6>
                     <small v-if="file.size > 0" class="text-muted">{{ formatFileSize(file.size) }}</small>
                   </div>
-                  <a :href="file.url" target="_blank" class="soft-button primary btn-sm" :download="file.name">
+                  <button @click="downloadFile(file)" class="soft-button primary btn-sm">
                     <i class="fa fa-download me-1"></i>
                     دانلود
-                  </a>
+                  </button>
                 </div>
               </div>
             </div>
@@ -169,77 +169,37 @@ const handleCategoryClick = async (category: string) => {
   
   // Handle "Congress" booklets from local files
   if (category === 'congress') {
-    try {
-      // Try to load files list from JSON file
-      const response = await fetch('/Content/Other/congress.json');
-      
-      if (!response.ok) {
-        throw new Error('JSON file not found');
+    // Use hardcoded list directly to avoid JSON parsing issues
+    files.value = [
+      {
+        name: '1_23033290624.pdf',
+        url: '/Content/Other/1_23033290624.pdf',
+        type: 'application/pdf',
+        size: 0
       }
-      
-      const fileList = await response.json();
-      
-      // Use files as-is, size will be determined by browser when downloading
-      // Don't fetch sizes to avoid CORS/HEAD request issues
-      files.value = fileList.map((file: any) => ({
-        ...file,
-        size: file.size || 0 // Use size from JSON if available, otherwise 0
-      }));
-    } catch (error) {
-      console.error('Error loading congress files, using fallback:', error);
-      // Fallback to hardcoded list if JSON fails
-      files.value = [
-        {
-          name: '1_23033290624.pdf',
-          url: '/Content/Other/1_23033290624.pdf',
-          type: 'application/pdf',
-          size: 0
-        }
-      ];
-    } finally {
-      loading.value = false;
-    }
+    ];
+    loading.value = false;
     return;
   }
   
   // Handle "Other" products from local files
   if (category === 'products') {
-    try {
-      // Try to load files list from JSON file
-      const response = await fetch('/Content/Other/files.json');
-      
-      if (!response.ok) {
-        throw new Error('JSON file not found');
+    // Use hardcoded list directly to avoid JSON parsing issues
+    files.value = [
+      {
+        name: 'DOC-20251227-WA0007.pdf',
+        url: '/Content/Other/DOC-20251227-WA0007.pdf',
+        type: 'application/pdf',
+        size: 0
+      },
+      {
+        name: 'خلاصه مقالات 5 همایش 403.pdf',
+        url: '/Content/Other/خلاصه مقالات 5 همایش 403.pdf',
+        type: 'application/pdf',
+        size: 0
       }
-      
-      const fileList = await response.json();
-      
-      // Use files as-is, size will be determined by browser when downloading
-      // Don't fetch sizes to avoid CORS/HEAD request issues
-      files.value = fileList.map((file: any) => ({
-        ...file,
-        size: file.size || 0 // Use size from JSON if available, otherwise 0
-      }));
-    } catch (error) {
-      console.error('Error loading other products, using fallback:', error);
-      // Fallback to hardcoded list if JSON fails
-      files.value = [
-        {
-          name: 'DOC-20251227-WA0007.pdf',
-          url: '/Content/Other/DOC-20251227-WA0007.pdf',
-          type: 'application/pdf',
-          size: 0
-        },
-        {
-          name: 'خلاصه مقالات 5 همایش 403.pdf',
-          url: '/Content/Other/خلاصه مقالات 5 همایش 403.pdf',
-          type: 'application/pdf',
-          size: 0
-        }
-      ];
-    } finally {
-      loading.value = false;
-    }
+    ];
+    loading.value = false;
     return;
   }
   
@@ -286,8 +246,14 @@ const formatFileSize = (bytes: number) => {
 };
 
 const downloadFile = (file: any) => {
-  // Open file in new tab for download/view
-  window.open(file.url, '_blank');
+  // Create a temporary anchor element to trigger download
+  const link = document.createElement('a');
+  link.href = file.url;
+  link.download = file.name;
+  link.target = '_blank';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 };
 
 onMounted(() => {
