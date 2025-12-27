@@ -241,13 +241,19 @@ const contactCards = computed(() => [
     icon: 'fa-phone',
     title: t('contact.phoneTitle'),
     subtitle: t('contact.phoneSubtitle'),
-    lines: ['021-12345678', '021-87654321', t('contact.phoneHours')]
+    lines: ['+98 901 368 4856', t('contact.phoneHours')]
   },
   {
     icon: 'fa-envelope',
     title: t('contact.emailTitle'),
     subtitle: t('contact.emailSubtitle'),
     lines: ['info@childrenlung.ir', 'support@childrenlung.ir', t('contact.emailResponse')]
+  },
+  {
+    icon: 'fa-map-marker-alt',
+    title: t('contact.addressTitle'),
+    subtitle: t('contact.addressSubtitle'),
+    lines: [t('contact.addressLine1'), t('contact.addressLine2')]
   }
 ]);
 
