@@ -112,7 +112,7 @@
             <h5 class="modal-title">{{ currentCategoryTitle }}</h5>
             <button type="button" class="btn-close" @click="showFilesModal = false"></button>
           </div>
-          <div class="modal-body">
+          <div class="modal-body modal-body-scrollable">
             <div v-if="loading" class="text-center py-4">
               <i class="fa fa-spinner fa-spin fa-2x text-primary"></i>
               <p class="mt-2">در حال بارگذاری...</p>
@@ -247,40 +247,50 @@ const formatFileSize = (bytes: number) => {
 
 const downloadFile = async (file: any) => {
   try {
-    // Split URL into parts and encode each part properly
-    const urlParts = file.url.split('/');
-    const encodedParts = urlParts.map((part: string, index: number) => {
-      // Don't encode the first empty part or protocol/domain parts
-      if (index === 0 || part === '' || part.startsWith('http')) {
+    // Build URL properly - encode each path segment separately
+    const urlParts = file.url.split('/').filter((part: string) => part !== '');
+    const encodedParts = urlParts.map((part: string) => {
+      // Don't encode if it's already encoded or is a protocol
+      if (part.includes('://') || part.startsWith('http')) {
         return part;
       }
-      // Encode each part separately to handle Persian characters
-      return encodeURIComponent(part);
+      // Encode each part to handle Persian characters and special characters
+      return encodeURIComponent(decodeURIComponent(part));
     });
-    const encodedUrl = encodedParts.join('/');
+    const encodedUrl = '/' + encodedParts.join('/');
     
-    // Fetch the file as blob
-    const response = await fetch(encodedUrl);
+    // Fetch the file as blob with proper headers
+    const response = await fetch(encodedUrl, {
+      method: 'GET',
+      headers: {
+        'Accept': file.type || 'application/octet-stream'
+      }
+    });
     
     if (!response.ok) {
-      throw new Error(`Failed to download file: ${response.status} ${response.statusText}`);
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
     
-    // Check if response is actually a file (not HTML)
-    const contentType = response.headers.get('content-type');
-    if (contentType && contentType.includes('text/html')) {
-      throw new Error('Server returned HTML instead of file');
+    // Check content type
+    const contentType = response.headers.get('content-type') || '';
+    if (contentType.includes('text/html')) {
+      throw new Error('Server returned HTML instead of file. File may not exist.');
     }
     
+    // Get blob
     const blob = await response.blob();
     
-    // Create a temporary URL for the blob
-    const blobUrl = window.URL.createObjectURL(blob);
+    // Verify blob is not empty
+    if (blob.size === 0) {
+      throw new Error('Downloaded file is empty');
+    }
     
-    // Create a temporary anchor element to trigger download
+    // Create download link
+    const blobUrl = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = blobUrl;
     link.download = file.name;
+    link.style.display = 'none';
     document.body.appendChild(link);
     link.click();
     
@@ -288,32 +298,26 @@ const downloadFile = async (file: any) => {
     setTimeout(() => {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(blobUrl);
-    }, 100);
-  } catch (error) {
-    console.error('Error downloading file:', error);
-    // Try fallback method with direct link
+    }, 200);
+  } catch (error: any) {
+    console.error('Download error:', error);
+    
+    // Fallback: try direct download with encoded URL
     try {
-      const urlParts = file.url.split('/');
-      const encodedParts = urlParts.map((part: string, index: number) => {
-        if (index === 0 || part === '' || part.startsWith('http')) {
+      const urlParts = file.url.split('/').filter((part: string) => part !== '');
+      const encodedParts = urlParts.map((part: string) => {
+        if (part.includes('://') || part.startsWith('http')) {
           return part;
         }
-        return encodeURIComponent(part);
+        return encodeURIComponent(decodeURIComponent(part));
       });
-      const encodedUrl = encodedParts.join('/');
+      const encodedUrl = '/' + encodedParts.join('/');
       
-      const link = document.createElement('a');
-      link.href = encodedUrl;
-      link.download = file.name;
-      link.target = '_blank';
-      document.body.appendChild(link);
-      link.click();
-      setTimeout(() => {
-        document.body.removeChild(link);
-      }, 100);
+      // Try opening in new tab as last resort
+      window.open(encodedUrl, '_blank');
     } catch (fallbackError) {
-      console.error('Fallback download also failed:', fallbackError);
-      alert('خطا در دانلود فایل. لطفاً دوباره تلاش کنید.');
+      console.error('Fallback failed:', fallbackError);
+      alert(`خطا در دانلود فایل "${file.name}". لطفاً دوباره تلاش کنید.`);
     }
   }
 };
@@ -363,9 +367,53 @@ onMounted(() => {
   text-align: center;
 }
 
+.modal-dialog {
+  max-height: 90vh;
+  margin: 1.75rem auto;
+  display: flex;
+  align-items: center;
+  min-height: calc(100% - 3.5rem);
+}
+
 .modal-content {
   border-radius: var(--radius-lg);
   backdrop-filter: blur(20px);
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modal-header {
+  flex-shrink: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.modal-body-scrollable {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: 1.5rem;
+  min-height: 0;
+  max-height: calc(90vh - 120px);
+}
+
+.modal-body-scrollable::-webkit-scrollbar {
+  width: 10px;
+}
+
+.modal-body-scrollable::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 5px;
+}
+
+.modal-body-scrollable::-webkit-scrollbar-thumb {
+  background: rgba(13, 110, 253, 0.6);
+  border-radius: 5px;
+}
+
+.modal-body-scrollable::-webkit-scrollbar-thumb:hover {
+  background: rgba(13, 110, 253, 0.8);
 }
 
 @media (max-width: 768px) {
