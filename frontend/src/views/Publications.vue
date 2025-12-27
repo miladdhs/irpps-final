@@ -383,6 +383,8 @@ onMounted(() => {
 
 .file-icon {
   width: 50px;
+  min-width: 50px;
+  flex-shrink: 0;
   text-align: center;
 }
 
@@ -496,6 +498,9 @@ onMounted(() => {
   min-width: 0;
   word-wrap: break-word;
   overflow-wrap: break-word;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
 }
 
 .file-item-inner h6 {
@@ -513,7 +518,9 @@ onMounted(() => {
 .file-info {
   min-width: 0;
   flex: 1 1 auto;
+  flex-shrink: 1;
   overflow: hidden;
+  max-width: 100%;
 }
 
 .file-info h6 {
@@ -521,6 +528,13 @@ onMounted(() => {
   text-overflow: ellipsis;
   white-space: nowrap;
   max-width: 100%;
+  min-width: 0;
+}
+
+.file-item-inner .soft-button {
+  flex-shrink: 0;
+  min-width: fit-content;
+  white-space: nowrap;
 }
 
 @media (max-width: 768px) {
