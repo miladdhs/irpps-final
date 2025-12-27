@@ -151,16 +151,12 @@
                         </div>
                         <div class="file-info flex-grow-1">
                           <h6 class="mb-1">{{ file.name }}</h6>
-                          <small class="text-muted">{{ formatFileSize(file.size) }}</small>
+                          <small v-if="file.size > 0" class="text-muted">{{ formatFileSize(file.size) }}</small>
                         </div>
-                        <a :href="file.url" target="_blank" class="soft-button primary btn-sm me-2" download>
+                        <button @click="downloadFile(file)" class="soft-button primary btn-sm">
                           <i class="fa fa-download me-1"></i>
                           دانلود
-                        </a>
-                        <a v-if="file.type.includes('pdf')" :href="file.url" target="_blank" class="soft-button outline btn-sm">
-                          <i class="fa fa-eye me-1"></i>
-                          مشاهده
-                        </a>
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -176,16 +172,12 @@
                       </div>
                       <div class="file-info flex-grow-1">
                         <h6 class="mb-1">{{ file.name }}</h6>
-                        <small class="text-muted">{{ formatFileSize(file.size) }}</small>
+                        <small v-if="file.size > 0" class="text-muted">{{ formatFileSize(file.size) }}</small>
                       </div>
-                      <a :href="file.url" target="_blank" class="soft-button primary btn-sm me-2" download>
+                      <button @click="downloadFile(file)" class="soft-button primary btn-sm">
                         <i class="fa fa-download me-1"></i>
                         دانلود
-                      </a>
-                      <a v-if="file.type.includes('pdf') || file.type.includes('image')" :href="file.url" target="_blank" class="soft-button outline btn-sm">
-                        <i class="fa fa-eye me-1"></i>
-                        مشاهده
-                      </a>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -242,6 +234,141 @@ const handleCategoryClick = async (category: string) => {
   loading.value = true;
   files.value = [];
   
+  // Handle "Books" from local files
+  if (category === 'books') {
+    // Load books from local Content/Books directory
+    files.value = [
+      // تکامل
+      {
+        name: '152-games-and-exercises-for-childrens-development.pdf',
+        url: '/Content/Books/تکامل/152-games-and-exercises-for-childrens-development.pdf',
+        type: 'application/pdf',
+        size: 0,
+        folder: 'تکامل'
+      },
+      {
+        name: 'Childrens-development-book.pdf',
+        url: '/Content/Books/تکامل/Childrens-development-book.pdf',
+        type: 'application/pdf',
+        size: 0,
+        folder: 'تکامل'
+      },
+      {
+        name: 'تقویت-تکامل-در-اوایل-کودکی-.pdf',
+        url: '/Content/Books/تکامل/تقویت-تکامل-در-اوایل-کودکی-.pdf',
+        type: 'application/pdf',
+        size: 0,
+        folder: 'تکامل'
+      },
+      {
+        name: 'فعالیت-هایی-برای-ارتقای-تکامل-کودک.pdf',
+        url: '/Content/Books/تکامل/فعالیت-هایی-برای-ارتقای-تکامل-کودک.pdf',
+        type: 'application/pdf',
+        size: 0,
+        folder: 'تکامل'
+      },
+      {
+        name: 'کتاب-تکامل-دوران-ابتدای-کودکی.pdf',
+        url: '/Content/Books/تکامل/کتاب-تکامل-دوران-ابتدای-کودکی.pdf',
+        type: 'application/pdf',
+        size: 0,
+        folder: 'تکامل'
+      },
+      // گفتار خانواده
+      {
+        name: 'khanevade.pdf',
+        url: '/Content/Books/گفتار خانواده/khanevade.pdf',
+        type: 'application/pdf',
+        size: 0,
+        folder: 'گفتار خانواده'
+      },
+      // مراقبت های ادغام ناخوشی های اطفال
+      {
+        name: 'Final-instructions-implementation.pdf',
+        url: '/Content/Books/مراقبت های ادغام ناخوشی های اطفال/Final-instructions-implementation.pdf',
+        type: 'application/pdf',
+        size: 0,
+        folder: 'مراقبت های ادغام ناخوشی های اطفال'
+      },
+      {
+        name: 'mana-np.pdf',
+        url: '/Content/Books/مراقبت های ادغام ناخوشی های اطفال/mana-np.pdf',
+        type: 'application/pdf',
+        size: 0,
+        folder: 'مراقبت های ادغام ناخوشی های اطفال'
+      },
+      {
+        name: 'mana-p.pdf',
+        url: '/Content/Books/مراقبت های ادغام ناخوشی های اطفال/mana-p.pdf',
+        type: 'application/pdf',
+        size: 0,
+        folder: 'مراقبت های ادغام ناخوشی های اطفال'
+      },
+      // مراقبت های ادغام یافته‌ی کودک سالم
+      {
+        name: 'booklet-پزشک-کودک-سالم.pdf',
+        url: '/Content/Books/مراقبت های ادغام یافته‌ی کودک سالم/booklet-پزشک-کودک-سالم.pdf',
+        type: 'application/pdf',
+        size: 0,
+        folder: 'مراقبت های ادغام یافته‌ی کودک سالم'
+      },
+      {
+        name: 'booklet-غیر-پزشک.pdf',
+        url: '/Content/Books/مراقبت های ادغام یافته‌ی کودک سالم/booklet-غیر-پزشک.pdf',
+        type: 'application/pdf',
+        size: 0,
+        folder: 'مراقبت های ادغام یافته‌ی کودک سالم'
+      },
+      {
+        name: 'counselling-guide-23-12-1400_compressed.pdf',
+        url: '/Content/Books/مراقبت های ادغام یافته‌ی کودک سالم/counselling-guide-23-12-1400_compressed.pdf',
+        type: 'application/pdf',
+        size: 0,
+        folder: 'مراقبت های ادغام یافته‌ی کودک سالم'
+      },
+      {
+        name: 'non-physician-guide-25-12-1400_compressed.pdf',
+        url: '/Content/Books/مراقبت های ادغام یافته‌ی کودک سالم/non-physician-guide-25-12-1400_compressed.pdf',
+        type: 'application/pdf',
+        size: 0,
+        folder: 'مراقبت های ادغام یافته‌ی کودک سالم'
+      },
+      {
+        name: 'physician-guide-30-1-1401_compressed.pdf',
+        url: '/Content/Books/مراقبت های ادغام یافته‌ی کودک سالم/physician-guide-30-1-1401_compressed.pdf',
+        type: 'application/pdf',
+        size: 0,
+        folder: 'مراقبت های ادغام یافته‌ی کودک سالم'
+      },
+      {
+        name: 'rahnamay-jame-koodak.pdf',
+        url: '/Content/Books/مراقبت های ادغام یافته‌ی کودک سالم/rahnamay-jame-koodak.pdf',
+        type: 'application/pdf',
+        size: 0,
+        folder: 'مراقبت های ادغام یافته‌ی کودک سالم'
+      },
+      // هیپوتیروئیدی
+      {
+        name: 'کتاب-بیماری-کم-کاری-تیرویید-99.pdf',
+        url: '/Content/Books/هیپوتیروئیدی/کتاب-بیماری-کم-کاری-تیرویید-99.pdf',
+        type: 'application/pdf',
+        size: 0,
+        folder: 'هیپوتیروئیدی'
+      },
+      // واکسیناسیون
+      {
+        name: 'برنامه-و-راهنمای-ایمن-سازی-1403.pdf',
+        url: '/Content/Books/واکسیناسیون/برنامه-و-راهنمای-ایمن-سازی-1403.pdf',
+        type: 'application/pdf',
+        size: 0,
+        folder: 'واکسیناسیون'
+      }
+    ];
+    loading.value = false;
+    return;
+  }
+  
+  // Handle other categories from API
   try {
     const response = await fetch(getApiUrl(`/api/doctors/files/?category=${category}`), {
       credentials: 'include'
@@ -273,11 +400,22 @@ const getFileIcon = (fileType: string) => {
 };
 
 const formatFileSize = (bytes: number) => {
-  if (!bytes || bytes === 0) return '0 Bytes';
+  if (!bytes || bytes === 0) return '';
   const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+};
+
+const downloadFile = (file: any) => {
+  // Create a temporary anchor element to trigger download
+  const link = document.createElement('a');
+  link.href = file.url;
+  link.download = file.name;
+  link.target = '_blank';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
 };
 
 onMounted(() => {
