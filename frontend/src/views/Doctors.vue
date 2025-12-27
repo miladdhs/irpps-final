@@ -145,7 +145,8 @@
                   </h6>
                   <div class="row g-3">
                     <div v-for="file in folderFiles" :key="file.name" class="col-12">
-                      <div class="file-item glass-card p-3 d-flex align-items-center">
+                      <div class="file-item">
+                        <div class="file-item-inner glass-card p-3 d-flex align-items-center">
                         <div class="file-icon me-3">
                           <i :class="getFileIcon(file.type)" class="fa-2x text-primary"></i>
                         </div>
@@ -157,6 +158,7 @@
                           <i class="fa fa-download me-1"></i>
                           دانلود
                         </button>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -166,7 +168,8 @@
               <template v-else>
                 <div class="row g-3">
                   <div v-for="file in files" :key="file.name" class="col-12">
-                    <div class="file-item glass-card p-3 d-flex align-items-center">
+                    <div class="file-item">
+                      <div class="file-item-inner glass-card p-3 d-flex align-items-center">
                       <div class="file-icon me-3">
                         <i :class="getFileIcon(file.type)" class="fa-2x text-primary"></i>
                       </div>
@@ -178,6 +181,7 @@
                         <i class="fa fa-download me-1"></i>
                         دانلود
                       </button>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -625,15 +629,7 @@ onMounted(() => {
   justify-content: center;
 }
 
-.file-item {
-  transition: var(--transition-snappy);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.file-item:hover {
-  border-color: rgba(13, 110, 253, 0.3);
-  transform: translateX(5px);
-}
+/* File item styles moved to bottom to avoid conflicts */
 
 .file-icon {
   width: 50px;
@@ -642,33 +638,55 @@ onMounted(() => {
 
 .modal-dialog {
   max-height: 90vh;
+  height: auto;
   margin: 1.75rem auto;
   display: flex;
   align-items: center;
-  min-height: calc(100% - 3.5rem);
+  justify-content: center;
 }
 
 .modal-content {
   border-radius: var(--radius-lg);
   backdrop-filter: blur(20px);
   max-height: 90vh;
+  height: auto;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative;
 }
 
 .modal-header {
   flex-shrink: 0;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem 1.5rem;
+  min-height: 60px;
 }
 
 .modal-body-scrollable {
-  flex: 1;
+  flex: 1 1 auto;
   overflow-y: auto;
   overflow-x: hidden;
   padding: 1.5rem;
   min-height: 0;
-  max-height: calc(90vh - 120px);
+  max-height: calc(90vh - 60px);
+  position: relative;
+}
+
+.modal-body-scrollable > div {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.modal-body-scrollable .row {
+  margin: 0;
+  width: 100%;
+}
+
+.modal-body-scrollable .col-12 {
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .modal-body-scrollable::-webkit-scrollbar {
@@ -687,6 +705,28 @@ onMounted(() => {
 
 .modal-body-scrollable::-webkit-scrollbar-thumb:hover {
   background: rgba(13, 110, 253, 0.8);
+}
+
+.file-item {
+  width: 100%;
+  box-sizing: border-box;
+  margin-bottom: 0.75rem;
+}
+
+.file-item:last-child {
+  margin-bottom: 0;
+}
+
+.file-item-inner {
+  transition: var(--transition-snappy);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.file-item:hover .file-item-inner {
+  border-color: rgba(13, 110, 253, 0.3);
+  transform: translateX(5px);
 }
 
 @media (max-width: 768px) {
