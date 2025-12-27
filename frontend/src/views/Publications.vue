@@ -129,15 +129,11 @@
                   </div>
                   <div class="file-info flex-grow-1">
                     <h6 class="mb-1">{{ file.name }}</h6>
-                    <small class="text-muted">{{ formatFileSize(file.size) }}</small>
+                    <small v-if="file.size > 0" class="text-muted">{{ formatFileSize(file.size) }}</small>
                   </div>
-                  <a :href="file.url" target="_blank" class="soft-button primary btn-sm me-2" download>
+                  <a :href="file.url" target="_blank" class="soft-button primary btn-sm" :download="file.name">
                     <i class="fa fa-download me-1"></i>
                     دانلود
-                  </a>
-                  <a v-if="file.type.includes('pdf')" :href="file.url" target="_blank" class="soft-button outline btn-sm">
-                    <i class="fa fa-eye me-1"></i>
-                    مشاهده
                   </a>
                 </div>
               </div>
@@ -183,26 +179,12 @@ const handleCategoryClick = async (category: string) => {
       
       const fileList = await response.json();
       
-      // Fetch file sizes for each file
-      const filesWithSize = await Promise.all(
-        fileList.map(async (file: any) => {
-          try {
-            const headResponse = await fetch(file.url, { method: 'HEAD' });
-            const size = parseInt(headResponse.headers.get('content-length') || '0', 10);
-            return {
-              ...file,
-              size: size
-            };
-          } catch {
-            return {
-              ...file,
-              size: 0
-            };
-          }
-        })
-      );
-      
-      files.value = filesWithSize;
+      // Use files as-is, size will be determined by browser when downloading
+      // Don't fetch sizes to avoid CORS/HEAD request issues
+      files.value = fileList.map((file: any) => ({
+        ...file,
+        size: file.size || 0 // Use size from JSON if available, otherwise 0
+      }));
     } catch (error) {
       console.error('Error loading congress files, using fallback:', error);
       // Fallback to hardcoded list if JSON fails
@@ -232,26 +214,12 @@ const handleCategoryClick = async (category: string) => {
       
       const fileList = await response.json();
       
-      // Fetch file sizes for each file
-      const filesWithSize = await Promise.all(
-        fileList.map(async (file: any) => {
-          try {
-            const headResponse = await fetch(file.url, { method: 'HEAD' });
-            const size = parseInt(headResponse.headers.get('content-length') || '0', 10);
-            return {
-              ...file,
-              size: size
-            };
-          } catch {
-            return {
-              ...file,
-              size: 0
-            };
-          }
-        })
-      );
-      
-      files.value = filesWithSize;
+      // Use files as-is, size will be determined by browser when downloading
+      // Don't fetch sizes to avoid CORS/HEAD request issues
+      files.value = fileList.map((file: any) => ({
+        ...file,
+        size: file.size || 0 // Use size from JSON if available, otherwise 0
+      }));
     } catch (error) {
       console.error('Error loading other products, using fallback:', error);
       // Fallback to hardcoded list if JSON fails
