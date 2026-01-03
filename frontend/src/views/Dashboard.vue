@@ -535,13 +535,13 @@
 
     <!-- Resume Modal -->
     <div v-if="showResumeModal" class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);" @click.self="showResumeModal = false">
-          <div class="modal-dialog modal-dialog-centered modal-lg">
-            <div class="modal-content" style="border-radius: 20px;">
-              <div class="modal-header border-0">
+          <div class="modal-dialog modal-dialog-centered modal-lg" style="max-height: 90vh; display: flex; align-items: center;">
+            <div class="modal-content" style="border-radius: 20px; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden;">
+              <div class="modal-header border-0" style="flex-shrink: 0;">
                 <h5 class="modal-title"><i class="fa fa-file-text col_blue me-2"></i>توضیحات عمومی و رزومه</h5>
                 <button type="button" class="btn-close" @click="showResumeModal = false"></button>
               </div>
-              <div class="modal-body" style="max-height: 70vh; overflow-y: auto;">
+              <div class="modal-body" style="max-height: calc(90vh - 120px); overflow-y: auto; overflow-x: hidden; flex: 1 1 auto; min-height: 0;">
                 <div v-if="resumeMessage" :class="'alert alert-' + (resumeSuccess ? 'success' : 'danger') + ' alert-dismissible fade show'" role="alert">
                   {{ resumeMessage }}
                   <button type="button" class="btn-close" @click="resumeMessage = ''"></button>

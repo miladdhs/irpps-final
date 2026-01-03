@@ -247,7 +247,7 @@ const contactCards = computed(() => [
     icon: 'fa-envelope',
     title: t('contact.emailTitle'),
     subtitle: t('contact.emailSubtitle'),
-    lines: ['info@childrenlung.ir', 'support@childrenlung.ir', t('contact.emailResponse')]
+    lines: ['info@irspp.ir', t('contact.emailResponse')]
   },
   {
     icon: 'fa-map-marker-alt',

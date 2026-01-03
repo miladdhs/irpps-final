@@ -20,7 +20,7 @@
         <div class="row g-4">
           <div class="col-md-12">
             <div class="board-members-card glass-card p-5">
-              <h3 class="fw-bold mb-4 text-center">موسسین انجمن (هیئت مدیره اول)</h3>
+              <h3 class="fw-bold mb-4 text-center">هیئت مدیره اول</h3>
               <div class="row g-4">
                 <div class="col-md-6 col-lg-3">
                   <div class="member-item text-center p-4 glass-chip">

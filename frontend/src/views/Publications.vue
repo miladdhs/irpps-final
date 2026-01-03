@@ -178,6 +178,12 @@ const handleCategoryClick = async (category: string) => {
         url: '/Content/Other/1_23033290624.pdf',
         type: 'application/pdf',
         size: 0
+      },
+      {
+        name: 'خلاصه مقالات 5 همایش 403.pdf',
+        url: '/Content/Other/خلاصه مقالات 5 همایش 403.pdf',
+        type: 'application/pdf',
+        size: 0
       }
     ];
     loading.value = false;
@@ -191,12 +197,6 @@ const handleCategoryClick = async (category: string) => {
       {
         name: 'DOC-20251227-WA0007.pdf',
         url: '/Content/Other/DOC-20251227-WA0007.pdf',
-        type: 'application/pdf',
-        size: 0
-      },
-      {
-        name: 'خلاصه مقالات 5 همایش 403.pdf',
-        url: '/Content/Other/خلاصه مقالات 5 همایش 403.pdf',
         type: 'application/pdf',
         size: 0
       }

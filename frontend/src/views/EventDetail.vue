@@ -14,7 +14,6 @@
             <div v-if="eventItem" class="meta d-flex flex-wrap gap-3 text-muted">
               <span><i class="fa fa-calendar me-2"></i>{{ formatDateTime(eventItem.start_date) }}</span>
               <span><i class="fa fa-map-marker-alt me-2"></i>{{ eventItem.location }}</span>
-              <span><i class="fa fa-users me-2"></i>{{ eventItem.max_participants ? eventItem.max_participants : 'نامحدود' }}</span>
             </div>
           </div>
         </div>
@@ -34,14 +33,8 @@
 
         <article v-else-if="eventItem" class="event-article glass-card p-4 p-md-5">
           <div class="article-header mb-4">
-            <span class="badge rounded-pill" :class="eventItem.is_featured ? 'bg-primary' : 'bg-secondary'">
-              {{ eventItem.is_featured ? 'رویداد ویژه' : eventItem.event_type }}
-            </span>
-            <span
-              class="badge status-badge"
-              :class="eventItem.is_registration_open ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'"
-            >
-              {{ eventItem.is_registration_open ? 'ثبت‌نام باز است' : 'ثبت‌نام بسته است' }}
+            <span class="badge rounded-pill bg-primary">
+              شناسه: {{ eventItem.id }}
             </span>
           </div>
 
@@ -76,15 +69,6 @@
                 <div>
                   <h6 class="fw-bold mb-1">مهلت ثبت‌نام</h6>
                   <p class="mb-0 text-muted">{{ formatDateTime(eventItem.registration_deadline) }}</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="info-card">
-                <i class="fa fa-wallet"></i>
-                <div>
-                  <h6 class="fw-bold mb-1">هزینه شرکت</h6>
-                  <p class="mb-0 text-muted">{{ formatPrice(eventItem.price) }}</p>
                 </div>
               </div>
             </div>

@@ -56,8 +56,8 @@
                 </div>
                 <div class="event-card-body">
                   <div class="event-card-meta">
-                    <span class="badge rounded-pill" :class="event.is_featured ? 'bg-primary' : 'bg-secondary'">
-                      {{ event.is_featured ? 'ویژه' : event.event_type }}
+                    <span class="badge rounded-pill bg-primary">
+                      شناسه: {{ event.id }}
                     </span>
                     <span v-if="isEventFinished(event)" class="badge rounded-pill bg-dark text-white">
                       تمام شده
@@ -74,22 +74,8 @@
                       <i class="fa fa-clock me-2"></i>
                       {{ $t('services.endDate') }}: {{ formatDateTime(event.end_date) }}
                     </li>
-                    <li>
-                      <i class="fa fa-users me-2"></i>
-                      {{ $t('services.capacity') }}: {{ event.max_participants ? event.max_participants : $t('services.unlimited') }}
-                    </li>
-                    <li>
-                      <i class="fa fa-money-bill-wave me-2"></i>
-                      {{ $t('services.fee') }}: {{ formatPrice(event.price) }}
-                    </li>
                   </ul>
                   <div class="event-card-footer">
-                    <span
-                      class="badge status-badge"
-                      :class="event.is_registration_open ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'"
-                    >
-                      {{ event.is_registration_open ? $t('services.registrationOpen') : $t('services.registrationClosed') }}
-                    </span>
                     <router-link :to="`/events/${event.slug}`" class="soft-button primary">
                       {{ $t('services.details') }}
                       <i class="fa fa-chevron-left me-1"></i>

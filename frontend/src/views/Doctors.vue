@@ -83,21 +83,6 @@
                   </div>
                 </div>
 
-                <!-- Broshour -->
-                <div class="col-lg-4 col-md-6">
-                  <div class="category-card glass-card p-4 text-center h-100" @click="handleCategoryClick('broshour')">
-                    <div class="category-icon mb-3">
-                      <i class="fa fa-file-image-o fa-3x text-primary"></i>
-                    </div>
-                    <h5 class="fw-bold mb-2">بروشور</h5>
-                    <p class="text-muted mb-3">بروشورها و تصاویر آموزشی</p>
-                    <button class="soft-button primary btn-sm">
-                      <i class="fa fa-download me-1"></i>
-                      مشاهده و دانلود
-                    </button>
-                  </div>
-                </div>
-
                 <!-- Resources -->
                 <div class="col-lg-4 col-md-6">
                   <div class="category-card glass-card p-4 text-center h-100" @click="handleCategoryClick('resources')">
@@ -209,7 +194,6 @@ const categoryTitles: Record<string, string> = {
   video: 'ویدیو',
   slides: 'اسلایدها',
   books: 'کتاب',
-  broshour: 'بروشور',
   resources: 'منابع و مدارک'
 };
 
@@ -242,50 +226,6 @@ const handleCategoryClick = async (category: string) => {
   if (category === 'books') {
     // Load books from local Content/Books directory
     files.value = [
-      // تکامل
-      {
-        name: '152-games-and-exercises-for-childrens-development.pdf',
-        url: '/Content/Books/تکامل/152-games-and-exercises-for-childrens-development.pdf',
-        type: 'application/pdf',
-        size: 0,
-        folder: 'تکامل'
-      },
-      {
-        name: 'Childrens-development-book.pdf',
-        url: '/Content/Books/تکامل/Childrens-development-book.pdf',
-        type: 'application/pdf',
-        size: 0,
-        folder: 'تکامل'
-      },
-      {
-        name: 'تقویت-تکامل-در-اوایل-کودکی-.pdf',
-        url: '/Content/Books/تکامل/تقویت-تکامل-در-اوایل-کودکی-.pdf',
-        type: 'application/pdf',
-        size: 0,
-        folder: 'تکامل'
-      },
-      {
-        name: 'فعالیت-هایی-برای-ارتقای-تکامل-کودک.pdf',
-        url: '/Content/Books/تکامل/فعالیت-هایی-برای-ارتقای-تکامل-کودک.pdf',
-        type: 'application/pdf',
-        size: 0,
-        folder: 'تکامل'
-      },
-      {
-        name: 'کتاب-تکامل-دوران-ابتدای-کودکی.pdf',
-        url: '/Content/Books/تکامل/کتاب-تکامل-دوران-ابتدای-کودکی.pdf',
-        type: 'application/pdf',
-        size: 0,
-        folder: 'تکامل'
-      },
-      // گفتار خانواده
-      {
-        name: 'khanevade.pdf',
-        url: '/Content/Books/گفتار خانواده/khanevade.pdf',
-        type: 'application/pdf',
-        size: 0,
-        folder: 'گفتار خانواده'
-      },
       // مراقبت های ادغام ناخوشی های اطفال
       {
         name: 'Final-instructions-implementation.pdf',
@@ -351,14 +291,6 @@ const handleCategoryClick = async (category: string) => {
         size: 0,
         folder: 'مراقبت های ادغام یافته‌ی کودک سالم'
       },
-      // هیپوتیروئیدی
-      {
-        name: 'کتاب-بیماری-کم-کاری-تیرویید-99.pdf',
-        url: '/Content/Books/هیپوتیروئیدی/کتاب-بیماری-کم-کاری-تیرویید-99.pdf',
-        type: 'application/pdf',
-        size: 0,
-        folder: 'هیپوتیروئیدی'
-      },
       // واکسیناسیون
       {
         name: 'برنامه-و-راهنمای-ایمن-سازی-1403.pdf',
@@ -366,117 +298,6 @@ const handleCategoryClick = async (category: string) => {
         type: 'application/pdf',
         size: 0,
         folder: 'واکسیناسیون'
-      }
-    ];
-    loading.value = false;
-    return;
-  }
-  
-  // Handle "Broshour" from local files
-  if (category === 'broshour') {
-    // Load broshour files from local Content/Broshour directory
-    files.value = [
-      {
-        name: 'picture-1-scaled.jpg',
-        url: '/Content/Broshour/picture-1-scaled.jpg',
-        type: 'image/jpeg',
-        size: 0
-      },
-      {
-        name: 'picture-2-scaled.jpg',
-        url: '/Content/Broshour/picture-2-scaled.jpg',
-        type: 'image/jpeg',
-        size: 0
-      },
-      {
-        name: 'picture-4-scaled.jpg',
-        url: '/Content/Broshour/picture-4-scaled.jpg',
-        type: 'image/jpeg',
-        size: 0
-      },
-      {
-        name: 'picture-4-scaled (1).jpg',
-        url: '/Content/Broshour/picture-4-scaled (1).jpg',
-        type: 'image/jpeg',
-        size: 0
-      },
-      {
-        name: 'picture-7-scaled.jpg',
-        url: '/Content/Broshour/picture-7-scaled.jpg',
-        type: 'image/jpeg',
-        size: 0
-      },
-      {
-        name: 'picture-8-scaled.jpg',
-        url: '/Content/Broshour/picture-8-scaled.jpg',
-        type: 'image/jpeg',
-        size: 0
-      },
-      {
-        name: 'picture-9-scaled.jpg',
-        url: '/Content/Broshour/picture-9-scaled.jpg',
-        type: 'image/jpeg',
-        size: 0
-      },
-      {
-        name: 'picture-10-scaled.jpg',
-        url: '/Content/Broshour/picture-10-scaled.jpg',
-        type: 'image/jpeg',
-        size: 0
-      },
-      {
-        name: 'picture-11-scaled.jpg',
-        url: '/Content/Broshour/picture-11-scaled.jpg',
-        type: 'image/jpeg',
-        size: 0
-      },
-      {
-        name: 'picture-12-1-scaled.jpg',
-        url: '/Content/Broshour/picture-12-1-scaled.jpg',
-        type: 'image/jpeg',
-        size: 0
-      },
-      {
-        name: 'picture-13-scaled.jpg',
-        url: '/Content/Broshour/picture-13-scaled.jpg',
-        type: 'image/jpeg',
-        size: 0
-      },
-      {
-        name: 'picture-14-scaled.jpg',
-        url: '/Content/Broshour/picture-14-scaled.jpg',
-        type: 'image/jpeg',
-        size: 0
-      },
-      {
-        name: 'picture-16-scaled.jpg',
-        url: '/Content/Broshour/picture-16-scaled.jpg',
-        type: 'image/jpeg',
-        size: 0
-      },
-      {
-        name: 'picture-17-scaled.jpg',
-        url: '/Content/Broshour/picture-17-scaled.jpg',
-        type: 'image/jpeg',
-        size: 0
-      },
-      {
-        name: 'picture-18-scaled.jpg',
-        url: '/Content/Broshour/picture-18-scaled.jpg',
-        type: 'image/jpeg',
-        size: 0
-      },
-      {
-        name: 'pictute-6-scaled.jpg',
-        url: '/Content/Broshour/pictute-6-scaled.jpg',
-        type: 'image/jpeg',
-        size: 0
-      },
-      {
-        name: 'Screenshot-811.png',
-        url: '/Content/Broshour/Screenshot-811.png',
-        type: 'image/png',
-        size: 0
       }
     ];
     loading.value = false;
