@@ -491,7 +491,7 @@ onMounted(() => {
   border-radius: var(--radius-lg);
   backdrop-filter: blur(20px);
   max-height: 90vh;
-  height: auto;
+  height: 90vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -516,7 +516,7 @@ onMounted(() => {
   overflow-x: hidden;
   padding: 1.5rem;
   min-height: 0;
-  max-height: calc(90vh - 60px);
+  max-height: 100%;
   position: relative;
   width: 100%;
   box-sizing: border-box;
@@ -632,6 +632,12 @@ onMounted(() => {
   
   .modal-dialog {
     margin: 1rem;
+    max-height: 95vh;
+  }
+  
+  .modal-content {
+    height: 95vh;
+    max-height: 95vh;
   }
 }
 </style>
