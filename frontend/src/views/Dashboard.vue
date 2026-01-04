@@ -541,7 +541,7 @@
                 <h5 class="modal-title"><i class="fa fa-file-text col_blue me-2"></i>توضیحات عمومی و رزومه</h5>
                 <button type="button" class="btn-close" @click="showResumeModal = false"></button>
               </div>
-              <div class="modal-body" style="max-height: calc(90vh - 120px); overflow-y: auto; overflow-x: hidden; flex: 1 1 auto; min-height: 0;">
+              <div class="modal-body modal-body-scrollable">
                 <div v-if="resumeMessage" :class="'alert alert-' + (resumeSuccess ? 'success' : 'danger') + ' alert-dismissible fade show'" role="alert">
                   {{ resumeMessage }}
                   <button type="button" class="btn-close" @click="resumeMessage = ''"></button>
@@ -2101,6 +2101,61 @@ onMounted(() => {
 .fade-slide-leave-to {
   opacity: 0;
   transform: translateY(-6px);
+}
+
+.modal-body-scrollable {
+  overflow-y: auto !important;
+  flex: 1 1 auto;
+  overflow-x: hidden;
+  padding: 1.5rem;
+  min-height: 0;
+  max-height: 100%;
+  position: relative;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.modal-body-scrollable > div {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.modal-body-scrollable .row {
+  margin: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.modal-body-scrollable .col-12 {
+  padding-left: 0.75rem;
+  padding-right: 0.75rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  flex: 0 0 100%;
+}
+
+.modal-body-scrollable::-webkit-scrollbar {
+  width: 10px;
+}
+
+.modal-body-scrollable::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 5px;
+}
+
+.modal-body-scrollable::-webkit-scrollbar-thumb {
+  background: rgba(13, 110, 253, 0.6);
+  border-radius: 5px;
+}
+
+.modal-body-scrollable::-webkit-scrollbar-thumb:hover {
+  background: rgba(13, 110, 253, 0.8);
 }
 
 @media (max-width: 991.98px) {

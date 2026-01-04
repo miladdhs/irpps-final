@@ -478,6 +478,7 @@ onMounted(() => {
 
 .modal-dialog {
   max-height: 90vh;
+  height: 90vh;
   max-width: 90vw;
   width: 100%;
   margin: 1.75rem auto;
@@ -485,16 +486,18 @@ onMounted(() => {
   align-items: center;
   justify-content: center;
   position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .modal-content {
+  overflow: hidden !important;
   border-radius: var(--radius-lg);
   backdrop-filter: blur(20px);
   max-height: 90vh;
   height: 90vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   position: relative;
   width: 100%;
   max-width: 100%;
@@ -511,8 +514,8 @@ onMounted(() => {
 }
 
 .modal-body-scrollable {
+  overflow-y: auto !important;
   flex: 1 1 auto;
-  overflow-y: auto;
   overflow-x: hidden;
   padding: 1.5rem;
   min-height: 0;
@@ -633,6 +636,7 @@ onMounted(() => {
   .modal-dialog {
     margin: 1rem;
     max-height: 95vh;
+    height: 95vh;
   }
   
   .modal-content {
