@@ -48,45 +48,110 @@
             <p class="text-muted mb-0">{{ $t('services.noEventsDesc') }}</p>
           </div>
 
-          <div v-else class="row g-4">
-            <div class="col-lg-4 col-md-6" v-for="event in eventItems" :key="event.id">
-              <article class="event-card glass-card h-100" :class="{ 'event-finished': isEventFinished(event) }">
-                <div class="event-card-image" v-if="event.image">
-                  <img :src="event.image" :alt="event.title">
+          <div v-else-if="activeEvents.length === 0 && finishedEvents.length === 0" class="empty-state glass-card text-center p-5">
+            <i class="fa fa-info-circle fa-2x mb-3 text-primary"></i>
+            <h5 class="fw-bold mb-2">رویدادی یافت نشد</h5>
+            <p class="text-muted mb-0">در حال حاضر رویدادی برای نمایش وجود ندارد.</p>
+          </div>
+
+          <div v-else>
+            <!-- Active Events Section -->
+            <div v-if="activeEvents.length > 0" class="mb-5">
+              <h3 class="section-title mb-4">
+                <i class="fa fa-calendar-check me-2"></i>
+                رویدادهای فعال
+              </h3>
+              <div class="row g-4">
+                <div class="col-lg-4 col-md-6" v-for="event in activeEvents" :key="event.id">
+                  <article class="event-card glass-card h-100 event-active">
+                    <div class="event-card-image" v-if="event.image">
+                      <img :src="event.image" :alt="event.title">
+                    </div>
+                    <div class="event-card-body">
+                      <div class="event-card-meta">
+                        <span class="badge rounded-pill bg-success">
+                          <i class="fa fa-check-circle me-1"></i>
+                          ثبت‌نام باز است
+                        </span>
+                      </div>
+                      <h3 class="event-card-title">{{ event.title }}</h3>
+                      <p class="event-card-content">{{ event.description }}</p>
+                      <ul class="event-card-info list-unstyled">
+                        <li>
+                          <i class="fa fa-map-marker-alt me-2"></i>
+                          {{ $t('services.location') }}: {{ event.location }}
+                        </li>
+                        <li v-if="event.registration_deadline">
+                          <i class="fa fa-calendar-times me-2"></i>
+                          مهلت ثبت‌نام: {{ formatDate(event.registration_deadline) }}
+                        </li>
+                        <li v-if="event.end_date">
+                          <i class="fa fa-clock me-2"></i>
+                          {{ $t('services.endDate') }}: {{ formatDateTime(event.end_date) }}
+                        </li>
+                      </ul>
+                      <div class="event-card-footer">
+                        <router-link :to="`/events/${event.slug}`" class="soft-button primary">
+                          {{ $t('services.details') }}
+                          <i class="fa fa-chevron-left me-1"></i>
+                        </router-link>
+                      </div>
+                    </div>
+                  </article>
                 </div>
-                <div class="event-card-body">
-                  <div class="event-card-meta">
-                    <span class="badge rounded-pill bg-primary">
-                      شناسه: {{ event.id }}
-                    </span>
-                    <span v-if="isEventFinished(event)" class="badge rounded-pill bg-dark text-white">
-                      تمام شده
-                    </span>
-                  </div>
-                  <h3 class="event-card-title">{{ event.title }}</h3>
-                  <p class="event-card-content">{{ event.description }}</p>
-                  <ul class="event-card-info list-unstyled">
-                    <li>
-                      <i class="fa fa-map-marker-alt me-2"></i>
-                      {{ $t('services.location') }}: {{ event.location }}
-                    </li>
-                    <li>
-                      <i class="fa fa-clock me-2"></i>
-                      {{ $t('services.endDate') }}: {{ formatDateTime(event.end_date) }}
-                    </li>
-                  </ul>
-                  <div class="event-card-footer">
-                    <router-link :to="`/events/${event.slug}`" class="soft-button primary">
-                      {{ $t('services.details') }}
-                      <i class="fa fa-chevron-left me-1"></i>
-                    </router-link>
-                  </div>
+              </div>
+            </div>
+
+            <!-- Finished Events Section -->
+            <div v-if="finishedEvents.length > 0">
+              <h3 class="section-title mb-4">
+                <i class="fa fa-calendar-times me-2"></i>
+                رویدادهای تمام شده
+              </h3>
+              <div class="row g-4">
+                <div class="col-lg-4 col-md-6" v-for="event in finishedEvents" :key="event.id">
+                  <article class="event-card glass-card h-100 event-finished">
+                    <div class="event-card-image" v-if="event.image">
+                      <img :src="event.image" :alt="event.title">
+                    </div>
+                    <div class="event-card-body">
+                      <div class="event-card-meta">
+                        <span class="badge rounded-pill bg-dark text-white">
+                          <i class="fa fa-times-circle me-1"></i>
+                          ثبت‌نام بسته شده
+                        </span>
+                      </div>
+                      <h3 class="event-card-title">{{ event.title }}</h3>
+                      <p class="event-card-content">{{ event.description }}</p>
+                      <ul class="event-card-info list-unstyled">
+                        <li>
+                          <i class="fa fa-map-marker-alt me-2"></i>
+                          {{ $t('services.location') }}: {{ event.location }}
+                        </li>
+                        <li v-if="event.registration_deadline">
+                          <i class="fa fa-calendar-times me-2"></i>
+                          مهلت ثبت‌نام: {{ formatDate(event.registration_deadline) }}
+                        </li>
+                        <li v-if="event.end_date">
+                          <i class="fa fa-clock me-2"></i>
+                          {{ $t('services.endDate') }}: {{ formatDateTime(event.end_date) }}
+                        </li>
+                      </ul>
+                      <div class="event-card-footer">
+                        <router-link :to="`/events/${event.slug}`" class="soft-button primary">
+                          {{ $t('services.details') }}
+                          <i class="fa fa-chevron-left me-1"></i>
+                        </router-link>
+                      </div>
+                    </div>
+                  </article>
                 </div>
-              </article>
+              </div>
             </div>
           </div>
 
-          <div v-if="hasNextPage || hasPrevPage" class="text-center mt-5">
+          <!-- Pagination for active events section -->
+          <div v-if="(activeEvents.length > 0 || finishedEvents.length > 0) && (hasNextPage || hasPrevPage)" class="text-center mt-5">
             <nav>
               <ul class="pagination justify-content-center">
                 <li class="page-item" :class="{ disabled: !hasPrevPage }">
@@ -177,6 +242,20 @@ const formatDateTime = (isoDate: string) => {
   }
 };
 
+const formatDate = (isoDate: string | null) => {
+  if (!isoDate) return '';
+  try {
+    return new Date(isoDate).toLocaleDateString('fa-IR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  } catch (error) {
+    console.warn('Unable to format date:', isoDate, error);
+    return isoDate;
+  }
+};
+
 const formatPrice = (value: number) => {
   if (!value || value <= 0) {
     return t('services.free');
@@ -185,9 +264,21 @@ const formatPrice = (value: number) => {
 };
 
 const isEventFinished = (event: EventItem): boolean => {
+  // Check registration status first
   if (!event.is_registration_open) {
     return true;
   }
+  // If registration deadline exists and passed, event is finished
+  if (event.registration_deadline) {
+    const deadline = new Date(event.registration_deadline);
+    const now = new Date();
+    // Set time to end of day for deadline comparison
+    deadline.setHours(23, 59, 59, 999);
+    if (deadline < now) {
+      return true;
+    }
+  }
+  // Check end_date as fallback
   if (event.end_date) {
     const endDate = new Date(event.end_date);
     const now = new Date();
@@ -195,6 +286,15 @@ const isEventFinished = (event: EventItem): boolean => {
   }
   return false;
 };
+
+// Separate events into active and finished
+const activeEvents = computed(() => {
+  return eventItems.value.filter(event => !isEventFinished(event));
+});
+
+const finishedEvents = computed(() => {
+  return eventItems.value.filter(event => isEventFinished(event));
+});
 
 const loadPage = async (page: number) => {
   if (page < 1 || page > totalPages.value) return;
@@ -360,9 +460,19 @@ onMounted(() => {
   cursor: not-allowed;
 }
 
+.event-active {
+  border: 2px solid rgba(34, 197, 94, 0.3);
+  box-shadow: 0 4px 20px rgba(34, 197, 94, 0.1);
+}
+
+.event-active .event-card-title {
+  color: #16a34a;
+}
+
 .event-finished {
   opacity: 0.65;
   filter: grayscale(0.3);
+  border: 1px solid rgba(107, 114, 128, 0.2);
 }
 
 .event-finished .event-card-image img {
@@ -373,6 +483,14 @@ onMounted(() => {
 .event-finished .event-card-content,
 .event-finished .event-card-info {
   color: #6b7280;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #14233c;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid rgba(37, 99, 235, 0.2);
 }
 
 @media (max-width: 575.98px) {

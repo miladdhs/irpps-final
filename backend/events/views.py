@@ -151,8 +151,8 @@ def event_list(request):
         # Calculate start_date and end_date from event_year and event_month
         start_date, end_date = calculate_event_dates(item.event_year, item.event_month)
         
-        # Since all events are past, registration is closed
-        is_registration_open = False
+        # Use the model's property to check if registration is open
+        is_registration_open = item.is_registration_open
         
         events_data.append({
             'id': item.id,
@@ -205,8 +205,8 @@ def event_detail(request, slug):
     # Calculate start_date and end_date from event_year and event_month
     start_date, end_date = calculate_event_dates(event.event_year, event.event_month)
     
-    # Since all events are past, registration is closed
-    is_registration_open = False
+    # Use the model's property to check if registration is open
+    is_registration_open = event.is_registration_open
     
     return JsonResponse({
         'success': True,

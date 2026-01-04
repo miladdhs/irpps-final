@@ -5,16 +5,41 @@ Usage: python manage.py add_new_events
 import os
 import shutil
 from pathlib import Path
+from datetime import date
 from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
 from django.conf import settings
+from django.utils import timezone
 from events.models import Event
+
+# Try to import jdatetime for Persian date conversion
+try:
+    import jdatetime
+    HAS_JDATETIME = True
+except ImportError:
+    HAS_JDATETIME = False
 
 User = get_user_model()
 
 
 class Command(BaseCommand):
     help = 'Add new events to the database'
+
+    def persian_to_gregorian_date(self, year, month, day):
+        """Convert Persian date to Gregorian date"""
+        try:
+            if HAS_JDATETIME:
+                persian_date = jdatetime.date(year, month, day)
+                gregorian_date = persian_date.togregorian()
+                return gregorian_date
+            else:
+                # Fallback: approximate conversion
+                approx_year = year + 621
+                # Simple approximation (not accurate but works for basic needs)
+                return date(approx_year, month, min(day, 28))
+        except Exception as e:
+            self.stdout.write(self.style.WARNING(f'Error converting date: {e}'))
+            return None
 
     def handle(self, *args, **options):
         # Get or create a staff user for created_by
@@ -30,6 +55,9 @@ class Command(BaseCommand):
         media_dir.mkdir(parents=True, exist_ok=True)
 
         # Event 1: ورکشاپ POCUS
+        # Registration deadline: 5 بهمن 1404
+        registration_deadline_1 = self.persian_to_gregorian_date(1404, 11, 5)
+        
         event1_data = {
             'title': 'ورکشاپ عملی POCUS (سونوگرافی در نقطه مراقبت در بخش مراقبت‌های ویژه) در ریه اطفال',
             'slug': 'workshop-pocus-1404',
@@ -83,9 +111,13 @@ class Command(BaseCommand):
             'is_featured': False,
             'created_by': staff_user,
             'cover_image_path': 'IMG_20251104_071318_242.jpg',
+            'registration_deadline': registration_deadline_1,
         }
 
         # Event 2: کنفرانس علمی یک روزه
+        # Registration deadline: 2 دی 1404
+        registration_deadline_2 = self.persian_to_gregorian_date(1404, 10, 2)
+        
         event2_data = {
             'title': 'کنفرانس علمی یک روزه: بیماری شایع تنفسی کودکان',
             'slug': 'conference-respiratory-children-1404',
@@ -128,9 +160,13 @@ class Command(BaseCommand):
             'is_featured': False,
             'created_by': staff_user,
             'cover_image_path': 'photo_2026-01-04_12-05-34.jpg',
+            'registration_deadline': registration_deadline_2,
         }
 
         # Event 3: چهارمین کنگره بین‌المللی
+        # Registration deadline: 20 دی 1404
+        registration_deadline_3 = self.persian_to_gregorian_date(1404, 10, 20)
+        
         event3_data = {
             'title': 'چهارمین کنگره بین‌المللی ریه و اختلالات تنفسی خواب کودکان',
             'slug': 'congress-pediatric-pulmonary-2026',
@@ -166,16 +202,25 @@ class Command(BaseCommand):
             'is_featured': True,  # Mark as featured
             'created_by': staff_user,
             'cover_image_path': None,  # PDF file, no image
+            'registration_deadline': registration_deadline_3,
         }
 
         events_data = [event1_data, event2_data, event3_data]
 
         for event_data in events_data:
             cover_image_path = event_data.pop('cover_image_path', None)
+            registration_deadline = event_data.pop('registration_deadline', None)
             
             # Check if event already exists
-            if Event.objects.filter(slug=event_data['slug']).exists():
-                self.stdout.write(self.style.WARNING(f'Event "{event_data["title"]}" already exists. Skipping...'))
+            existing_event = Event.objects.filter(slug=event_data['slug']).first()
+            if existing_event:
+                # Update registration_deadline if event exists
+                if registration_deadline:
+                    existing_event.registration_deadline = registration_deadline
+                    existing_event.save(update_fields=['registration_deadline'])
+                    self.stdout.write(self.style.SUCCESS(f'Updated registration_deadline for: {existing_event.title}'))
+                else:
+                    self.stdout.write(self.style.WARNING(f'Event "{event_data["title"]}" already exists. Skipping...'))
                 continue
 
             # Copy cover image if provided
@@ -194,7 +239,8 @@ class Command(BaseCommand):
             # Create event
             event = Event.objects.create(
                 **event_data,
-                cover_image=cover_image
+                cover_image=cover_image,
+                registration_deadline=registration_deadline
             )
 
             self.stdout.write(self.style.SUCCESS(f'Successfully created event: {event.title}'))
