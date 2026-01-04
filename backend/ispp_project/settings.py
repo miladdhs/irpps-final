@@ -231,6 +231,10 @@ SESSION_COOKIE_AGE = 86400  # 24 hours
 SESSION_SAVE_EVERY_REQUEST = True
 
 # Logging configuration
+# Ensure logs directory exists
+logs_dir = BASE_DIR / 'logs'
+logs_dir.mkdir(exist_ok=True)
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -248,7 +252,7 @@ LOGGING = {
         'file': {
             'level': 'WARNING',
             'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs' / 'django.log',
+            'filename': logs_dir / 'django.log',
             'formatter': 'verbose',
         },
         'console': {
