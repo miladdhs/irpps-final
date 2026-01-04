@@ -45,30 +45,12 @@
           <div class="article-content" v-html="formattedDescription"></div>
 
           <div class="event-meta-info row gy-3 mt-4">
-            <div class="col-md-4">
-              <div class="info-card">
-                <i class="fa fa-calendar-day"></i>
-                <div>
-                  <h6 class="fw-bold mb-1">زمان شروع</h6>
-                  <p class="mb-0 text-muted">{{ formatDateTime(eventItem.start_date) }}</p>
-                </div>
-              </div>
-            </div>
-            <div class="col-md-4">
-              <div class="info-card">
-                <i class="fa fa-calendar-check"></i>
-                <div>
-                  <h6 class="fw-bold mb-1">زمان پایان</h6>
-                  <p class="mb-0 text-muted">{{ formatDateTime(eventItem.end_date) }}</p>
-                </div>
-              </div>
-            </div>
             <div class="col-md-4" v-if="eventItem.registration_deadline">
               <div class="info-card">
                 <i class="fa fa-hourglass-half"></i>
                 <div>
                   <h6 class="fw-bold mb-1">مهلت ثبت‌نام</h6>
-                  <p class="mb-0 text-muted">{{ formatDateTime(eventItem.registration_deadline) }}</p>
+                  <p class="mb-0 text-muted">{{ formatDate(eventItem.registration_deadline) }}</p>
                 </div>
               </div>
             </div>
@@ -124,6 +106,20 @@ const formatDateTime = (isoDate: string) => {
     return new Date(isoDate).toLocaleString('fa-IR', {
       dateStyle: 'medium',
       timeStyle: 'short',
+    });
+  } catch (error) {
+    console.warn('Unable to format date:', isoDate, error);
+    return isoDate;
+  }
+};
+
+const formatDate = (isoDate: string | null) => {
+  if (!isoDate) return '';
+  try {
+    return new Date(isoDate).toLocaleDateString('fa-IR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
     });
   } catch (error) {
     console.warn('Unable to format date:', isoDate, error);
