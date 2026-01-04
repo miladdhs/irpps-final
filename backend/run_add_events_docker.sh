@@ -8,6 +8,7 @@ set -e
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # مسیرهای پیش‌فرض
@@ -43,6 +44,29 @@ if ! docker ps | grep -q irpps-mysql; then
 fi
 
 echo -e "${GREEN}✅ Containers اجرا شدند${NC}"
+
+# بررسی وجود دستور در container
+echo -e "${BLUE}🔍 بررسی وجود دستور add_new_events...${NC}"
+if ! docker compose exec -T backend test -f /app/events/management/commands/add_new_events.py 2>/dev/null; then
+    echo -e "${YELLOW}⚠️  دستور add_new_events در container پیدا نشد${NC}"
+    echo -e "${YELLOW}🔨 در حال rebuild کردن backend container (این ممکن است چند دقیقه طول بکشد)...${NC}"
+    docker compose build backend
+    docker compose up -d backend
+    echo -e "${YELLOW}⏳ منتظر آماده شدن backend...${NC}"
+    sleep 15
+    
+    # بررسی مجدد
+    if ! docker compose exec -T backend test -f /app/events/management/commands/add_new_events.py 2>/dev/null; then
+        echo -e "${RED}❌ بعد از rebuild هم دستور پیدا نشد!${NC}"
+        echo -e "${YELLOW}💡 لطفاً دستی بررسی کنید:${NC}"
+        echo "   docker compose exec backend ls -la /app/events/management/commands/"
+        exit 1
+    fi
+    echo -e "${GREEN}✅ دستور بعد از rebuild پیدا شد${NC}"
+else
+    echo -e "${GREEN}✅ دستور پیدا شد${NC}"
+fi
+
 echo -e "${YELLOW}🚀 در حال اجرای دستور: python manage.py add_new_events${NC}"
 echo ""
 
