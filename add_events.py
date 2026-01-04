@@ -1,0 +1,251 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Script to add new events directly to the database
+Usage: python add_events.py
+"""
+import os
+import sys
+import django
+from pathlib import Path
+
+# Fix encoding for Windows console
+if sys.platform == 'win32':
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
+
+# Add backend directory to path
+backend_dir = Path(__file__).parent / 'backend'
+sys.path.insert(0, str(backend_dir))
+
+# Set database environment variables for online database (must be set before Django setup)
+os.environ['DB_HOST'] = '45.149.79.217'
+os.environ['DB_USER'] = 'root'
+os.environ['DB_PASSWORD'] = 'Re27cwv9TsNCBqPvbYgJ'
+os.environ['DB_NAME'] = 'irporg_DB'
+os.environ['DB_PORT'] = '3306'
+os.environ['IS_DOCKER'] = 'False'
+
+# Set up Django
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ispp_project.settings')
+django.setup()
+
+from django.contrib.auth import get_user_model
+from events.models import Event
+import shutil
+
+User = get_user_model()
+
+def add_events():
+    # Get or create a staff user for created_by
+    staff_user = User.objects.filter(is_staff=True).first()
+    if not staff_user:
+        print("❌ خطا: هیچ کاربر staff یافت نشد. لطفاً ابتدا یک کاربر staff ایجاد کنید.")
+        return False
+
+    # Base paths
+    base_dir = Path(__file__).parent
+    frontend_content = base_dir / 'frontend' / 'public' / 'Content' / 'lAST'
+    media_dir = base_dir / 'backend' / 'media' / 'events' / 'covers'
+    media_dir.mkdir(parents=True, exist_ok=True)
+
+    # Event 1: ورکشاپ POCUS
+    event1_data = {
+        'title': 'ورکشاپ عملی POCUS (سونوگرافی در نقطه مراقبت در بخش مراقبت‌های ویژه) در ریه اطفال',
+        'slug': 'workshop-pocus-1404',
+        'description': '''عنوان رویداد:
+ورکشاپ عملی POCUS (سونوگرافی در نقطه مراقبت در بخش مراقبت‌های ویژه) در ریه اطفال
+
+برگزار کننده:
+شرکت ایده گستر قدرت
+
+سرفصل‌های دوره:
+این کارگاه شامل مباحث تئوری و عملی زیر می‌باشد:
+• اکوکاردیوگرافی پایه: نماهای اصلی، EF، و افیوژن پریکارد
+• اولتراسوند پایه ریه: علائم، پنوموتوراکس، و افیوژن پلورال
+• سونوگرافی اندام تحتانی
+• ارزیابی وضعیت حجم مایعات بدن
+• eFAST (سونوگرافی متمرکز برای تروما)
+• ارزیابی دیافراگم با اولتراسوند
+• اولتراسوند شکم در ICU
+• ارزیابی راه هوایی با اولتراسوند
+
+مخاطبین هدف کارگاه:
+این دوره برای گروه‌های زیر طراحی شده است:
+• متخصصین داخلی
+• فوق تخصصین ریه
+• فوق تخصصین ریه کودکان
+• متخصصین اورژانس
+• متخصصین بیهوشی
+• جراحان توراکس
+
+مدرس کارگاه:
+جناب آقای دکتر مهدی ندیری
+فوق تخصص ریه از دانشگاه علوم پزشکی تبریز
+مسئول زیر شاخه آموزش سونوگرافی انجمن ریه
+
+اطلاعات برگزاری و ثبت‌نام:
+تاریخ برگزاری: ۹ بهمن ماه ۱۴۰۴
+ظرفیت: ۱۵ نفر (به صورت حضوری)
+نحوه ثبت‌نام: جهت ثبت نام در کارگاه با شماره ۰۹۳۳۱۱۷۴۶۵۳ تماس بگیرید.''',
+        'short_description': 'ورکشاپ عملی POCUS در ریه اطفال - شرکت ایده گستر قدرت - ۹ بهمن ۱۴۰۴',
+        'event_type': 'workshop',
+        'location': 'تهران',
+        'event_month': 11,  # بهمن
+        'event_year': 1404,
+        'organizer': 'شرکت ایده گستر قدرت',
+        'target_audience': 'متخصصین داخلی، فوق تخصصین ریه، فوق تخصصین ریه کودکان، متخصصین اورژانس، متخصصین بیهوشی، جراحان توراکس',
+        'speakers': 'جناب آقای دکتر مهدی ندیری - فوق تخصص ریه از دانشگاه علوم پزشکی تبریز',
+        'contact_info': 'جهت ثبت نام در کارگاه با شماره ۰۹۳۳۱۱۷۴۶۵۳ تماس بگیرید',
+        'max_participants': 15,
+        'price': 0,
+        'is_published': True,
+        'is_featured': False,
+        'created_by': staff_user,
+        'cover_image_path': 'IMG_20251104_071318_242.jpg',
+    }
+
+    # Event 2: کنفرانس علمی یک روزه
+    event2_data = {
+        'title': 'کنفرانس علمی یک روزه: بیماری شایع تنفسی کودکان',
+        'slug': 'conference-respiratory-children-1404',
+        'description': '''عنوان رویداد:
+کنفرانس علمی یک روزه: بیماری شایع تنفسی کودکان
+
+برگزار کننده:
+دانشگاه علوم پزشکی شهید صدوقی یزد
+
+اطلاعات بازآموزی:
+شناسه بازآموزی: 244403
+امتیاز: این کنفرانس دارای ۵ امتیاز بازآموزی برای شرکت‌کنندگان می‌باشد.
+
+دبیر علمی:
+دکتر سیده ذلفا مدرسی
+
+گروه‌های هدف:
+این کنفرانس برای گروه‌های زیر در نظر گرفته شده است:
+• پزشکان عمومی
+• متخصصین اطفال
+• متخصصین گوش، حلق و بینی (ENT)
+• متخصصین عفونی
+• متخصصین داخلی
+• پرستاران
+• مراقبین بهداشتی
+
+زمان و مکان برگزاری:
+تاریخ: چهارشنبه، سوم دی ماه ۱۴۰۴
+مکان: بیمارستان شهید صدوقی، سالن دکتر جوادی''',
+        'short_description': 'کنفرانس علمی یک روزه: بیماری شایع تنفسی کودکان - دانشگاه علوم پزشکی شهید صدوقی یزد - ۳ دی ۱۴۰۴',
+        'event_type': 'conference',
+        'location': 'بیمارستان شهید صدوقی، سالن دکتر جوادی - یزد',
+        'event_month': 10,  # دی
+        'event_year': 1404,
+        'organizer': 'دانشگاه علوم پزشکی شهید صدوقی یزد',
+        'target_audience': 'پزشکان عمومی، متخصصین اطفال، متخصصین گوش حلق و بینی، متخصصین عفونی، متخصصین داخلی، پرستاران، مراقبین بهداشتی',
+        'speakers': 'دبیر علمی: دکتر سیده ذلفا مدرسی',
+        'agenda': 'شناسه بازآموزی: 244403 - امتیاز: ۵ امتیاز بازآموزی',
+        'is_published': True,
+        'is_featured': False,
+        'created_by': staff_user,
+        'cover_image_path': 'photo_2026-01-04_12-05-34.jpg',
+    }
+
+    # Event 3: چهارمین کنگره بین‌المللی
+    event3_data = {
+        'title': 'چهارمین کنگره بین‌المللی ریه و اختلالات تنفسی خواب کودکان',
+        'slug': 'congress-pediatric-pulmonary-2026',
+        'description': '''عنوان رویداد:
+چهارمین کنگره بین‌المللی ریه و اختلالات تنفسی خواب کودکان
+(4th International Congress of Pediatric Pulmonary and Sleep Medicine)
+
+محل و زمان برگزاری:
+محل برگزاری: مرکز طبی کودکان
+زمان: ۲۴ تا ۲۶ دی‌ماه ۱۴۰۴ (معادل 14-16 ژانویه 2026)
+
+اطلاعات بازآموزی:
+این کنگره دارای امتیاز بازآموزی برای گروه‌های هدف زیر می‌باشد.
+شناسه برنامه: 2۴۶۸۵۵
+
+گروه‌های هدف (دارای امتیاز بازآموزی):
+• متخصصین کودکان
+• فوق تخصص ریه کودکان
+• فوق تخصص ایمونولوژی و آلرژی
+• فوق تخصص عفونی کودکان
+• فوق تخصص نوزادان
+• فوق تخصص بیهوشی و مراقبت‌های ویژه
+• متخصصین گوش و حلق و بینی
+• پزشکان عمومی''',
+        'short_description': 'چهارمین کنگره بین‌المللی ریه و اختلالات تنفسی خواب کودکان - مرکز طبی کودکان - ۲۴ تا ۲۶ دی ۱۴۰۴',
+        'event_type': 'congress',
+        'location': 'مرکز طبی کودکان',
+        'event_month': 10,  # دی
+        'event_year': 1404,
+        'target_audience': 'متخصصین کودکان، فوق تخصص ریه کودکان، فوق تخصص ایمونولوژی و آلرژی، فوق تخصص عفونی کودکان، فوق تخصص نوزادان، فوق تخصص بیهوشی و مراقبت‌های ویژه، متخصصین گوش و حلق و بینی، پزشکان عمومی',
+        'agenda': 'شناسه برنامه: 2۴۶۸۵۵ - زمان: ۲۴ تا ۲۶ دی‌ماه ۱۴۰۴ (معادل 14-16 ژانویه 2026)',
+        'is_published': True,
+        'is_featured': True,  # Mark as featured
+        'created_by': staff_user,
+        'cover_image_path': None,  # PDF file, no image
+    }
+
+    events_data = [event1_data, event2_data, event3_data]
+    success_count = 0
+    skip_count = 0
+
+    for event_data in events_data:
+        cover_image_path = event_data.pop('cover_image_path', None)
+        
+        # Check if event already exists
+        if Event.objects.filter(slug=event_data['slug']).exists():
+            print(f"⚠️  رویداد «{event_data['title']}» قبلاً وجود دارد. رد می‌شود...")
+            skip_count += 1
+            continue
+
+        # Copy cover image if provided
+        cover_image = None
+        if cover_image_path:
+            source_image = frontend_content / cover_image_path
+            if source_image.exists():
+                dest_image = media_dir / cover_image_path
+                shutil.copy2(source_image, dest_image)
+                # Set cover_image field (relative to MEDIA_ROOT)
+                cover_image = f'events/covers/{cover_image_path}'
+                print(f"✅ تصویر کپی شد: {cover_image_path}")
+            else:
+                print(f"⚠️  تصویر یافت نشد: {source_image}")
+
+        # Create event
+        try:
+            event = Event.objects.create(
+                **event_data,
+                cover_image=cover_image
+            )
+            print(f"✅ رویداد با موفقیت ایجاد شد: {event.title}")
+            success_count += 1
+        except Exception as e:
+            print(f"❌ خطا در ایجاد رویداد «{event_data['title']}»: {e}")
+            continue
+
+    print(f"\n{'='*60}")
+    print(f"✅ {success_count} رویداد با موفقیت اضافه شد")
+    if skip_count > 0:
+        print(f"⚠️  {skip_count} رویداد رد شد (قبلاً وجود داشت)")
+    print(f"{'='*60}")
+    
+    return success_count > 0
+
+if __name__ == '__main__':
+    print("=" * 60)
+    print("افزودن رویدادهای جدید به دیتابیس")
+    print("=" * 60)
+    print()
+    
+    try:
+        add_events()
+    except Exception as e:
+        print(f"\n❌ خطای کلی: {e}")
+        import traceback
+        traceback.print_exc()
+        sys.exit(1)
+

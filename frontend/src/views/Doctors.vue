@@ -298,6 +298,21 @@ const handleCategoryClick = async (category: string) => {
         type: 'application/pdf',
         size: 0,
         folder: 'واکسیناسیون'
+      },
+      // GINA - راهنمای آسم
+      {
+        name: 'GINA-Summary-Guide-2025-WEB_FINAL-WMS.pdf',
+        url: '/Content/lAST/GINA-Summary-Guide-2025-WEB_FINAL-WMS.pdf',
+        type: 'application/pdf',
+        size: 0,
+        folder: 'GINA - راهنمای آسم'
+      },
+      {
+        name: 'GINA-2025-Update-25_11_08-WMS.pdf',
+        url: '/Content/lAST/GINA-2025-Update-25_11_08-WMS.pdf',
+        type: 'application/pdf',
+        size: 0,
+        folder: 'GINA - راهنمای آسم'
       }
     ];
     loading.value = false;
