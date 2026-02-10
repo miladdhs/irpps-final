@@ -370,3 +370,90 @@ def event_create(request):
             'errors': str(e)
         }, status=400)
 
+
+@csrf_exempt
+@login_required
+@user_passes_test(is_staff)
+@require_http_methods(["PUT", "POST"])
+def event_update(request, id):
+    """Update event"""
+    try:
+        event = get_object_or_404(Event, id=id)
+        
+        # Handle both JSON and FormData
+        if request.content_type and 'application/json' in request.content_type:
+            data = json.loads(request.body)
+            
+            event.title = data.get('title', event.title)
+            event.slug = data.get('slug', event.slug)
+            event.description = data.get('description', event.description)
+            event.event_type = data.get('event_type', event.event_type)
+            event.location = data.get('location', event.location)
+            event.event_year = data.get('event_year', event.event_year)
+            event.event_month = data.get('event_month', event.event_month)
+            event.retraining_number = data.get('retraining_number', event.retraining_number)
+            event.is_published = data.get('is_published', event.is_published)
+            event.is_featured = data.get('is_featured', event.is_featured)
+            
+            if 'price' in data:
+                event.price = Decimal(str(data['price']))
+            if 'max_participants' in data:
+                event.max_participants = data['max_participants']
+        else:
+            # FormData
+            event.title = request.POST.get('title', event.title)
+            event.slug = request.POST.get('slug', event.slug)
+            event.description = request.POST.get('description', event.description)
+            event.event_type = request.POST.get('event_type', event.event_type)
+            event.location = request.POST.get('location', event.location)
+            
+            if request.POST.get('event_year'):
+                event.event_year = int(request.POST.get('event_year'))
+            if request.POST.get('event_month'):
+                event.event_month = int(request.POST.get('event_month'))
+            if request.POST.get('retraining_number'):
+                event.retraining_number = request.POST.get('retraining_number')
+            
+            event.is_published = request.POST.get('is_published', 'true').lower() == 'true'
+            event.is_featured = request.POST.get('is_featured', 'false').lower() == 'true'
+            
+            if 'cover_image' in request.FILES:
+                event.cover_image = request.FILES['cover_image']
+        
+        event.save()
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'رویداد با موفقیت بروزرسانی شد',
+            'event': {
+                'id': event.id,
+                'title': event.title,
+            }
+        })
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'errors': str(e)
+        }, status=400)
+
+
+@csrf_exempt
+@login_required
+@user_passes_test(is_staff)
+@require_http_methods(["DELETE"])
+def event_delete(request, id):
+    """Delete event"""
+    try:
+        event = get_object_or_404(Event, id=id)
+        event.delete()
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'رویداد با موفقیت حذف شد'
+        })
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'errors': str(e)
+        }, status=400)
+

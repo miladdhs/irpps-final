@@ -49,6 +49,11 @@
             <button class="flex items-center justify-center rounded-lg h-10 w-10 bg-primary/10 text-primary lg:hidden" @click="toggleMobileMenu">
               <span class="material-symbols-outlined">{{ isMobileMenuOpen ? 'close' : 'menu' }}</span>
             </button>
+            <!-- Admin Panel Button (only for staff users) -->
+            <router-link v-if="isLoggedIn && authStore.isAdmin" to="/admin" class="hidden lg:flex items-center justify-center rounded-lg h-10 px-4 bg-purple-600 text-white font-bold text-sm hover:bg-purple-700 transition-all">
+              <span class="material-symbols-outlined text-sm mr-1">admin_panel_settings</span>
+              پنل مدیریت
+            </router-link>
             <router-link v-if="!isLoggedIn" to="/login" class="flex items-center justify-center rounded-lg h-10 px-4 bg-primary text-white font-bold text-sm hover:bg-primary/90 transition-all">
               {{ $t('nav.login') }}
             </router-link>
@@ -69,6 +74,11 @@
             <router-link class="px-4 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/news" @click="closeMobileMenu">{{ $t('nav.newsItem') }}</router-link>
             <router-link class="px-4 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/events" @click="closeMobileMenu">{{ $t('nav.eventsItem') }}</router-link>
             <router-link class="px-4 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/contact" @click="closeMobileMenu">{{ $t('nav.contact') }}</router-link>
+            <!-- Admin Panel Link for Mobile (only for staff users) -->
+            <router-link v-if="isLoggedIn && authStore.isAdmin" class="px-4 py-2 text-sm font-medium rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition-colors flex items-center gap-2" to="/admin" @click="closeMobileMenu">
+              <span class="material-symbols-outlined text-sm">admin_panel_settings</span>
+              پنل مدیریت
+            </router-link>
           </nav>
         </div>
       </header>

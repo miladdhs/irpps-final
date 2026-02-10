@@ -421,10 +421,14 @@ const saveEvent = async () => {
       formDataToSend.append('cover_image', selectedImage.value);
     }
 
-    const url = getApiUrl('/api/events/create/');
+    const url = showEditModal.value 
+      ? getApiUrl(`/api/events/${editingId.value}/update/`)
+      : getApiUrl('/api/events/create/');
+    
+    const method = 'POST';
 
     const response = await fetch(url, {
-      method: 'POST',
+      method,
       credentials: 'include',
       body: formDataToSend
     });
@@ -470,7 +474,23 @@ const editEvent = (event: EventItem) => {
 const deleteEvent = async (id: number) => {
   if (!confirm('آیا از حذف این رویداد اطمینان دارید؟')) return;
 
-  alert('API حذف رویداد هنوز پیاده‌سازی نشده است');
+  try {
+    const response = await fetch(getApiUrl(`/api/events/${id}/delete/`), {
+      method: 'DELETE',
+      credentials: 'include'
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+      alert(data.message);
+      fetchEvents();
+    } else {
+      alert(data.errors || 'خطا در حذف رویداد');
+    }
+  } catch (err) {
+    alert('خطا در ارتباط با سرور');
+  }
 };
 
 const closeModal = () => {

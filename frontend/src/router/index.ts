@@ -64,6 +64,12 @@ const routes = [
     meta: { requiresAuth: true, requiresAdmin: true }
   },
   { 
+    path: '/admin/announcements', 
+    name: 'admin-announcements', 
+    component: () => import('../views/admin/ManageAnnouncements.vue'),
+    meta: { requiresAuth: true, requiresAdmin: true }
+  },
+  { 
     path: '/admin/events', 
     name: 'admin-events', 
     component: () => import('../views/admin/ManageEvents.vue'),

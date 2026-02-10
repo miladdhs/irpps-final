@@ -261,3 +261,56 @@ def announcement_create(request):
             'errors': str(e)
         }, status=400)
 
+
+@csrf_exempt
+@login_required
+@user_passes_test(is_staff)
+@require_http_methods(["PUT"])
+def announcement_update(request, id):
+    """Update announcement"""
+    try:
+        announcement = get_object_or_404(Announcement, id=id)
+        data = json.loads(request.body)
+        
+        announcement.title = data.get('title', announcement.title)
+        announcement.slug = data.get('slug', announcement.slug)
+        announcement.content = data.get('content', announcement.content)
+        announcement.is_published = data.get('is_published', announcement.is_published)
+        announcement.is_important = data.get('is_important', announcement.is_important)
+        announcement.save()
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'اطلاعیه با موفقیت بروزرسانی شد',
+            'announcement': {
+                'id': announcement.id,
+                'title': announcement.title,
+            }
+        })
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'errors': str(e)
+        }, status=400)
+
+
+@csrf_exempt
+@login_required
+@user_passes_test(is_staff)
+@require_http_methods(["DELETE"])
+def announcement_delete(request, id):
+    """Delete announcement"""
+    try:
+        announcement = get_object_or_404(Announcement, id=id)
+        announcement.delete()
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'اطلاعیه با موفقیت حذف شد'
+        })
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'errors': str(e)
+        }, status=400)
+
