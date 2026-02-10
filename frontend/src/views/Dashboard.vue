@@ -30,315 +30,367 @@
         </div>
       </div>
 
-      <!-- Tabs -->
-      <div class="bg-white rounded-2xl shadow-sm mb-8">
-        <div class="flex border-b border-gray-200">
-          <button
-            @click="activeTab = 'info'"
-            :class="[
-              'flex-1 px-6 py-4 text-center font-medium transition',
-              activeTab === 'info' 
-                ? 'text-blue-600 border-b-2 border-blue-600' 
-                : 'text-gray-500 hover:text-gray-700'
-            ]"
-          >
-            <span class="material-symbols-outlined text-xl align-middle ml-2">person</span>
-            اطلاعات شخصی
-          </button>
-          <button
-            @click="activeTab = 'photo'"
-            :class="[
-              'flex-1 px-6 py-4 text-center font-medium transition',
-              activeTab === 'photo' 
-                ? 'text-blue-600 border-b-2 border-blue-600' 
-                : 'text-gray-500 hover:text-gray-700'
-            ]"
-          >
-            <span class="material-symbols-outlined text-xl align-middle ml-2">photo_camera</span>
-            عکس پروفایل
-          </button>
-          <button
-            @click="activeTab = 'resume'"
-            :class="[
-              'flex-1 px-6 py-4 text-center font-medium transition',
-              activeTab === 'resume' 
-                ? 'text-blue-600 border-b-2 border-blue-600' 
-                : 'text-gray-500 hover:text-gray-700'
-            ]"
-          >
-            <span class="material-symbols-outlined text-xl align-middle ml-2">description</span>
-            رزومه
-          </button>
-        </div>
-
-        <!-- Tab Content -->
-        <div class="p-8">
-          <!-- Personal Info Tab -->
-          <div v-if="activeTab === 'info'">
-            <h2 class="text-xl font-bold text-gray-900 mb-6">ویرایش اطلاعات شخصی</h2>
-            <form @submit.prevent="updatePersonalInfo" class="space-y-6">
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">نام فارسی</label>
-                  <input
-                    v-model="personalInfo.first_name"
-                    type="text"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="نام خود را وارد کنید"
-                  />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">نام انگلیسی</label>
-                  <input
-                    v-model="personalInfo.last_name"
-                    type="text"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="Full Name in English"
-                  />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">ایمیل</label>
-                  <input
-                    v-model="personalInfo.email"
-                    type="email"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="email@example.com"
-                  />
-                </div>
-                <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">تلفن</label>
-                  <input
-                    v-model="personalInfo.phone"
-                    type="tel"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    placeholder="09123456789"
-                  />
-                </div>
-              </div>
-
-              <!-- Success/Error Messages -->
+      <!-- Main Content -->
+      <div class="row g-4">
+        <div class="col-lg-8">
+          <!-- Profile Edit Form (Inline Toggle) -->
+          <transition name="fade-slide">
+            <div v-if="showProfileForm" class="bg-white rounded-2xl shadow-sm p-6 mb-6">
+              <h4 class="text-xl font-bold text-gray-900 mb-6">
+                <span class="material-symbols-outlined align-middle ml-2">person_edit</span>
+                ویرایش اطلاعات شخصی
+              </h4>
+              
               <div v-if="personalInfoMessage" :class="[
-                'p-4 rounded-lg',
+                'p-4 rounded-lg mb-6',
                 personalInfoError ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'
               ]">
                 {{ personalInfoMessage }}
               </div>
 
-              <button
-                type="submit"
-                :disabled="personalInfoLoading"
-                class="w-full md:w-auto px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <span v-if="personalInfoLoading">در حال ذخیره...</span>
-                <span v-else>ذخیره تغییرات</span>
-              </button>
-            </form>
-          </div>
-
-          <!-- Photo Upload Tab -->
-          <div v-if="activeTab === 'photo'">
-            <h2 class="text-xl font-bold text-gray-900 mb-6">مدیریت عکس پروفایل</h2>
-            
-            <!-- Current Photo -->
-            <div class="mb-8 text-center">
-              <div v-if="profileImage" class="inline-block">
-                <img :src="profileImage" alt="Profile" class="w-48 h-48 rounded-full object-cover border-4 border-gray-200 mb-4" />
-                <button
-                  @click="deleteProfileImage"
-                  :disabled="photoLoading"
-                  class="block mx-auto px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition disabled:opacity-50"
-                >
-                  <span v-if="photoLoading">در حال حذف...</span>
-                  <span v-else>حذف عکس</span>
-                </button>
-              </div>
-              <div v-else class="inline-block">
-                <div class="w-48 h-48 rounded-full bg-gray-200 flex items-center justify-center text-gray-400 text-6xl mb-4 mx-auto">
-                  <span class="material-symbols-outlined text-8xl">person</span>
+              <form @submit.prevent="updatePersonalInfo" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">نام فارسی</label>
+                    <input
+                      v-model="personalInfo.first_name"
+                      type="text"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="نام خود را وارد کنید"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">نام انگلیسی</label>
+                    <input
+                      v-model="personalInfo.last_name"
+                      type="text"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="Full Name in English"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">ایمیل</label>
+                    <input
+                      v-model="personalInfo.email"
+                      type="email"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="email@example.com"
+                    />
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">تلفن</label>
+                    <input
+                      v-model="personalInfo.phone"
+                      type="tel"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                      placeholder="09123456789"
+                    />
+                  </div>
                 </div>
-                <p class="text-gray-500">عکس پروفایل آپلود نشده است</p>
-              </div>
+
+                <div class="flex gap-3">
+                  <button
+                    type="submit"
+                    :disabled="personalInfoLoading"
+                    class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+                  >
+                    <span v-if="personalInfoLoading">در حال ذخیره...</span>
+                    <span v-else>ذخیره تغییرات</span>
+                  </button>
+                  <button
+                    type="button"
+                    @click="showProfileForm = false"
+                    class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
+                  >
+                    انصراف
+                  </button>
+                </div>
+              </form>
+            </div>
+          </transition>
+
+          <!-- Profile Info Display -->
+          <div class="bg-white rounded-2xl shadow-sm p-6">
+            <div class="flex justify-between items-center mb-6">
+              <h4 class="text-xl font-bold text-gray-900">
+                <span class="material-symbols-outlined align-middle ml-2">info</span>
+                اطلاعات حساب کاربری
+              </h4>
+              <button
+                v-if="!showProfileForm"
+                @click="showProfileForm = true"
+                class="px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition"
+              >
+                <span class="material-symbols-outlined text-sm align-middle ml-1">edit</span>
+                ویرایش
+              </button>
             </div>
 
-            <!-- Upload Form -->
-            <form @submit.prevent="uploadProfileImage" class="max-w-md mx-auto">
-              <div class="mb-6">
-                <label class="block text-sm font-medium text-gray-700 mb-2">انتخاب عکس جدید</label>
-                <input
-                  ref="fileInput"
-                  type="file"
-                  accept="image/*"
-                  @change="handleFileSelect"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                />
-                <p class="text-sm text-gray-500 mt-2">فرمت‌های مجاز: JPG, PNG, GIF</p>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="flex items-start gap-3">
+                <span class="material-symbols-outlined text-blue-600">person</span>
+                <div>
+                  <p class="text-sm text-gray-500">نام</p>
+                  <p class="font-medium">{{ personalInfo.first_name || 'ثبت نشده' }}</p>
+                </div>
               </div>
-
-              <!-- Preview -->
-              <div v-if="selectedFile" class="mb-6">
-                <p class="text-sm font-medium text-gray-700 mb-2">پیش‌نمایش:</p>
-                <img :src="previewUrl" alt="Preview" class="w-32 h-32 rounded-full object-cover border-2 border-gray-300 mx-auto" />
+              <div class="flex items-start gap-3">
+                <span class="material-symbols-outlined text-blue-600">badge</span>
+                <div>
+                  <p class="text-sm text-gray-500">نام خانوادگی</p>
+                  <p class="font-medium">{{ personalInfo.last_name || 'ثبت نشده' }}</p>
+                </div>
               </div>
-
-              <!-- Success/Error Messages -->
-              <div v-if="photoMessage" :class="[
-                'p-4 rounded-lg mb-6',
-                photoError ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'
-              ]">
-                {{ photoMessage }}
+              <div class="flex items-start gap-3">
+                <span class="material-symbols-outlined text-blue-600">email</span>
+                <div>
+                  <p class="text-sm text-gray-500">ایمیل</p>
+                  <p class="font-medium">{{ personalInfo.email || 'ثبت نشده' }}</p>
+                </div>
               </div>
-
-              <button
-                type="submit"
-                :disabled="!selectedFile || photoLoading"
-                class="w-full px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <span v-if="photoLoading">در حال آپلود...</span>
-                <span v-else>آپلود عکس</span>
-              </button>
-            </form>
+              <div class="flex items-start gap-3">
+                <span class="material-symbols-outlined text-blue-600">phone</span>
+                <div>
+                  <p class="text-sm text-gray-500">تلفن</p>
+                  <p class="font-medium">{{ personalInfo.phone || 'ثبت نشده' }}</p>
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
 
-          <!-- Resume Tab -->
-          <div v-if="activeTab === 'resume'">
-            <h2 class="text-xl font-bold text-gray-900 mb-6">ویرایش رزومه</h2>
-            <form @submit.prevent="updateResume" class="space-y-6">
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">تحصیلات</label>
-                <textarea
-                  v-model="resumeInfo.education"
-                  rows="4"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="مثال: دکترای تخصصی ریه کودکان از دانشگاه تهران - 1395"
-                ></textarea>
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+          <div class="bg-white rounded-2xl shadow-sm p-6 sticky top-24">
+            <!-- Profile Image Display -->
+            <div class="text-center mb-6">
+              <div v-if="profileImage" class="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-200 mx-auto mb-4">
+                <img :src="profileImage" alt="Profile" class="w-full h-full object-cover" />
               </div>
+              <div v-else class="w-32 h-32 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-4xl font-bold mx-auto mb-4">
+                {{ userInitials }}
+              </div>
+              <h5 class="font-bold text-lg">{{ personalInfo.first_name || authStore.user?.username }}</h5>
+              <p class="text-gray-500 text-sm">{{ authStore.user?.username }}</p>
+            </div>
 
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">مقالات و انتشارات</label>
-                <textarea
-                  v-model="resumeInfo.publications"
-                  rows="4"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="لیست مقالات و انتشارات علمی خود را وارد کنید"
-                ></textarea>
-              </div>
-
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">جوایز و افتخارات</label>
-                <textarea
-                  v-model="resumeInfo.awards"
-                  rows="3"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="جوایز و افتخارات علمی خود را وارد کنید"
-                ></textarea>
-              </div>
-
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">گواهینامه‌ها</label>
-                <textarea
-                  v-model="resumeInfo.certifications"
-                  rows="3"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="گواهینامه‌ها و مدارک تخصصی خود را وارد کنید"
-                ></textarea>
-              </div>
-
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">علایق پژوهشی</label>
-                <textarea
-                  v-model="resumeInfo.research_interests"
-                  rows="3"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="حوزه‌های علاقه‌مندی پژوهشی خود را وارد کنید"
-                ></textarea>
-              </div>
-
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">زبان‌ها</label>
-                <input
-                  v-model="resumeInfo.languages"
-                  type="text"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="مثال: فارسی، انگلیسی، عربی"
-                />
-              </div>
-
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">بیوگرافی</label>
-                <textarea
-                  v-model="resumeInfo.bio"
-                  rows="4"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder="توضیحات کوتاهی درباره خود و فعالیت‌های حرفه‌ای خود بنویسید"
-                ></textarea>
-              </div>
-
-              <!-- Success/Error Messages -->
-              <div v-if="resumeMessage" :class="[
-                'p-4 rounded-lg',
-                resumeError ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'
-              ]">
-                {{ resumeMessage }}
-              </div>
+            <!-- Action Buttons -->
+            <div class="space-y-3">
+              <button
+                @click="showImageUploadModal = true"
+                class="w-full px-4 py-3 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100 transition flex items-center justify-center gap-2"
+              >
+                <span class="material-symbols-outlined">photo_camera</span>
+                {{ profileImage ? 'تغییر عکس' : 'افزودن عکس' }}
+              </button>
 
               <button
-                type="submit"
-                :disabled="resumeLoading"
-                class="w-full md:w-auto px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                v-if="profileImage"
+                @click="deleteProfileImage"
+                :disabled="photoLoading"
+                class="w-full px-4 py-3 bg-red-50 text-red-600 rounded-lg hover:bg-red-100 transition flex items-center justify-center gap-2 disabled:opacity-50"
               >
-                <span v-if="resumeLoading">در حال ذخیره...</span>
-                <span v-else>ذخیره رزومه</span>
+                <span v-if="photoLoading" class="material-symbols-outlined animate-spin">progress_activity</span>
+                <span v-else class="material-symbols-outlined">delete</span>
+                {{ photoLoading ? 'در حال حذف...' : 'حذف عکس' }}
               </button>
-            </form>
+
+              <button
+                @click="showResumeModal = true"
+                class="w-full px-4 py-3 bg-green-50 text-green-600 rounded-lg hover:bg-green-100 transition flex items-center justify-center gap-2"
+              >
+                <span class="material-symbols-outlined">description</span>
+                رزومه و توضیحات
+              </button>
+            </div>
           </div>
         </div>
       </div>
+    </div>
 
-      <!-- Quick Links -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <router-link
-          to="/team"
-          class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition group"
-        >
-          <div class="w-12 h-12 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center mb-4 group-hover:scale-110 transition">
-            <span class="material-symbols-outlined text-2xl">groups</span>
-          </div>
-          <h3 class="font-bold text-gray-900 mb-1">مشاهده اعضا</h3>
-          <p class="text-sm text-gray-600">مشاهده پروفایل سایر اعضا</p>
-        </router-link>
+    <!-- Image Upload Modal -->
+    <div
+      v-if="showImageUploadModal"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      @click.self="showImageUploadModal = false"
+    >
+      <div class="bg-white rounded-2xl shadow-xl max-w-md w-full">
+        <div class="flex items-center justify-between p-6 border-b">
+          <h3 class="text-xl font-bold">
+            <span class="material-symbols-outlined align-middle ml-2 text-blue-600">photo_camera</span>
+            تغییر عکس پروفایل
+          </h3>
+          <button @click="showImageUploadModal = false" class="text-gray-400 hover:text-gray-600">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
 
-        <router-link
-          to="/events"
-          class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition group"
-        >
-          <div class="w-12 h-12 rounded-lg bg-green-100 text-green-600 flex items-center justify-center mb-4 group-hover:scale-110 transition">
-            <span class="material-symbols-outlined text-2xl">event</span>
+        <div class="p-6">
+          <div v-if="photoMessage" :class="[
+            'p-4 rounded-lg mb-6',
+            photoError ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'
+          ]">
+            {{ photoMessage }}
           </div>
-          <h3 class="font-bold text-gray-900 mb-1">رویدادها</h3>
-          <p class="text-sm text-gray-600">مشاهده و ثبت نام</p>
-        </router-link>
 
-        <router-link
-          to="/news"
-          class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition group"
-        >
-          <div class="w-12 h-12 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center mb-4 group-hover:scale-110 transition">
-            <span class="material-symbols-outlined text-2xl">newspaper</span>
-          </div>
-          <h3 class="font-bold text-gray-900 mb-1">اخبار</h3>
-          <p class="text-sm text-gray-600">آخرین اخبار انجمن</p>
-        </router-link>
+          <form @submit.prevent="uploadProfileImage">
+            <div class="mb-6">
+              <label class="block text-sm font-medium text-gray-700 mb-2">انتخاب عکس</label>
+              <input
+                ref="fileInput"
+                type="file"
+                accept="image/*"
+                @change="handleFileSelect"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                required
+              />
+              <p class="text-sm text-gray-500 mt-2">فرمت‌های مجاز: JPG, PNG, GIF</p>
+            </div>
 
-        <router-link
-          to="/education/doctors"
-          class="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition group"
-        >
-          <div class="w-12 h-12 rounded-lg bg-orange-100 text-orange-600 flex items-center justify-center mb-4 group-hover:scale-110 transition">
-            <span class="material-symbols-outlined text-2xl">school</span>
+            <div v-if="previewUrl" class="mb-6 text-center">
+              <img :src="previewUrl" alt="Preview" class="w-48 h-48 rounded-lg object-cover mx-auto border-2 border-gray-200" />
+            </div>
+
+            <button
+              type="submit"
+              :disabled="!selectedFile || photoLoading"
+              class="w-full px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
+            >
+              <span v-if="photoLoading">در حال آپلود...</span>
+              <span v-else>آپلود عکس</span>
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resume Modal -->
+    <div
+      v-if="showResumeModal"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      @click.self="showResumeModal = false"
+    >
+      <div class="bg-white rounded-2xl shadow-xl max-w-3xl w-full max-h-[90vh] flex flex-col">
+        <div class="flex items-center justify-between p-6 border-b flex-shrink-0">
+          <h3 class="text-xl font-bold">
+            <span class="material-symbols-outlined align-middle ml-2 text-green-600">description</span>
+            توضیحات عمومی و رزومه
+          </h3>
+          <button @click="showResumeModal = false" class="text-gray-400 hover:text-gray-600">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+
+        <div class="p-6 overflow-y-auto flex-1">
+          <div v-if="resumeMessage" :class="[
+            'p-4 rounded-lg mb-6',
+            resumeError ? 'bg-red-50 text-red-600' : 'bg-green-50 text-green-600'
+          ]">
+            {{ resumeMessage }}
           </div>
-          <h3 class="font-bold text-gray-900 mb-1">آموزش</h3>
-          <p class="text-sm text-gray-600">منابع آموزشی</p>
-        </router-link>
+
+          <form @submit.prevent="updateResume" class="space-y-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                <span class="material-symbols-outlined text-sm align-middle ml-1">info</span>
+                توضیحات عمومی
+              </label>
+              <textarea
+                v-model="resumeInfo.bio"
+                rows="3"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="توضیحات کوتاه درباره خودتان..."
+              ></textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                <span class="material-symbols-outlined text-sm align-middle ml-1">school</span>
+                تحصیلات
+              </label>
+              <textarea
+                v-model="resumeInfo.education"
+                rows="3"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="مدرک تحصیلی، دانشگاه، سال فارغ‌التحصیلی..."
+              ></textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                <span class="material-symbols-outlined text-sm align-middle ml-1">menu_book</span>
+                مقالات و انتشارات
+              </label>
+              <textarea
+                v-model="resumeInfo.publications"
+                rows="4"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="مقالات، کتاب‌ها و انتشارات علمی..."
+              ></textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                <span class="material-symbols-outlined text-sm align-middle ml-1">emoji_events</span>
+                جوایز و افتخارات
+              </label>
+              <textarea
+                v-model="resumeInfo.awards"
+                rows="3"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="جوایز، افتخارات و دستاوردها..."
+              ></textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                <span class="material-symbols-outlined text-sm align-middle ml-1">workspace_premium</span>
+                گواهینامه‌ها
+              </label>
+              <textarea
+                v-model="resumeInfo.certifications"
+                rows="3"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="گواهینامه‌های تخصصی و حرفه‌ای..."
+              ></textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                <span class="material-symbols-outlined text-sm align-middle ml-1">science</span>
+                علایق پژوهشی
+              </label>
+              <textarea
+                v-model="resumeInfo.research_interests"
+                rows="3"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="حوزه‌های تحقیقاتی و علایق پژوهشی..."
+              ></textarea>
+            </div>
+
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                <span class="material-symbols-outlined text-sm align-middle ml-1">language</span>
+                زبان‌ها
+              </label>
+              <input
+                v-model="resumeInfo.languages"
+                type="text"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="مثال: فارسی، انگلیسی، آلمانی"
+              />
+            </div>
+
+            <button
+              type="submit"
+              :disabled="resumeLoading"
+              class="w-full px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition disabled:opacity-50"
+            >
+              <span v-if="resumeLoading">در حال ذخیره...</span>
+              <span v-else>ذخیره رزومه</span>
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   </div>
@@ -353,12 +405,21 @@ import { getApiUrl } from '@/utils/api'
 const router = useRouter()
 const authStore = useAuthStore()
 
-const activeTab = ref('info')
+// Modals
+const showImageUploadModal = ref(false)
+const showResumeModal = ref(false)
+const showProfileForm = ref(false)
+
+// Profile image
 const profileImage = ref('')
 const selectedFile = ref<File | null>(null)
 const previewUrl = ref('')
 const fileInput = ref<HTMLInputElement | null>(null)
+const photoLoading = ref(false)
+const photoMessage = ref('')
+const photoError = ref(false)
 
+// Personal info
 const personalInfo = ref({
   first_name: '',
   last_name: '',
@@ -369,10 +430,7 @@ const personalInfoLoading = ref(false)
 const personalInfoMessage = ref('')
 const personalInfoError = ref(false)
 
-const photoLoading = ref(false)
-const photoMessage = ref('')
-const photoError = ref(false)
-
+// Resume
 const resumeInfo = ref({
   education: '',
   publications: '',
@@ -461,6 +519,9 @@ async function updatePersonalInfo() {
         authStore.user.last_name = personalInfo.value.last_name
         authStore.user.email = personalInfo.value.email
       }
+      setTimeout(() => {
+        showProfileForm.value = false
+      }, 1500)
     } else {
       personalInfoMessage.value = data.errors || 'خطا در به‌روزرسانی اطلاعات'
       personalInfoError.value = true
@@ -513,6 +574,11 @@ async function uploadProfileImage() {
       selectedFile.value = null
       previewUrl.value = ''
       if (fileInput.value) fileInput.value.value = ''
+
+      setTimeout(() => {
+        showImageUploadModal.value = false
+        photoMessage.value = ''
+      }, 1500)
     } else {
       photoMessage.value = data.errors || 'خطا در آپلود عکس'
       photoError.value = true
@@ -529,8 +595,6 @@ async function deleteProfileImage() {
   if (!confirm('آیا از حذف عکس پروفایل اطمینان دارید؟')) return
 
   photoLoading.value = true
-  photoMessage.value = ''
-  photoError.value = false
 
   try {
     const response = await fetch(getApiUrl('/api/accounts/delete-profile-image/'), {
@@ -541,16 +605,13 @@ async function deleteProfileImage() {
     const data = await response.json()
 
     if (data.success) {
-      photoMessage.value = 'عکس با موفقیت حذف شد'
-      photoError.value = false
       profileImage.value = ''
+      alert('عکس با موفقیت حذف شد')
     } else {
-      photoMessage.value = data.errors || 'خطا در حذف عکس'
-      photoError.value = true
+      alert(data.errors || 'خطا در حذف عکس')
     }
   } catch (error) {
-    photoMessage.value = 'خطا در ارتباط با سرور'
-    photoError.value = true
+    alert('خطا در ارتباط با سرور')
   } finally {
     photoLoading.value = false
   }
@@ -576,6 +637,10 @@ async function updateResume() {
     if (data.success) {
       resumeMessage.value = 'رزومه با موفقیت به‌روزرسانی شد'
       resumeError.value = false
+      setTimeout(() => {
+        showResumeModal.value = false
+        resumeMessage.value = ''
+      }, 1500)
     } else {
       resumeMessage.value = data.errors || 'خطا در به‌روزرسانی رزومه'
       resumeError.value = true
@@ -597,3 +662,20 @@ onMounted(() => {
   fetchProfile()
 })
 </script>
+
+<style scoped>
+.fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: all 0.3s ease;
+}
+
+.fade-slide-enter-from {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+.fade-slide-leave-to {
+  opacity: 0;
+  transform: translateY(10px);
+}
+</style>
