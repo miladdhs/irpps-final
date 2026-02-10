@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     'events',
     'dashboard',
     'doctors',
-    'services',
+    # 'services',  # Temporarily disabled until rest_framework is installed
 ]
 
 MIDDLEWARE = [
