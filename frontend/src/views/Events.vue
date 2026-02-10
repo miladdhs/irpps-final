@@ -97,7 +97,13 @@
                     <span class="material-symbols-outlined text-primary text-base">{{ event.locationIcon }}</span>
                     <span>{{ event.location }}</span>
                   </div>
-                  <div v-if="event.badge" class="flex items-center gap-2 text-xs font-bold mt-1 p-2 rounded-lg" :class="event.badgeClass">
+                  <!-- Retraining Number Badge -->
+                  <div v-if="event.retraining_number" class="flex items-center gap-2 text-xs font-bold mt-1 p-3 rounded-lg bg-primary/10 text-primary border border-primary/20">
+                    <span class="material-symbols-outlined text-base">badge</span>
+                    <span>شماره بازآموزی: {{ event.retraining_number }}</span>
+                  </div>
+                  <!-- Registration Deadline Badge (only if no retraining number) -->
+                  <div v-else-if="event.badge" class="flex items-center gap-2 text-xs font-bold mt-1 p-2 rounded-lg" :class="event.badgeClass">
                     <span class="material-symbols-outlined text-base">{{ event.badgeIcon }}</span>
                     <span>{{ event.badge }}</span>
                   </div>
@@ -258,6 +264,7 @@ const filteredEvents = computed(() => {
     status: event.is_registration_open ? 'active' : 'closed',
     statusText: event.is_registration_open ? 'در حال ثبت‌نام' : 'ثبت‌نام بسته',
     statusClass: event.is_registration_open ? 'bg-green-500' : 'bg-gray-500',
+    retraining_number: event.retraining_number,
     badge: event.registration_deadline ? `مهلت ثبت‌نام: ${formatDate(event.registration_deadline)}` : null,
     badgeIcon: 'timer',
     badgeClass: 'text-red-600 bg-red-50',

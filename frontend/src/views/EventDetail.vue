@@ -11,25 +11,40 @@
           <span class="text-slate-900 dark:text-white">جزئیات رویداد</span>
         </nav>
 
-        <div class="grid grid-cols-1 gap-8 lg:grid-cols-3">
+        <div v-if="eventLoading" class="p-12 text-center">
+          <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+          <p class="mt-4 text-slate-500">در حال بارگذاری...</p>
+        </div>
+
+        <div v-else-if="eventError" class="p-6">
+          <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-6 text-center">
+            <span class="material-symbols-outlined text-red-600 text-4xl mb-2">error</span>
+            <p class="text-red-600 dark:text-red-400">{{ eventError }}</p>
+          </div>
+        </div>
+
+        <div v-else-if="event" class="grid grid-cols-1 gap-8 lg:grid-cols-3">
           <!-- Main Content -->
           <div class="lg:col-span-2">
             <article class="rounded-xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900">
               <!-- Event Header -->
               <div class="mb-6">
-                <div class="mb-4 inline-block rounded-full bg-green-100 px-4 py-2 text-sm font-bold text-green-600">
+                <div v-if="event.is_registration_open" class="mb-4 inline-block rounded-full bg-green-100 px-4 py-2 text-sm font-bold text-green-600">
                   در حال ثبت‌نام
                 </div>
+                <div v-else class="mb-4 inline-block rounded-full bg-gray-100 px-4 py-2 text-sm font-bold text-gray-600">
+                  ثبت‌نام بسته
+                </div>
                 <h1 class="mb-4 text-3xl font-black leading-tight md:text-4xl">
-                  نهمین کنگره بیماری‌های ریوی کودکان و نوزادان ایران
+                  {{ event.title }}
                 </h1>
               </div>
 
               <!-- Featured Image -->
               <div class="mb-8 aspect-video overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800">
                 <img 
-                  src="/img/events.png" 
-                  alt="کنگره" 
+                  :src="event.image || '/img/events.png'" 
+                  :alt="event.title" 
                   class="h-full w-full object-cover"
                 />
               </div>
@@ -37,23 +52,7 @@
               <!-- Event Description -->
               <div class="prose prose-slate max-w-none dark:prose-invert">
                 <h2 class="mb-4 text-2xl font-bold">درباره رویداد</h2>
-                <p class="leading-relaxed">
-                  نهمین کنگره بیماری‌های ریوی کودکان و نوزادان ایران با هدف ارتقای دانش و مهارت‌های تشخیصی و درمانی پزشکان و متخصصان در زمینه بیماری‌های تنفسی اطفال برگزار می‌شود.
-                </p>
-
-                <h3 class="mt-6 mb-3 text-xl font-bold">موضوعات کنگره:</h3>
-                <ul class="list-disc pr-6 space-y-2">
-                  <li>آسم و آلرژی‌های تنفسی در کودکان</li>
-                  <li>عفونت‌های ریوی و مدیریت آنتی‌بیوتیک</li>
-                  <li>فیبروز سیستیک و بیماری‌های ژنتیکی ریه</li>
-                  <li>مراقبت‌های ویژه تنفسی نوزادان</li>
-                  <li>تکنیک‌های تشخیصی پیشرفته</li>
-                </ul>
-
-                <h3 class="mt-6 mb-3 text-xl font-bold">سخنرانان:</h3>
-                <p class="leading-relaxed">
-                  برجسته‌ترین اساتید و متخصصان ریه کودکان از سراسر کشور و همچنین سخنرانان بین‌المللی مدعو در این کنگره حضور خواهند داشت.
-                </p>
+                <div v-html="event.description" class="leading-relaxed"></div>
               </div>
             </article>
           </div>
@@ -69,15 +68,7 @@
                     <span class="material-symbols-outlined text-primary">calendar_month</span>
                     <div>
                       <div class="text-sm font-medium text-slate-500 dark:text-slate-400">تاریخ</div>
-                      <div class="font-medium">۲۵ لغایت ۲۷ مهر ۱۴۰۳</div>
-                    </div>
-                  </div>
-                  
-                  <div class="flex items-start gap-3">
-                    <span class="material-symbols-outlined text-primary">schedule</span>
-                    <div>
-                      <div class="text-sm font-medium text-slate-500 dark:text-slate-400">ساعت</div>
-                      <div class="font-medium">۸:۰۰ صبح تا ۶:۰۰ عصر</div>
+                      <div class="font-medium">{{ formatDate(event.start_date) }}</div>
                     </div>
                   </div>
                   
@@ -85,52 +76,36 @@
                     <span class="material-symbols-outlined text-primary">location_on</span>
                     <div>
                       <div class="text-sm font-medium text-slate-500 dark:text-slate-400">مکان</div>
-                      <div class="font-medium">تهران، مرکز طبی کودکان - تالار همایش‌ها</div>
+                      <div class="font-medium">{{ event.location }}</div>
                     </div>
                   </div>
                   
-                  <div class="flex items-start gap-3">
-                    <span class="material-symbols-outlined text-primary">payments</span>
-                    <div>
-                      <div class="text-sm font-medium text-slate-500 dark:text-slate-400">هزینه ثبت‌نام</div>
-                      <div class="font-medium">۲,۵۰۰,۰۰۰ تومان</div>
-                    </div>
-                  </div>
-                  
-                  <div class="flex items-start gap-3">
+                  <div v-if="event.max_participants" class="flex items-start gap-3">
                     <span class="material-symbols-outlined text-primary">group</span>
                     <div>
                       <div class="text-sm font-medium text-slate-500 dark:text-slate-400">ظرفیت</div>
-                      <div class="font-medium">۲۰۰ نفر</div>
+                      <div class="font-medium">{{ event.max_participants }} نفر</div>
+                    </div>
+                  </div>
+
+                  <!-- Retraining Number Display -->
+                  <div v-if="event.retraining_number" class="flex items-start gap-3">
+                    <span class="material-symbols-outlined text-primary">badge</span>
+                    <div>
+                      <div class="text-sm font-medium text-slate-500 dark:text-slate-400">شماره بازآموزی</div>
+                      <div class="font-bold text-lg text-primary">{{ event.retraining_number }}</div>
                     </div>
                   </div>
                 </div>
 
+                <!-- Show registration button only if NO retraining number -->
                 <button 
+                  v-if="!event.retraining_number && event.is_registration_open"
                   @click="showRegistrationForm = true"
                   class="mt-6 w-full rounded-lg bg-primary py-3 font-bold text-white transition-colors hover:bg-primary/90"
                 >
-                  ثبت‌نام در کنگره
+                  ثبت‌نام در رویداد
                 </button>
-              </div>
-
-              <!-- Countdown Card -->
-              <div class="rounded-xl border border-primary/20 bg-primary/5 p-6 dark:bg-primary/10">
-                <h3 class="mb-4 text-center text-lg font-bold">زمان باقی‌مانده تا شروع</h3>
-                <div class="grid grid-cols-3 gap-3 text-center">
-                  <div>
-                    <div class="text-2xl font-black text-primary">۴۵</div>
-                    <div class="text-xs text-slate-500">روز</div>
-                  </div>
-                  <div>
-                    <div class="text-2xl font-black text-primary">۱۲</div>
-                    <div class="text-xs text-slate-500">ساعت</div>
-                  </div>
-                  <div>
-                    <div class="text-2xl font-black text-primary">۳۰</div>
-                    <div class="text-xs text-slate-500">دقیقه</div>
-                  </div>
-                </div>
               </div>
 
               <!-- Share Card -->
@@ -317,10 +292,16 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import { getApiUrl } from '@/utils/api';
 
+const route = useRoute();
 const showRegistrationForm = ref(false);
 const isSubmitting = ref(false);
+const event = ref<any>(null);
+const eventLoading = ref(true);
+const eventError = ref<string | null>(null);
 
 const registrationForm = ref({
   fullName: '',
@@ -333,6 +314,51 @@ const registrationForm = ref({
   needsAccommodation: false,
   notes: ''
 });
+
+const formatDate = (isoDate: string | null) => {
+  if (!isoDate) return '';
+  try {
+    return new Date(isoDate).toLocaleDateString('fa-IR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  } catch (error) {
+    return isoDate;
+  }
+};
+
+const fetchEvent = async () => {
+  eventLoading.value = true;
+  eventError.value = null;
+
+  try {
+    const slug = route.params.slug as string;
+    const response = await fetch(getApiUrl(`/api/events/${slug}/`), {
+      credentials: 'include',
+    });
+
+    if (!response.ok) {
+      throw new Error(`خطا در دریافت رویداد از سرور (${response.status})`);
+    }
+
+    const data = await response.json();
+
+    if (!data.success || !data.event) {
+      throw new Error('ساختار داده رویداد نامعتبر است');
+    }
+
+    event.value = {
+      ...data.event,
+      image: data.event.image ? getApiUrl(data.event.image) : '/img/events.png'
+    };
+  } catch (error: any) {
+    console.error('Failed to load event:', error);
+    eventError.value = error.message || 'خطای ناشناخته هنگام دریافت رویداد';
+  } finally {
+    eventLoading.value = false;
+  }
+};
 
 const submitRegistration = async () => {
   isSubmitting.value = true;
@@ -362,4 +388,8 @@ const submitRegistration = async () => {
     isSubmitting.value = false;
   }
 };
+
+onMounted(() => {
+  fetchEvent();
+});
 </script>
