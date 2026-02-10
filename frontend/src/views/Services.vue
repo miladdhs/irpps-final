@@ -49,27 +49,6 @@
             </router-link>
           </div>
         </section>
-
-        <!-- CTA Section -->
-        <section class="mt-20 bg-primary/5 dark:bg-primary/10 rounded-3xl p-8 lg:p-16 relative overflow-hidden">
-          <div class="relative z-10 flex flex-col items-center text-center max-w-3xl mx-auto gap-8">
-            <h2 class="text-slate-900 dark:text-white text-3xl font-black">{{ $t('services.ctaTitle') }}</h2>
-            <p class="text-slate-700 dark:text-slate-300 text-lg">
-              {{ $t('services.ctaDescription') }}
-            </p>
-            <div class="flex flex-wrap justify-center gap-4">
-              <button class="bg-primary text-white h-14 px-10 rounded-xl font-bold text-lg shadow-xl shadow-primary/30 hover:scale-105 transition-transform">
-                {{ $t('services.ctaButton1') }}
-              </button>
-              <button class="bg-white dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-200 dark:border-slate-700 h-14 px-10 rounded-xl font-bold text-lg hover:bg-slate-50 dark:hover:bg-slate-700 transition-colors">
-                {{ $t('services.ctaButton2') }}
-              </button>
-            </div>
-          </div>
-          <!-- Decorative Background Elements -->
-          <div class="absolute -right-20 -bottom-20 size-64 bg-primary/10 rounded-full blur-3xl"></div>
-          <div class="absolute -left-20 -top-20 size-64 bg-primary/10 rounded-full blur-3xl"></div>
-        </section>
       </main>
     </div>
   </div>

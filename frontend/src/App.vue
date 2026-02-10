@@ -31,6 +31,7 @@
                 </div>
               </div>
               <router-link class="text-sm font-medium leading-normal hover:text-primary transition-colors" to="/services">{{ $t('nav.services') }}</router-link>
+              <router-link class="text-sm font-medium leading-normal hover:text-primary transition-colors" to="/team">اعضا</router-link>
               <div class="relative group">
                 <button class="text-sm font-medium leading-normal hover:text-primary transition-colors flex items-center gap-1">
                   {{ $t('nav.news') }}
@@ -45,21 +46,13 @@
             </nav>
           </div>
           <div class="flex items-center gap-4">
-            <label class="hidden sm:flex flex-col min-w-40 h-10 max-w-64">
-              <div class="flex w-full flex-1 items-stretch rounded-lg h-full bg-slate-100 dark:bg-slate-800">
-                <div class="text-slate-500 flex items-center justify-center pr-3">
-                  <span class="material-symbols-outlined text-xl">search</span>
-                </div>
-                <input class="form-input flex w-full min-w-0 flex-1 border-none bg-transparent focus:outline-0 focus:ring-0 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 text-sm font-normal pr-2" :placeholder="$t('nav.search')" value=""/>
-              </div>
-            </label>
             <button class="flex items-center justify-center rounded-lg h-10 w-10 bg-primary/10 text-primary lg:hidden" @click="toggleMobileMenu">
               <span class="material-symbols-outlined">{{ isMobileMenuOpen ? 'close' : 'menu' }}</span>
             </button>
-            <router-link v-if="!isLoggedIn" to="/login" class="hidden sm:flex items-center justify-center rounded-lg h-10 px-4 bg-primary text-white font-bold text-sm hover:bg-primary/90 transition-all">
+            <router-link v-if="!isLoggedIn" to="/login" class="flex items-center justify-center rounded-lg h-10 px-4 bg-primary text-white font-bold text-sm hover:bg-primary/90 transition-all">
               {{ $t('nav.login') }}
             </router-link>
-            <router-link v-else to="/dashboard" class="hidden sm:flex items-center justify-center rounded-lg h-10 px-4 bg-primary text-white font-bold text-sm hover:bg-primary/90 transition-all">
+            <router-link v-else to="/dashboard" class="flex items-center justify-center rounded-lg h-10 px-4 bg-primary text-white font-bold text-sm hover:bg-primary/90 transition-all">
               <span class="material-symbols-outlined text-sm mr-1">person</span>
               {{ userDisplayName }}
             </router-link>
@@ -72,6 +65,7 @@
             <router-link class="px-4 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/" @click="closeMobileMenu">{{ $t('nav.home') }}</router-link>
             <router-link class="px-4 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/about" @click="closeMobileMenu">{{ $t('nav.about') }}</router-link>
             <router-link class="px-4 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/services" @click="closeMobileMenu">{{ $t('nav.services') }}</router-link>
+            <router-link class="px-4 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/team" @click="closeMobileMenu">اعضا</router-link>
             <router-link class="px-4 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/news" @click="closeMobileMenu">{{ $t('nav.newsItem') }}</router-link>
             <router-link class="px-4 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/events" @click="closeMobileMenu">{{ $t('nav.eventsItem') }}</router-link>
             <router-link class="px-4 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/contact" @click="closeMobileMenu">{{ $t('nav.contact') }}</router-link>
@@ -123,8 +117,6 @@
               <h3 class="text-lg font-bold mb-8 relative after:content-[''] after:absolute after:bottom-[-10px] after:right-0 after:w-10 after:h-1 after:bg-primary">{{ $t('footer.quickContact') }}</h3>
               <ul class="space-y-4">
                 <li><router-link class="text-slate-400 hover:text-white transition-colors" to="/contact">{{ $t('nav.contact') }}</router-link></li>
-                <li><router-link class="text-slate-400 hover:text-white transition-colors" to="/site-guide">راهنمای سایت</router-link></li>
-                <li><a class="text-slate-400 hover:text-white transition-colors" href="#">{{ $t('footer.faq') }}</a></li>
               </ul>
             </div>
             <div>
