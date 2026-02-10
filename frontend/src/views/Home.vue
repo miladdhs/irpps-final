@@ -18,12 +18,12 @@
           {{ $t('home.subtitle') }}
         </p>
         <div class="flex flex-wrap gap-4 justify-center mt-4">
-          <button class="min-w-[160px] h-14 rounded-xl bg-primary text-white text-lg font-bold shadow-lg shadow-primary/30 hover:scale-105 transition-transform">
+          <router-link to="/about" class="min-w-[160px] h-14 rounded-xl bg-primary text-white text-lg font-bold shadow-lg shadow-primary/30 hover:scale-105 transition-transform flex items-center justify-center">
             {{ $t('home.learnMore') }}
-          </button>
-          <button class="min-w-[160px] h-14 rounded-xl bg-white/20 backdrop-blur-md border border-white/30 text-white text-lg font-bold hover:bg-white/30 transition-all">
+          </router-link>
+          <router-link to="/contact" class="min-w-[160px] h-14 rounded-xl bg-white/20 backdrop-blur-md border border-white/30 text-white text-lg font-bold hover:bg-white/30 transition-all flex items-center justify-center">
             {{ $t('home.contactUs') }}
-          </button>
+          </router-link>
         </div>
       </div>
     </section>

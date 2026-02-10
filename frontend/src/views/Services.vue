@@ -24,7 +24,7 @@
         </section>
 
         <!-- Services Grid -->
-        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           <!-- Service Card -->
           <div 
             v-for="service in services" 
@@ -40,13 +40,13 @@
                 {{ service.description }}
               </p>
             </div>
-            <a 
-              :href="service.link" 
+            <router-link 
+              :to="service.link" 
               class="mt-auto flex items-center gap-1 text-primary text-sm font-bold group-hover:translate-x-[-4px] transition-transform"
             >
               {{ service.linkText }}
               <span class="material-symbols-outlined text-sm">arrow_back</span>
-            </a>
+            </router-link>
           </div>
         </section>
 
@@ -84,51 +84,51 @@ const { t } = useI18n();
 const services = ref([
   {
     id: 1,
-    icon: 'school',
-    title: t('services.service1Title'),
-    description: t('services.service1Desc'),
-    link: '#',
-    linkText: t('services.viewDetails')
+    icon: 'medical_information',
+    title: 'مشاوره تخصصی',
+    description: 'ارائه مشاوره‌های علمی و تخصصی در زمینه بیماری‌های ریوی نوزادان و کودکان',
+    link: '/contact',
+    linkText: 'درخواست مشاوره'
   },
   {
     id: 2,
-    icon: 'groups',
-    title: t('services.service2Title'),
-    description: t('services.service2Desc'),
-    link: '#',
-    linkText: t('services.viewCalendar')
+    icon: 'healing',
+    title: 'درمان‌های نوین',
+    description: 'معرفی و بکارگیری جدیدترین پروتکل‌های درمانی بین‌المللی برای بیماران تنفسی',
+    link: '/services',
+    linkText: 'اطلاعات بیشتر'
   },
   {
     id: 3,
-    icon: 'precision_manufacturing',
-    title: t('services.service3Title'),
-    description: t('services.service3Desc'),
-    link: '#',
-    linkText: t('services.registerWorkshop')
+    icon: 'health_and_safety',
+    title: 'پیشگیری و سلامت',
+    description: 'برنامه‌های غربالگری و آگاهی‌رسانی جهت جلوگیری از بروز بیماری‌های مزمن ریوی',
+    link: '/education',
+    linkText: 'برنامه‌های پیشگیری'
   },
   {
     id: 4,
-    icon: 'menu_book',
-    title: t('services.service4Title'),
-    description: t('services.service4Desc'),
-    link: '#',
-    linkText: t('services.viewArchive')
+    icon: 'school',
+    title: 'آموزش مداوم',
+    description: 'برگزاری کارگاه‌ها و کنفرانس‌های علمی برای پزشکان و متخصصان سراسر کشور',
+    link: '/events',
+    linkText: 'رویدادهای آموزشی'
   },
   {
     id: 5,
     icon: 'biotech',
-    title: t('services.service5Title'),
-    description: t('services.service5Desc'),
-    link: '#',
-    linkText: t('services.submitProposal')
+    title: 'پژوهش علمی',
+    description: 'حمایت از پایان‌نامه‌ها و طرح‌های تحقیقاتی در حوزه تنفس و آسم کودکان',
+    link: '/publications',
+    linkText: 'پروژه‌های تحقیقاتی'
   },
   {
     id: 6,
-    icon: 'verified',
-    title: t('services.service6Title'),
-    description: t('services.service6Desc'),
-    link: '#',
-    linkText: t('services.verifyCertificate')
+    icon: 'volunteer_activism',
+    title: 'حمایت از بیماران',
+    description: 'ارائه خدمات حمایتی و مددکاری برای خانواده‌های دارای کودک با بیماری خاص',
+    link: '/contact',
+    linkText: 'درخواست حمایت'
   }
 ]);
 </script>
