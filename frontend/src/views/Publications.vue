@@ -1,145 +1,215 @@
 <template>
-  <div class="publications-view position-relative">
-    <section class="page-hero glass-section pt-5 pb-5 mb-4">
-      <div class="container-xl">
-        <div class="row align-items-center">
-          <div class="col-md-12 text-center">
-            <span class="soft-badge secondary mb-3">
-              <i class="fa fa-book"></i>
-              {{ $t('nav.publications') }}
-            </span>
-            <h1 class="display-4 fw-bold mb-4">{{ $t('nav.publications') }}</h1>
-            <p class="lead text-muted">انتشارات علمی و مجلات انجمن علمی ریه کودکان ایران</p>
+  <div class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
+    <div class="relative flex min-h-screen flex-col overflow-x-hidden">
+      <main class="mx-auto w-full max-w-[1280px] grow px-6 py-8 lg:px-10">
+        <!-- Header Section -->
+        <div class="mb-12 flex flex-col gap-4">
+          <div class="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-bold text-primary w-fit">
+            <span class="material-symbols-outlined text-[20px]">article</span>
+            انتشارات
           </div>
+          <h1 class="text-4xl font-black text-slate-900 dark:text-white md:text-5xl">انتشارات علمی</h1>
+          <p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl">مجلات، کتاب‌ها و مقالات علمی منتشر شده توسط انجمن</p>
         </div>
-      </div>
-    </section>
 
-    <section class="p_3 glass-section mb-4">
-      <div class="container-xl">
-        <div class="row g-4">
-          <div class="col-md-12">
-            <div class="glass-card p-5">
-              <h2 class="fw-bold mb-4">انتشارات انجمن</h2>
-              <p class="text-muted mb-4">مجلات، کتاب‌ها و مقالات علمی منتشر شده توسط انجمن</p>
-              <div class="row g-4">
-                <!-- Newsletters -->
-                <div class="col-lg-4 col-md-6">
-                  <div class="publication-card glass-card p-4 text-center h-100" @click="handleCategoryClick('newsletters')">
-                    <div class="publication-icon mb-3">
-                      <i class="fa fa-newspaper-o fa-3x text-primary"></i>
-                    </div>
-                    <h5 class="fw-bold mb-2">خبرنامه‌ها</h5>
-                    <p class="text-muted mb-3">خبرنامه‌های سالانه انجمن</p>
-                    <button class="soft-button primary btn-sm">
-                      <i class="fa fa-download me-1"></i>
-                      مشاهده و دانلود
-                    </button>
-                  </div>
-                </div>
+        <!-- Main Publications Grid -->
+        <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
+          <!-- Newsletters -->
+          <div class="group relative overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-blue-50 to-white p-8 shadow-sm transition-all hover:shadow-2xl hover:border-blue-300 dark:border-slate-800 dark:from-slate-900 dark:to-slate-900">
+            <div class="absolute top-0 right-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-blue-500/5 blur-3xl transition-all group-hover:scale-150"></div>
+            <div class="relative">
+              <div class="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg shadow-blue-500/30 transition-transform group-hover:scale-110">
+                <span class="material-symbols-outlined text-5xl text-white">newspaper</span>
+              </div>
+              <h3 class="mb-3 text-2xl font-black">خبرنامه‌ها</h3>
+              <p class="mb-6 text-slate-600 dark:text-slate-400">
+                خبرنامه‌های سالانه انجمن با آخرین اخبار و دستاوردهای علمی
+              </p>
+              <div class="mb-6 flex flex-wrap gap-2">
+                <span class="rounded-full bg-blue-500/10 px-3 py-1 text-xs font-bold text-blue-600">سالانه</span>
+                <span class="rounded-full bg-blue-500/10 px-3 py-1 text-xs font-bold text-blue-600">اخبار علمی</span>
+                <span class="rounded-full bg-blue-500/10 px-3 py-1 text-xs font-bold text-blue-600">دستاوردها</span>
+              </div>
+              <div class="inline-flex items-center gap-2 rounded-full bg-amber-500/10 px-4 py-2 text-sm font-bold text-amber-600">
+                <span class="material-symbols-outlined text-[18px]">schedule</span>
+                به زودی
+              </div>
+            </div>
+          </div>
 
-                <!-- Congress Booklets -->
-                <div class="col-lg-4 col-md-6">
-                  <div class="publication-card glass-card p-4 text-center h-100" @click="handleCategoryClick('congress')">
-                    <div class="publication-icon mb-3">
-                      <i class="fa fa-book fa-3x text-primary"></i>
-                    </div>
-                    <h5 class="fw-bold mb-2">کتابچه کنگره‌ها و همایش‌ها</h5>
-                    <p class="text-muted mb-3">کتابچه‌های کنگره‌ها و همایش‌های علمی</p>
-                    <button class="soft-button primary btn-sm">
-                      <i class="fa fa-download me-1"></i>
-                      مشاهده و دانلود
-                    </button>
-                  </div>
-                </div>
+          <!-- Congress Booklets -->
+          <div 
+            @click="openModal('congress')"
+            class="group relative overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-emerald-50 to-white p-8 shadow-sm transition-all hover:shadow-2xl hover:border-emerald-300 cursor-pointer dark:border-slate-800 dark:from-slate-900 dark:to-slate-900"
+          >
+            <div class="absolute top-0 right-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-emerald-500/5 blur-3xl transition-all group-hover:scale-150"></div>
+            <div class="relative">
+              <div class="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-500 to-green-600 shadow-lg shadow-emerald-500/30 transition-transform group-hover:scale-110">
+                <span class="material-symbols-outlined text-5xl text-white">book</span>
+              </div>
+              <h3 class="mb-3 text-2xl font-black">کتابچه کنگره‌ها و همایش‌ها</h3>
+              <p class="mb-6 text-slate-600 dark:text-slate-400">
+                کتابچه‌های کنگره‌ها و همایش‌های علمی با خلاصه مقالات
+              </p>
+              <div class="mb-6 flex flex-wrap gap-2">
+                <span class="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-600">2 فایل</span>
+                <span class="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-600">PDF</span>
+                <span class="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-600">دانلود رایگان</span>
+              </div>
+              <div class="flex items-center gap-2 text-emerald-600 font-bold group-hover:gap-3 transition-all">
+                <span>مشاهده و دانلود</span>
+                <span class="material-symbols-outlined">download</span>
+              </div>
+            </div>
+          </div>
 
-                <!-- Association Journal -->
-                <div class="col-lg-4 col-md-6">
-                  <div class="publication-card glass-card p-4 text-center h-100" @click="handleJournalClick">
-                    <div class="publication-icon mb-3">
-                      <i class="fa fa-file-text fa-3x text-primary"></i>
-                    </div>
-                    <h5 class="fw-bold mb-2">مجله انجمن</h5>
-                    <p class="text-muted mb-3">مجله علمی انجمن در سایت Brieflands</p>
-                    <button class="soft-button primary btn-sm">
-                      <i class="fa fa-external-link me-1"></i>
-                      مشاهده در سایت
-                    </button>
-                  </div>
-                </div>
+          <!-- Journal -->
+          <a 
+            href="https://brieflands.com/journals/jcp" 
+            target="_blank"
+            class="group relative overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-purple-50 to-white p-8 shadow-sm transition-all hover:shadow-2xl hover:border-purple-300 dark:border-slate-800 dark:from-slate-900 dark:to-slate-900"
+          >
+            <div class="absolute top-0 right-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-purple-500/5 blur-3xl transition-all group-hover:scale-150"></div>
+            <div class="relative">
+              <div class="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 shadow-lg shadow-purple-500/30 transition-transform group-hover:scale-110">
+                <span class="material-symbols-outlined text-5xl text-white">description</span>
+              </div>
+              <h3 class="mb-3 text-2xl font-black">مجله انجمن</h3>
+              <p class="mb-6 text-slate-600 dark:text-slate-400">
+                مجله علمی انجمن در سایت Brieflands با مقالات داوری شده
+              </p>
+              <div class="mb-6 flex flex-wrap gap-2">
+                <span class="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-bold text-purple-600">Peer-Reviewed</span>
+                <span class="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-bold text-purple-600">ISI</span>
+                <span class="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-bold text-purple-600">بین‌المللی</span>
+              </div>
+              <div class="flex items-center gap-2 text-purple-600 font-bold group-hover:gap-3 transition-all">
+                <span>مشاهده در سایت</span>
+                <span class="material-symbols-outlined">open_in_new</span>
+              </div>
+            </div>
+          </a>
 
-                <!-- Other Products -->
-                <div class="col-lg-4 col-md-6">
-                  <div class="publication-card glass-card p-4 text-center h-100" @click="handleCategoryClick('products')">
-                    <div class="publication-icon mb-3">
-                      <i class="fa fa-archive fa-3x text-primary"></i>
-                    </div>
-                    <h5 class="fw-bold mb-2">سایر محصولات</h5>
-                    <p class="text-muted mb-3">سایر انتشارات و محصولات علمی</p>
-                    <button class="soft-button primary btn-sm">
-                      <i class="fa fa-download me-1"></i>
-                      مشاهده و دانلود
-                    </button>
-                  </div>
-                </div>
-
-                <!-- Research -->
-                <div class="col-lg-4 col-md-6">
-                  <div class="publication-card glass-card p-4 text-center h-100" @click="handleCategoryClick('research')">
-                    <div class="publication-icon mb-3">
-                      <i class="fa fa-flask fa-3x text-primary"></i>
-                    </div>
-                    <h5 class="fw-bold mb-2">تحقیقات و پژوهش</h5>
-                    <p class="text-muted mb-3">مقالات و تحقیقات علمی انجمن</p>
-                    <button class="soft-button primary btn-sm">
-                      <i class="fa fa-download me-1"></i>
-                      مشاهده و دانلود
-                    </button>
-                  </div>
-                </div>
+          <!-- Other Products -->
+          <div 
+            @click="openModal('other')"
+            class="group relative overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-orange-50 to-white p-8 shadow-sm transition-all hover:shadow-2xl hover:border-orange-300 cursor-pointer dark:border-slate-800 dark:from-slate-900 dark:to-slate-900"
+          >
+            <div class="absolute top-0 right-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-orange-500/5 blur-3xl transition-all group-hover:scale-150"></div>
+            <div class="relative">
+              <div class="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 shadow-lg shadow-orange-500/30 transition-transform group-hover:scale-110">
+                <span class="material-symbols-outlined text-5xl text-white">folder_open</span>
+              </div>
+              <h3 class="mb-3 text-2xl font-black">سایر محصولات</h3>
+              <p class="mb-6 text-slate-600 dark:text-slate-400">
+                سایر انتشارات و محصولات علمی انجمن
+              </p>
+              <div class="mb-6 flex flex-wrap gap-2">
+                <span class="rounded-full bg-orange-500/10 px-3 py-1 text-xs font-bold text-orange-600">1 فایل</span>
+                <span class="rounded-full bg-orange-500/10 px-3 py-1 text-xs font-bold text-orange-600">PDF</span>
+                <span class="rounded-full bg-orange-500/10 px-3 py-1 text-xs font-bold text-orange-600">دانلود رایگان</span>
+              </div>
+              <div class="flex items-center gap-2 text-orange-600 font-bold group-hover:gap-3 transition-all">
+                <span>مشاهده و دانلود</span>
+                <span class="material-symbols-outlined">download</span>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+
+        <!-- Research Section -->
+        <div class="mt-8">
+          <div class="group rounded-2xl border border-slate-200 bg-gradient-to-br from-pink-50 to-white p-8 shadow-sm transition-all hover:shadow-lg dark:border-slate-800 dark:from-slate-900 dark:to-slate-900">
+            <div class="flex flex-col gap-6 md:flex-row md:items-center">
+              <div class="flex h-20 w-20 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-pink-500 to-pink-600 shadow-lg shadow-pink-500/30">
+                <span class="material-symbols-outlined text-5xl text-white">science</span>
+              </div>
+              <div class="flex-1">
+                <h3 class="mb-2 text-2xl font-black">تحقیقات و پژوهش</h3>
+                <p class="mb-4 text-slate-600 dark:text-slate-400">
+                  مقالات و تحقیقات علمی اعضای انجمن در مجلات معتبر داخلی و بین‌المللی
+                </p>
+                <div class="flex flex-wrap gap-2">
+                  <span class="rounded-full bg-pink-500/10 px-3 py-1 text-xs font-bold text-pink-600">مقالات ISI</span>
+                  <span class="rounded-full bg-pink-500/10 px-3 py-1 text-xs font-bold text-pink-600">پایان‌نامه‌ها</span>
+                  <span class="rounded-full bg-pink-500/10 px-3 py-1 text-xs font-bold text-pink-600">پروژه‌های تحقیقاتی</span>
+                </div>
+              </div>
+              <div class="inline-flex items-center gap-2 rounded-full bg-amber-500/10 px-4 py-2 text-sm font-bold text-amber-600">
+                <span class="material-symbols-outlined text-[18px]">schedule</span>
+                به زودی
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="mt-16 grid grid-cols-2 gap-6 md:grid-cols-4">
+          <div class="rounded-xl border border-slate-200 bg-white p-6 text-center shadow-sm transition-all hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
+            <div class="mb-2 flex justify-center">
+              <span class="material-symbols-outlined text-4xl text-primary">article</span>
+            </div>
+            <div class="text-3xl font-black text-slate-900 dark:text-white">100+</div>
+            <div class="text-sm text-slate-500 dark:text-slate-400">مقاله منتشر شده</div>
+          </div>
+          <div class="rounded-xl border border-slate-200 bg-white p-6 text-center shadow-sm transition-all hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
+            <div class="mb-2 flex justify-center">
+              <span class="material-symbols-outlined text-4xl text-primary">book</span>
+            </div>
+            <div class="text-3xl font-black text-slate-900 dark:text-white">15+</div>
+            <div class="text-sm text-slate-500 dark:text-slate-400">کتاب منتشر شده</div>
+          </div>
+          <div class="rounded-xl border border-slate-200 bg-white p-6 text-center shadow-sm transition-all hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
+            <div class="mb-2 flex justify-center">
+              <span class="material-symbols-outlined text-4xl text-primary">event</span>
+            </div>
+            <div class="text-3xl font-black text-slate-900 dark:text-white">9</div>
+            <div class="text-sm text-slate-500 dark:text-slate-400">کنگره برگزار شده</div>
+          </div>
+          <div class="rounded-xl border border-slate-200 bg-white p-6 text-center shadow-sm transition-all hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
+            <div class="mb-2 flex justify-center">
+              <span class="material-symbols-outlined text-4xl text-primary">groups</span>
+            </div>
+            <div class="text-3xl font-black text-slate-900 dark:text-white">500+</div>
+            <div class="text-sm text-slate-500 dark:text-slate-400">محقق و نویسنده</div>
+          </div>
+        </div>
+      </main>
+    </div>
 
     <!-- Files Modal -->
-    <div v-if="showFilesModal" class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);" @click.self="showFilesModal = false">
-      <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content glass-card border-0">
-          <div class="modal-header border-0">
-            <h5 class="modal-title">{{ currentCategoryTitle }}</h5>
-            <button type="button" class="btn-close" @click="showFilesModal = false"></button>
-          </div>
-          <div class="modal-body modal-body-scrollable">
-            <div v-if="loading" class="text-center py-4">
-              <i class="fa fa-spinner fa-spin fa-2x text-primary"></i>
-              <p class="mt-2">در حال بارگذاری...</p>
-            </div>
-            <div v-else-if="files.length === 0" class="text-center py-4">
-              <i class="fa fa-folder-open fa-2x text-muted"></i>
-              <p class="mt-2 text-muted">فایلی در این دسته یافت نشد</p>
-            </div>
-            <div v-else class="row g-3">
-              <div v-for="file in files" :key="file.name" class="col-12">
-                <div class="file-item">
-                  <div class="file-item-inner glass-card p-3 d-flex align-items-center">
-                  <div class="file-icon me-3">
-                    <i :class="getFileIcon(file.type)" class="fa-2x text-primary"></i>
-                  </div>
-                  <div class="file-info flex-grow-1">
-                    <h6 class="mb-1">{{ file.name }}</h6>
-                    <small v-if="file.size > 0" class="text-muted">{{ formatFileSize(file.size) }}</small>
-                  </div>
-                  <button @click="downloadFile(file)" class="soft-button primary btn-sm">
-                    <i class="fa fa-download me-1"></i>
-                    دانلود
-                  </button>
-                  </div>
+    <div 
+      v-if="showModal" 
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      @click.self="closeModal"
+    >
+      <div class="max-h-[80vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+        <div class="sticky top-0 flex items-center justify-between border-b border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
+          <h2 class="text-2xl font-black">{{ modalTitle }}</h2>
+          <button @click="closeModal" class="rounded-lg p-2 hover:bg-slate-100 transition-colors dark:hover:bg-slate-800">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div class="p-6">
+          <div class="flex flex-col gap-3">
+            <a 
+              v-for="file in modalFiles" 
+              :key="file.path"
+              :href="file.path" 
+              target="_blank"
+              class="group flex items-center justify-between rounded-xl border border-slate-200 p-4 transition-all hover:border-primary/30 hover:bg-slate-50 hover:shadow-md dark:border-slate-800 dark:hover:bg-slate-800"
+            >
+              <div class="flex items-center gap-4">
+                <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+                  <span class="material-symbols-outlined text-primary text-2xl">picture_as_pdf</span>
+                </div>
+                <div>
+                  <div class="font-bold group-hover:text-primary transition-colors">{{ file.name }}</div>
+                  <div class="text-sm text-slate-500">{{ file.size }}</div>
                 </div>
               </div>
-            </div>
+              <span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">download</span>
+            </a>
           </div>
         </div>
       </div>
@@ -148,413 +218,39 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { getApiUrl } from '@/utils/api';
+import { ref, computed } from 'vue';
 
-const showFilesModal = ref(false);
-const currentCategoryTitle = ref('');
-const files = ref<any[]>([]);
-const loading = ref(false);
+const showModal = ref(false);
+const modalType = ref('');
 
-const categoryTitles: Record<string, string> = {
-  newsletters: 'خبرنامه‌ها',
-  congress: 'کتابچه کنگره‌ها و همایش‌ها',
-  products: 'سایر محصولات',
-  research: 'تحقیقات و پژوهش'
+const files = {
+  congress: [
+    { name: 'کتابچه کنگره', path: '/Content/Other/1_23033290624.pdf', size: '5.2 MB' },
+    { name: 'خلاصه مقالات پنجمین همایش 1403', path: '/Content/Other/خلاصه مقالات 5 همایش 403.pdf', size: '3.7 MB' }
+  ],
+  other: [
+    { name: 'سند علمی', path: '/Content/Other/DOC-20251227-WA0007.pdf', size: '1.2 MB' }
+  ]
 };
 
-const handleCategoryClick = async (category: string) => {
-  currentCategoryTitle.value = categoryTitles[category];
-  showFilesModal.value = true;
-  loading.value = true;
-  files.value = [];
-  
-  // Handle "Congress" booklets from local files
-  if (category === 'congress') {
-    // Use hardcoded list directly to avoid JSON parsing issues
-    files.value = [
-      {
-        name: '1_23033290624.pdf',
-        url: '/Content/Other/1_23033290624.pdf',
-        type: 'application/pdf',
-        size: 0
-      },
-      {
-        name: 'خلاصه مقالات 5 همایش 403.pdf',
-        url: '/Content/Other/خلاصه مقالات 5 همایش 403.pdf',
-        type: 'application/pdf',
-        size: 0
-      }
-    ];
-    loading.value = false;
-    return;
-  }
-  
-  // Handle "Other" products from local files
-  if (category === 'products') {
-    // Use hardcoded list directly to avoid JSON parsing issues
-    files.value = [
-      {
-        name: 'DOC-20251227-WA0007.pdf',
-        url: '/Content/Other/DOC-20251227-WA0007.pdf',
-        type: 'application/pdf',
-        size: 0
-      }
-    ];
-    loading.value = false;
-    return;
-  }
-  
-  // Handle other categories from API
-  try {
-    const response = await fetch(getApiUrl(`/api/news/publications/files/?category=${category}`), {
-      credentials: 'include'
-    });
-    
-    const data = await response.json();
-    
-    if (data.success) {
-      files.value = data.files || [];
-    } else {
-      console.error('Error loading files:', data.errors);
-      files.value = [];
-    }
-  } catch (error) {
-    console.error('Error loading files:', error);
-    files.value = [];
-  } finally {
-    loading.value = false;
-  }
-};
-
-const handleJournalClick = () => {
-  // Redirect to external journal website
-  window.open('https://brieflands.com/journals/jcp', '_blank');
-};
-
-const getFileIcon = (fileType: string) => {
-  if (fileType.includes('pdf')) return 'fa fa-file-pdf-o';
-  if (fileType.includes('doc')) return 'fa fa-file-word-o';
-  if (fileType.includes('image')) return 'fa fa-file-image-o';
-  return 'fa fa-file-o';
-};
-
-const formatFileSize = (bytes: number) => {
-  if (bytes === 0) return '0 Bytes';
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-};
-
-const downloadFile = async (file: any) => {
-  try {
-    // Build URL properly - encode each path segment separately
-    const urlParts = file.url.split('/').filter((part: string) => part !== '');
-    const encodedParts = urlParts.map((part: string) => {
-      // Don't encode if it's already encoded or is a protocol
-      if (part.includes('://') || part.startsWith('http')) {
-        return part;
-      }
-      // Encode each part to handle Persian characters and special characters
-      return encodeURIComponent(decodeURIComponent(part));
-    });
-    const encodedUrl = '/' + encodedParts.join('/');
-    
-    // Fetch the file as blob with proper headers
-    const response = await fetch(encodedUrl, {
-      method: 'GET',
-      headers: {
-        'Accept': file.type || 'application/octet-stream'
-      }
-    });
-    
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
-    
-    // Check content type - if HTML, file doesn't exist
-    const contentType = response.headers.get('content-type') || '';
-    if (contentType.includes('text/html')) {
-      throw new Error('Server returned HTML instead of file. File may not exist.');
-    }
-    
-    // Get blob
-    const blob = await response.blob();
-    
-    // Verify blob is not empty
-    if (blob.size === 0) {
-      throw new Error('Downloaded file is empty');
-    }
-    
-    // Create download link with proper MIME type
-    const blobUrl = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = blobUrl;
-    link.download = file.name;
-    link.style.display = 'none';
-    link.setAttribute('download', file.name);
-    
-    // Force download by setting download attribute
-    document.body.appendChild(link);
-    link.click();
-    
-    // Clean up immediately
-    setTimeout(() => {
-      if (document.body.contains(link)) {
-        document.body.removeChild(link);
-      }
-      window.URL.revokeObjectURL(blobUrl);
-    }, 100);
-  } catch (error: any) {
-    console.error('Download error:', error);
-    
-    // Fallback: create direct download link with download attribute
-    try {
-      const urlParts = file.url.split('/').filter((part: string) => part !== '');
-      const encodedParts = urlParts.map((part: string) => {
-        if (part.includes('://') || part.startsWith('http')) {
-          return part;
-        }
-        return encodeURIComponent(decodeURIComponent(part));
-      });
-      const encodedUrl = '/' + encodedParts.join('/');
-      
-      // Create link with download attribute to force download
-      const link = document.createElement('a');
-      link.href = encodedUrl;
-      link.download = file.name;
-      link.style.display = 'none';
-      link.setAttribute('download', file.name);
-      document.body.appendChild(link);
-      link.click();
-      
-      setTimeout(() => {
-        if (document.body.contains(link)) {
-          document.body.removeChild(link);
-        }
-      }, 100);
-    } catch (fallbackError) {
-      console.error('Fallback failed:', fallbackError);
-      alert(`خطا در دانلود فایل "${file.name}". لطفاً دوباره تلاش کنید.`);
-    }
-  }
-};
-
-onMounted(() => {
-  window.scrollTo(0, 0);
+const modalTitle = computed(() => {
+  if (modalType.value === 'congress') return 'کتابچه کنگره‌ها و همایش‌ها';
+  if (modalType.value === 'other') return 'سایر محصولات';
+  return '';
 });
+
+const modalFiles = computed(() => {
+  return files[modalType.value as keyof typeof files] || [];
+});
+
+function openModal(type: string) {
+  modalType.value = type;
+  showModal.value = true;
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  showModal.value = false;
+  document.body.style.overflow = 'auto';
+}
 </script>
-
-<style scoped>
-.publications-view {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-}
-
-.publication-card {
-  transition: var(--transition-snappy);
-  cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.publication-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--glass-shadow-hover);
-  border-color: rgba(13, 110, 253, 0.3);
-}
-
-.publication-icon {
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.file-item {
-  transition: var(--transition-snappy);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.file-item:hover {
-  border-color: rgba(13, 110, 253, 0.3);
-  transform: translateX(5px);
-}
-
-.file-icon {
-  width: 50px;
-  min-width: 50px;
-  flex-shrink: 0;
-  text-align: center;
-}
-
-.modal-dialog {
-  max-height: 90vh;
-  height: 90vh;
-  max-width: 90vw;
-  width: 100%;
-  margin: 1.75rem auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-  box-sizing: border-box;
-}
-
-.modal-content {
-  border-radius: var(--radius-lg);
-  backdrop-filter: blur(20px);
-  max-height: 90vh;
-  height: 90vh;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  position: relative;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-.modal-header {
-  flex-shrink: 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 1rem 1.5rem;
-  min-height: 60px;
-  box-sizing: border-box;
-  width: 100%;
-}
-
-.modal-body-scrollable {
-  flex: 1 1 auto;
-  overflow-y: auto !important;
-  overflow-x: hidden;
-  padding: 1.5rem;
-  min-height: 0;
-  max-height: 100%;
-  position: relative;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.modal-body-scrollable > div {
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-.modal-body-scrollable .row {
-  margin: 0;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-.modal-body-scrollable .col-12 {
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  min-width: 0;
-  flex: 0 0 100%;
-}
-
-.modal-body-scrollable::-webkit-scrollbar {
-  width: 10px;
-}
-
-.modal-body-scrollable::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 5px;
-}
-
-.modal-body-scrollable::-webkit-scrollbar-thumb {
-  background: rgba(13, 110, 253, 0.6);
-  border-radius: 5px;
-}
-
-.modal-body-scrollable::-webkit-scrollbar-thumb:hover {
-  background: rgba(13, 110, 253, 0.8);
-}
-
-.file-item {
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  margin-bottom: 0.75rem;
-  min-width: 0;
-}
-
-.file-item:last-child {
-  margin-bottom: 0;
-}
-
-.file-item-inner {
-  transition: var(--transition-snappy);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  min-width: 0;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-}
-
-.file-item-inner h6 {
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  max-width: 100%;
-  min-width: 0;
-}
-
-.file-item:hover .file-item-inner {
-  border-color: rgba(13, 110, 253, 0.3);
-  transform: translateX(5px);
-}
-
-.file-info {
-  min-width: 0;
-  flex: 1 1 auto;
-  flex-shrink: 1;
-  overflow: hidden;
-  max-width: 100%;
-}
-
-.file-info h6 {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 100%;
-  min-width: 0;
-}
-
-.file-item-inner .soft-button {
-  flex-shrink: 0;
-  min-width: fit-content;
-  white-space: nowrap;
-}
-
-@media (max-width: 768px) {
-  .publication-card {
-    margin-bottom: 1rem;
-  }
-  
-  .modal-dialog {
-    margin: 1rem;
-    max-height: 95vh;
-    height: 95vh;
-  }
-  
-  .modal-content {
-    height: 95vh;
-    max-height: 95vh;
-  }
-}
-</style>
-

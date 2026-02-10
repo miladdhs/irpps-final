@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>مرکز آموزش و یادگیری - انجمن علمی ریه کودکان</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "Tahoma", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "3xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        @layer base {
+            .material-symbols-outlined {
+                font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            }
+        }
+        .pattern-bg {
+            background-color: #ffffff;
+            background-image: radial-gradient(#137fec 0.5px, transparent 0.5px), radial-gradient(#137fec 0.5px, #ffffff 0.5px);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            opacity: 0.05;
+        }
+        .dark .pattern-bg {
+            background-color: #101922;
+            background-image: radial-gradient(#137fec 0.5px, transparent 0.5px), radial-gradient(#137fec 0.5px, #101922 0.5px);
+            opacity: 0.1;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display transition-colors duration-200">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<header class="sticky top-0 z-50 w-full border-b border-solid border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-background-dark/80 backdrop-blur-md px-4 md:px-10 lg:px-20 py-3">
+<div class="max-w-7xl mx-auto flex items-center justify-between">
+<div class="flex items-center gap-6 lg:gap-12">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary text-3xl">pulmonology</span>
+</div>
+<h1 class="text-primary text-xl font-black leading-tight tracking-tight hidden md:block">
+                            انجمن علمی ریه کودکان ایران
+                        </h1>
+</div>
+<nav class="hidden lg:flex items-center gap-8">
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">خانه</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">درباره ما</a>
+<a class="text-primary font-bold text-sm leading-normal" href="#">مرکز آموزش</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">اخبار</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">رویدادها</a>
+<a class="text-slate-600 dark:text-slate-300 hover:text-primary transition-colors text-sm font-medium leading-normal" href="#">تماس با ما</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<label class="hidden sm:flex flex-col min-w-40 h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full bg-slate-100 dark:bg-slate-800">
+<div class="text-slate-500 flex items-center justify-center pr-3">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 border-none bg-transparent focus:outline-0 focus:ring-0 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 text-sm font-normal pr-2" placeholder="جستجوی منابع..." value=""/>
+</div>
+</label>
+<button class="flex items-center justify-center rounded-lg h-10 w-10 bg-primary/10 text-primary lg:hidden">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<button class="hidden sm:flex items-center justify-center rounded-lg h-10 px-4 bg-primary text-white font-bold text-sm hover:bg-primary/90 transition-all">
+                        پورتال آموزش
+                    </button>
+</div>
+</div>
+</header>
+<main class="flex-1">
+<section class="relative bg-white dark:bg-slate-900 py-16 overflow-hidden">
+<div class="absolute inset-0 pattern-bg"></div>
+<div class="max-w-7xl mx-auto px-4 relative z-10">
+<div class="flex flex-col items-center text-center max-w-3xl mx-auto">
+<span class="bg-primary/10 text-primary px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-6">سامانه جامع آموزشی</span>
+<h1 class="text-4xl md:text-5xl font-black text-slate-900 dark:text-white mb-6 leading-tight">
+                            مرکز آموزش و <span class="text-primary">یادگیری هوشمند</span>
+</h1>
+<p class="text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
+                            دسترسی به آخرین یافته‌های علمی، راهنماهای خودمراقبتی و محتوای چندرسانه‌ای برای متخصصین و خانواده‌ها.
+                        </p>
+</div>
+</div>
+</section>
+<section class="max-w-7xl mx-auto px-4 py-16 -mt-10">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="group relative bg-white dark:bg-slate-900 rounded-3xl overflow-hidden shadow-2xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 flex flex-col h-full hover:-translate-y-2 transition-all duration-300">
+<div class="h-48 relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-slate-900/80 to-transparent z-10"></div>
+<img alt="Medical Resources" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRWC-VzGvBx9A_e7sqNci_uzLWJ0XIpjk9UTNqvA4IUCQ__PUTeR94ABOPE6P4FTH5TLllujD0ZMIbC2YReNmYS1PscOkN7vQbF5CcOrJgsF2ZdRYX6cDgDJ1T1QpyLwG-3K3KxNnHyCY1I9z2USqtQ_yPA-4go7Mb_eMNkKOK0Tev6kBuZXXoXPnB5Kw_-ZLWBiTr2O7PIEL7Xqh64HzzHNsTInugfqAzUl_p_t9vnvH-THwM2M62mon2-pnHu7wrNSElmyXyAv4"/>
+<div class="absolute bottom-4 right-6 z-20 flex items-center gap-3">
+<div class="w-12 h-12 bg-primary rounded-xl flex items-center justify-center text-white shadow-lg">
+<span class="material-symbols-outlined text-2xl">menu_book</span>
+</div>
+<h3 class="text-xl font-bold text-white">منابع تخصصی پزشکی</h3>
+</div>
+</div>
+<div class="p-8 flex-1 flex flex-col">
+<p class="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
+                                دسترسی به پروتکل‌های درمانی، مقالات ژورنال‌های معتبر و کیس‌های بالینی برای پزشکان و دستیاران فوق تخصصی.
+                            </p>
+<ul class="space-y-3 mb-8">
+<li class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                                    راهنماهای بالینی (Clinical Guidelines)
+                                </li>
+<li class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                                    آرشیو سمینارهای علمی
+                                </li>
+</ul>
+<div class="mt-auto">
+<a class="inline-flex items-center gap-2 text-primary font-bold hover:gap-4 transition-all group/link" href="#">
+                                    ورود به مخزن منابع
+                                    <span class="material-symbols-outlined rotate-180">arrow_right_alt</span>
+</a>
+</div>
+</div>
+</div>
+<div class="group relative bg-white dark:bg-slate-900 rounded-3xl overflow-hidden shadow-2xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 flex flex-col h-full hover:-translate-y-2 transition-all duration-300">
+<div class="h-48 relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent z-10"></div>
+<img alt="Parents Guide" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCquxQ9nM1cRfLRedpV8TzpkncwOMcuRHGHzRQlT7NjszpCeY1MID_XJ9gcYg-SR99UEl2JAWfb5orPo9jpBpi3dngLv4tDAIArTOOoAQ5SwS8N112OZxi6pIMPJkVaiXSpAbE2sQhyz3v3imUScuraCY7vKHyTga0inlDXkHICDOFKI03lQsE66VTpLN-T5ZZCjGQhUhF43X1FcLy33evS_HAHDo3j9kPLZCtQ8XPltahaBWi_GdJ6QqIzVDt1keIqHshn5ZaBl40"/>
+<div class="absolute bottom-4 right-6 z-20 flex items-center gap-3">
+<div class="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-primary shadow-lg">
+<span class="material-symbols-outlined text-2xl">family_restroom</span>
+</div>
+<h3 class="text-xl font-bold text-white">راهنمای جامع والدین</h3>
+</div>
+</div>
+<div class="p-8 flex-1 flex flex-col">
+<p class="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
+                                آموزش‌های گام‌به‌گام برای مراقبت از کودکان مبتلا به بیماری‌های تنفسی، آسم و آلرژی در منزل.
+                            </p>
+<ul class="space-y-3 mb-8">
+<li class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                                    طرز استفاده از اسپری و نبولایزر
+                                </li>
+<li class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                                    پیشگیری از حملات تنفسی
+                                </li>
+</ul>
+<div class="mt-auto">
+<a class="inline-flex items-center gap-2 text-primary font-bold hover:gap-4 transition-all group/link" href="#">
+                                    مطالعه مقالات آموزشی
+                                    <span class="material-symbols-outlined rotate-180">arrow_right_alt</span>
+</a>
+</div>
+</div>
+</div>
+<div class="group relative bg-white dark:bg-slate-900 rounded-3xl overflow-hidden shadow-2xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800 flex flex-col h-full hover:-translate-y-2 transition-all duration-300">
+<div class="h-48 relative overflow-hidden">
+<div class="absolute inset-0 bg-gradient-to-t from-slate-800/80 to-transparent z-10"></div>
+<div class="absolute inset-0 pattern-bg opacity-20"></div>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-16 h-16 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/30 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-4xl fill-1">play_arrow</span>
+</div>
+</div>
+<div class="absolute bottom-4 right-6 z-20 flex items-center gap-3">
+<div class="w-12 h-12 bg-slate-800 rounded-xl flex items-center justify-center text-white shadow-lg">
+<span class="material-symbols-outlined text-2xl">movie</span>
+</div>
+<h3 class="text-xl font-bold text-white">رسانه آموزشی</h3>
+</div>
+</div>
+<div class="p-8 flex-1 flex flex-col">
+<p class="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
+                                تماشای ویدیوهای آموزشی، پادکست‌های تخصصی و اینفوگرافیک‌های تعاملی با کیفیت بالا.
+                            </p>
+<ul class="space-y-3 mb-8">
+<li class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                                    ویدیوهای آموزشی برای کودکان
+                                </li>
+<li class="flex items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+<span class="material-symbols-outlined text-primary text-lg">check_circle</span>
+                                    پادکست‌های پرسش و پاسخ
+                                </li>
+</ul>
+<div class="mt-auto">
+<a class="inline-flex items-center gap-2 text-primary font-bold hover:gap-4 transition-all group/link" href="#">
+                                    مشاهده گالری ویدیو
+                                    <span class="material-symbols-outlined rotate-180">arrow_right_alt</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="bg-slate-100 dark:bg-slate-800/30 py-20">
+<div class="max-w-7xl mx-auto px-4">
+<div class="bg-white dark:bg-slate-900 rounded-[2rem] overflow-hidden shadow-xl flex flex-col lg:flex-row">
+<div class="lg:w-1/2 relative h-80 lg:h-auto">
+<img alt="Featured Course" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRWC-VzGvBx9A_e7sqNci_uzLWJ0XIpjk9UTNqvA4IUCQ__PUTeR94ABOPE6P4FTH5TLllujD0ZMIbC2YReNmYS1PscOkN7vQbF5CcOrJgsF2ZdRYX6cDgDJ1T1QpyLwG-3K3KxNnHyCY1I9z2USqtQ_yPA-4go7Mb_eMNkKOK0Tev6kBuZXXoXPnB5Kw_-ZLWBiTr2O7PIEL7Xqh64HzzHNsTInugfqAzUl_p_t9vnvH-THwM2M62mon2-pnHu7wrNSElmyXyAv4"/>
+<div class="absolute inset-0 bg-primary/20 backdrop-multiply"></div>
+</div>
+<div class="lg:w-1/2 p-10 lg:p-16">
+<span class="text-primary font-bold text-sm mb-4 block">دوره پیشنهادی ماه</span>
+<h2 class="text-3xl font-black text-slate-900 dark:text-white mb-6">مبانی مراقبت‌های تنفسی در نوزادان نارس</h2>
+<p class="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
+                                این دوره جامع توسط برترین اساتید انجمن ریه کودکان ایران تدوین شده و شامل جدیدترین متدهای مراقبتی و درمانی برای نوزادان در بخش NICU است.
+                            </p>
+<div class="flex flex-wrap gap-6 mb-10">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">schedule</span>
+<span class="text-sm font-medium">۱۲ ساعت محتوا</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">verified</span>
+<span class="text-sm font-medium">گواهی معتبر</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">person_outline</span>
+<span class="text-sm font-medium">۴۵۰ شرکت‌کننده</span>
+</div>
+</div>
+<button class="bg-primary text-white px-8 h-14 rounded-xl font-bold hover:shadow-lg hover:shadow-primary/30 transition-all">
+                                ثبت نام در دوره
+                            </button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<footer class="bg-slate-900 text-white pt-20 pb-10">
+<div class="max-w-7xl mx-auto px-4">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 pb-16 border-b border-slate-800">
+<div class="col-span-1 lg:col-span-1">
+<div class="flex items-center gap-3 mb-6">
+<span class="material-symbols-outlined text-primary text-4xl">pulmonology</span>
+<h2 class="text-xl font-black">انجمن ریه کودکان</h2>
+</div>
+<p class="text-slate-400 leading-relaxed mb-6">
+                            مرکز تخصصی و مرجع علمی بیماری‌های ریوی کودکان در ایران، متعهد به تعالی در درمان و پژوهش.
+                        </p>
+<div class="flex gap-4">
+<a class="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors" href="#">
+<span class="material-symbols-outlined">share</span>
+</a>
+<a class="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors" href="#">
+<span class="material-symbols-outlined">public</span>
+</a>
+<a class="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center hover:bg-primary transition-colors" href="#">
+<span class="material-symbols-outlined">mail</span>
+</a>
+</div>
+</div>
+<div>
+<h3 class="text-lg font-bold mb-8 relative after:content-[''] after:absolute after:bottom-[-10px] after:right-0 after:w-10 after:h-1 after:bg-primary">مرکز آموزش</h3>
+<ul class="space-y-4">
+<li><a class="text-slate-400 hover:text-white transition-colors" href="#">کتابخانه دیجیتال</a></li>
+<li><a class="text-slate-400 hover:text-white transition-colors" href="#">ویدیوهای تخصصی</a></li>
+<li><a class="text-slate-400 hover:text-white transition-colors" href="#">وبینارهای ضبط شده</a></li>
+<li><a class="text-slate-400 hover:text-white transition-colors" href="#">راهنمای دارویی</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-lg font-bold mb-8 relative after:content-[''] after:absolute after:bottom-[-10px] after:right-0 after:w-10 after:h-1 after:bg-primary">خدمات آنلاین</h3>
+<ul class="space-y-4">
+<li><a class="text-slate-400 hover:text-white transition-colors" href="#">پنل کاربری پزشکان</a></li>
+<li><a class="text-slate-400 hover:text-white transition-colors" href="#">درخواست گواهی</a></li>
+<li><a class="text-slate-400 hover:text-white transition-colors" href="#">مشاوره از راه دور</a></li>
+<li><a class="text-slate-400 hover:text-white transition-colors" href="#">تالار گفتگو</a></li>
+</ul>
+</div>
+<div>
+<h3 class="text-lg font-bold mb-8 relative after:content-[''] after:absolute after:bottom-[-10px] after:right-0 after:w-10 after:h-1 after:bg-primary">ارتباط با ما</h3>
+<ul class="space-y-6">
+<li class="flex items-start gap-3">
+<span class="material-symbols-outlined text-primary mt-1 text-xl">location_on</span>
+<span class="text-slate-400 leading-relaxed">تهران، خیابان شریعتی، بالاتر از میرداماد، کوچه فلسفی، پلاک ۱۲</span>
+</li>
+<li class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-xl">call</span>
+<span class="text-slate-400 dir-ltr">۰۲۱-۸۸۰۰۰۰۰۰</span>
+</li>
+</ul>
+</div>
+</div>
+<div class="pt-10 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-500 text-sm">
+<p>© ۱۴۰۳ انجمن علمی ریه کودکان ایران. تمامی حقوق محفوظ است.</p>
+<div class="flex gap-8">
+<a class="hover:text-white transition-colors" href="#">حریم خصوصی</a>
+<a class="hover:text-white transition-colors" href="#">شرایط استفاده</a>
+</div>
+</div>
+</div>
+</footer>
+</div>
+
+</body></html>

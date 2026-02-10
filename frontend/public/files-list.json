@@ -1,0 +1,223 @@
+{
+  "books": {
+    "development": {
+      "title": "تکامل کودک",
+      "files": [
+        {
+          "name": "کتاب تکامل دوران ابتدای کودکی",
+          "path": "/Content/Books/تکامل/کتاب-تکامل-دوران-ابتدای-کودکی.pdf",
+          "size": "2.5 MB"
+        },
+        {
+          "name": "تقویت تکامل در اوایل کودکی",
+          "path": "/Content/Books/تکامل/تقویت-تکامل-در-اوایل-کودکی-.pdf",
+          "size": "1.8 MB"
+        },
+        {
+          "name": "فعالیت‌هایی برای ارتقای تکامل کودک",
+          "path": "/Content/Books/تکامل/فعالیت-هایی-برای-ارتقای-تکامل-کودک.pdf",
+          "size": "3.2 MB"
+        },
+        {
+          "name": "152 Games and Exercises for Children's Development",
+          "path": "/Content/Books/تکامل/152-games-and-exercises-for-childrens-development.pdf",
+          "size": "4.1 MB"
+        },
+        {
+          "name": "Children's Development Book",
+          "path": "/Content/Books/تکامل/Childrens-development-book.pdf",
+          "size": "2.9 MB"
+        }
+      ]
+    },
+    "family": {
+      "title": "گفتار خانواده",
+      "files": [
+        {
+          "name": "راهنمای خانواده",
+          "path": "/Content/Books/گفتار خانواده/khanevade.pdf",
+          "size": "1.5 MB"
+        }
+      ]
+    },
+    "imci": {
+      "title": "مراقبت‌های ادغام ناخوشی‌های اطفال",
+      "files": [
+        {
+          "name": "دستورالعمل نهایی اجرا",
+          "path": "/Content/Books/مراقبت های ادغام ناخوشی های اطفال/Final-instructions-implementation.pdf",
+          "size": "2.1 MB"
+        },
+        {
+          "name": "راهنمای غیرپزشک",
+          "path": "/Content/Books/مراقبت های ادغام ناخوشی های اطفال/mana-np.pdf",
+          "size": "1.8 MB"
+        },
+        {
+          "name": "راهنمای پزشک",
+          "path": "/Content/Books/مراقبت های ادغام ناخوشی های اطفال/mana-p.pdf",
+          "size": "2.3 MB"
+        }
+      ]
+    },
+    "imnci": {
+      "title": "مراقبت‌های ادغام یافته کودک سالم",
+      "files": [
+        {
+          "name": "کتابچه غیرپزشک",
+          "path": "/Content/Books/مراقبت های ادغام یافته‌ی کودک سالم/booklet-غیر-پزشک.pdf",
+          "size": "1.9 MB"
+        },
+        {
+          "name": "کتابچه پزشک کودک سالم",
+          "path": "/Content/Books/مراقبت های ادغام یافته‌ی کودک سالم/booklet-پزشک-کودک-سالم.pdf",
+          "size": "2.2 MB"
+        },
+        {
+          "name": "راهنمای مشاوره",
+          "path": "/Content/Books/مراقبت های ادغام یافته‌ی کودک سالم/counselling-guide-23-12-1400_compressed.pdf",
+          "size": "3.1 MB"
+        },
+        {
+          "name": "راهنمای غیرپزشک",
+          "path": "/Content/Books/مراقبت های ادغام یافته‌ی کودک سالم/non-physician-guide-25-12-1400_compressed.pdf",
+          "size": "2.8 MB"
+        },
+        {
+          "name": "راهنمای پزشک",
+          "path": "/Content/Books/مراقبت های ادغام یافته‌ی کودک سالم/physician-guide-30-1-1401_compressed.pdf",
+          "size": "3.5 MB"
+        },
+        {
+          "name": "راهنمای جامع کودک",
+          "path": "/Content/Books/مراقبت های ادغام یافته‌ی کودک سالم/rahnamay-jame-koodak.pdf",
+          "size": "4.2 MB"
+        }
+      ]
+    },
+    "hypothyroidism": {
+      "title": "هیپوتیروئیدی",
+      "files": [
+        {
+          "name": "کتاب بیماری کم‌کاری تیرویید",
+          "path": "/Content/Books/هیپوتیروئیدی/کتاب-بیماری-کم-کاری-تیرویید-99.pdf",
+          "size": "2.7 MB"
+        }
+      ]
+    },
+    "vaccination": {
+      "title": "واکسیناسیون",
+      "files": [
+        {
+          "name": "برنامه و راهنمای ایمن‌سازی 1403",
+          "path": "/Content/Books/واکسیناسیون/برنامه-و-راهنمای-ایمن-سازی-1403.pdf",
+          "size": "3.8 MB"
+        }
+      ]
+    },
+    "gina": {
+      "title": "GINA - راهنمای آسم",
+      "files": [
+        {
+          "name": "GINA Summary Guide 2025",
+          "path": "/Content/lAST/GINA-Summary-Guide-2025-WEB_FINAL-WMS.pdf",
+          "size": "2.1 MB"
+        },
+        {
+          "name": "GINA 2025 Update",
+          "path": "/Content/lAST/GINA-2025-Update-25_11_08-WMS.pdf",
+          "size": "1.5 MB"
+        }
+      ]
+    }
+  },
+  "publications": {
+    "newsletters": {
+      "title": "خبرنامه‌ها",
+      "files": []
+    },
+    "congress": {
+      "title": "کتابچه کنگره‌ها و همایش‌ها",
+      "files": [
+        {
+          "name": "کتابچه کنگره",
+          "path": "/Content/Other/1_23033290624.pdf",
+          "size": "5.2 MB"
+        },
+        {
+          "name": "خلاصه مقالات پنجمین همایش 1403",
+          "path": "/Content/Other/خلاصه مقالات 5 همایش 403.pdf",
+          "size": "3.7 MB"
+        }
+      ]
+    },
+    "journal": {
+      "title": "مجله انجمن",
+      "link": "https://brieflands.com/journals/jcp",
+      "description": "مجله علمی انجمن در سایت Brieflands"
+    },
+    "other": {
+      "title": "سایر محصولات",
+      "files": [
+        {
+          "name": "سند علمی",
+          "path": "/Content/Other/DOC-20251227-WA0007.pdf",
+          "size": "1.2 MB"
+        }
+      ]
+    }
+  },
+  "gallery": {
+    "brochures": {
+      "title": "بروشورها",
+      "images": [
+        "/Content/Broshour/picture-1-scaled.jpg",
+        "/Content/Broshour/picture-2-scaled.jpg",
+        "/Content/Broshour/picture-4-scaled.jpg",
+        "/Content/Broshour/picture-7-scaled.jpg",
+        "/Content/Broshour/picture-8-scaled.jpg",
+        "/Content/Broshour/picture-9-scaled.jpg",
+        "/Content/Broshour/picture-10-scaled.jpg",
+        "/Content/Broshour/picture-11-scaled.jpg",
+        "/Content/Broshour/picture-12-1-scaled.jpg",
+        "/Content/Broshour/picture-13-scaled.jpg",
+        "/Content/Broshour/picture-14-scaled.jpg",
+        "/Content/Broshour/picture-16-scaled.jpg",
+        "/Content/Broshour/picture-17-scaled.jpg",
+        "/Content/Broshour/picture-18-scaled.jpg",
+        "/Content/Broshour/pictute-6-scaled.jpg"
+      ]
+    },
+    "events": {
+      "title": "رویدادها",
+      "images": [
+        "/Content/photo_2025-12-05_21-18-04.jpg",
+        "/Content/photo_2025-12-05_21-18-05.jpg",
+        "/Content/photo_2025-12-05_21-18-06.jpg",
+        "/Content/photo_2025-12-05_21-18-07.jpg",
+        "/Content/photo_2025-12-05_21-18-08.jpg",
+        "/Content/photo_2025-12-05_21-18-09.jpg",
+        "/Content/photo_2025-12-05_21-18-10.jpg",
+        "/Content/photo_2025-12-05_21-18-11.jpg",
+        "/Content/photo_2025-12-05_21-18-12.jpg",
+        "/Content/photo_2025-12-05_21-18-13.jpg",
+        "/Content/photo_2025-12-05_21-18-20.jpg",
+        "/Content/photo_2025-12-05_21-18-22.jpg",
+        "/Content/photo_2025-12-05_21-18-26.jpg",
+        "/Content/photo_2025-12-05_21-18-28.jpg",
+        "/Content/photo_2025-12-05_21-18-29.jpg",
+        "/Content/photo_2025-12-05_21-18-30.jpg"
+      ]
+    },
+    "recent": {
+      "title": "تصاویر اخیر",
+      "images": [
+        "/Content/lAST/IMG_1518.JPG",
+        "/Content/lAST/IMG_1532.JPG",
+        "/Content/lAST/IMG_20251104_071318_242.jpg",
+        "/Content/lAST/photo_2026-01-04_12-05-34.jpg",
+        "/Content/lAST/photo_2026-01-04_12-05-58.jpg"
+      ]
+    }
+  }
+}

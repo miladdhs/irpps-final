@@ -1,24 +1,21 @@
-import { defineConfig } from 'vite';
-import vue from '@vitejs/plugin-vue';
-import { resolve } from 'path';
+import { defineConfig } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import { fileURLToPath, URL } from 'node:url'
 
+// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
+  resolve: {
+    alias: {
+      '@': fileURLToPath(new URL('./src', import.meta.url))
+    }
+  },
   server: {
     port: 5173,
     host: true,
-    fs: {
-      // Allow serving files from one level up to the project root
-      allow: ['..'],
-      strict: false
-    },
+    // Proxy برای development - در production nginx این کار رو انجام میده
     proxy: {
       '/api': {
-        target: 'http://localhost:8000',
-        changeOrigin: true,
-        secure: false,
-      },
-      '/static': {
         target: 'http://localhost:8000',
         changeOrigin: true,
         secure: false,
@@ -27,44 +24,21 @@ export default defineConfig({
         target: 'http://localhost:8000',
         changeOrigin: true,
         secure: false,
-      },
-      '/assets': {
-        target: 'http://localhost:8000',
-        changeOrigin: true,
-        secure: false,
       }
-    },
-    // Ignore templates directory and other problematic paths
-    watch: {
-      ignored: ['**/templates/**', '**/node_modules/**', '**/.git/**', '**/data/**']
     }
   },
   build: {
-    sourcemap: false,
+    // تنظیمات بهینه برای production
     outDir: 'dist',
+    assetsDir: 'assets',
+    sourcemap: false,
+    minify: 'terser',
     rollupOptions: {
-      input: {
-        main: resolve(__dirname, 'index.html')
+      output: {
+        manualChunks: {
+          'vendor': ['vue', 'vue-router', 'pinia', 'axios'],
+        }
       }
     }
-  },
-  css: {
-    devSourcemap: false,
-    preprocessorOptions: {
-      scss: {
-        silenceDeprecations: ['legacy-js-api', 'import', 'global-builtin', 'color-functions', 'slash-div']
-      }
-    }
-  },
-  resolve: {
-    alias: {
-      '@': resolve(__dirname, 'src')
-    }
-  },
-  publicDir: 'public',
-  base: '/',
-  assetsInclude: ['**/*.jpg', '**/*.png', '**/*.svg', '**/*.woff', '**/*.woff2', '**/*.ttf', '**/*.eot'],
-  optimizeDeps: {
-    exclude: []
   }
-});
+})

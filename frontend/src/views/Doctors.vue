@@ -1,177 +1,241 @@
 <template>
-  <div class="doctors-view position-relative">
-    <section class="page-hero glass-section pt-5 pb-5 mb-4">
-      <div class="container-xl">
-        <div class="row align-items-center">
-          <div class="col-md-12 text-center">
-            <span class="soft-badge secondary mb-3">
-              <i class="fa fa-user-md"></i>
-              بخش پزشکان
-            </span>
-            <h1 class="display-4 fw-bold mb-4">منابع و محتوای پزشکی</h1>
-            <p class="lead text-muted">دسترسی به منابع آموزشی، ویدیوها، کتاب‌ها و محتوای علمی</p>
+  <div class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
+    <div class="relative flex min-h-screen flex-col overflow-x-hidden">
+      <main class="mx-auto w-full max-w-[1280px] grow px-6 py-8 lg:px-10">
+        <!-- Header Section -->
+        <div class="mb-12 flex flex-col gap-4">
+          <div class="inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-sm font-bold text-primary w-fit">
+            <span class="material-symbols-outlined text-[20px]">medical_services</span>
+            منابع پزشکی
           </div>
+          <h1 class="text-4xl font-black text-slate-900 dark:text-white md:text-5xl">منابع و محتوای پزشکی</h1>
+          <p class="text-lg text-slate-600 dark:text-slate-400 max-w-2xl">دسترسی به کتاب‌ها، انتشارات، راهنماها و محتوای علمی تخصصی</p>
         </div>
-      </div>
-    </section>
 
-    <section class="p_3 glass-section mb-4">
-      <div class="container-xl">
-        <div class="row g-4">
-          <div class="col-md-12">
-            <div class="glass-card p-5">
-              <h2 class="fw-bold mb-4">دسته‌بندی محتوا</h2>
-              <p class="text-muted mb-4">انتخاب دسته‌بندی مورد نظر برای مشاهده و دانلود فایل‌ها</p>
-              <div class="row g-4">
-                <!-- SkyRoom -->
-                <div class="col-lg-4 col-md-6">
-                  <div class="category-card glass-card p-4 text-center h-100" @click="handleCategoryClick('skyroom')">
-                    <div class="category-icon mb-3">
-                      <i class="fa fa-video-camera fa-3x text-primary"></i>
-                    </div>
-                    <h5 class="fw-bold mb-2">اسکای روم</h5>
-                    <p class="text-muted mb-3">لینک‌های جلسات و وبینارهای اسکای روم</p>
-                    <button class="soft-button primary btn-sm">
-                      <i class="fa fa-external-link me-1"></i>
-                      مشاهده
-                    </button>
-                  </div>
-                </div>
+        <!-- Categories Grid -->
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <!-- Books Category -->
+          <div 
+            @click="openCategory('books')"
+            class="group relative overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-blue-50 to-white p-8 shadow-sm transition-all hover:shadow-2xl hover:border-blue-300 cursor-pointer dark:border-slate-800 dark:from-slate-900 dark:to-slate-900"
+          >
+            <div class="absolute top-0 right-0 h-24 w-24 translate-x-6 -translate-y-6 rounded-full bg-blue-500/5 blur-2xl transition-all group-hover:scale-150"></div>
+            <div class="relative">
+              <div class="mb-6 flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg shadow-blue-500/20 transition-transform group-hover:scale-110">
+                <span class="material-symbols-outlined text-white text-4xl">menu_book</span>
+              </div>
+              <h3 class="mb-3 text-xl font-black">کتاب‌های آموزشی</h3>
+              <p class="mb-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                کتاب‌های تخصصی و راهنماهای بالینی
+              </p>
+              <div class="flex items-center gap-2 text-blue-600 font-bold group-hover:gap-3 transition-all">
+                <span>19 کتاب</span>
+                <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+              </div>
+            </div>
+          </div>
 
-                <!-- Video -->
-                <div class="col-lg-4 col-md-6">
-                  <div class="category-card glass-card p-4 text-center h-100" @click="handleCategoryClick('video')">
-                    <div class="category-icon mb-3">
-                      <i class="fa fa-film fa-3x text-primary"></i>
-                    </div>
-                    <h5 class="fw-bold mb-2">ویدیو</h5>
-                    <p class="text-muted mb-3">فایل‌های ویدیویی آموزشی</p>
-                    <button class="soft-button primary btn-sm">
-                      <i class="fa fa-download me-1"></i>
-                      مشاهده و دانلود
-                    </button>
-                  </div>
-                </div>
+          <!-- Newsletters -->
+          <div 
+            @click="openCategory('newsletters')"
+            class="group relative overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-purple-50 to-white p-8 shadow-sm transition-all hover:shadow-2xl hover:border-purple-300 cursor-pointer dark:border-slate-800 dark:from-slate-900 dark:to-slate-900"
+          >
+            <div class="absolute top-0 right-0 h-24 w-24 translate-x-6 -translate-y-6 rounded-full bg-purple-500/5 blur-2xl transition-all group-hover:scale-150"></div>
+            <div class="relative">
+              <div class="mb-6 flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-purple-600 shadow-lg shadow-purple-500/20 transition-transform group-hover:scale-110">
+                <span class="material-symbols-outlined text-white text-4xl">newspaper</span>
+              </div>
+              <h3 class="mb-3 text-xl font-black">خبرنامه‌ها</h3>
+              <p class="mb-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                خبرنامه‌های سالانه انجمن
+              </p>
+              <div class="inline-flex items-center gap-2 rounded-full bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-600">
+                <span class="material-symbols-outlined text-[16px]">schedule</span>
+                به زودی
+              </div>
+            </div>
+          </div>
 
-                <!-- Slides -->
-                <div class="col-lg-4 col-md-6">
-                  <div class="category-card glass-card p-4 text-center h-100" @click="handleCategoryClick('slides')">
-                    <div class="category-icon mb-3">
-                      <i class="fa fa-file-powerpoint-o fa-3x text-primary"></i>
-                    </div>
-                    <h5 class="fw-bold mb-2">اسلایدها</h5>
-                    <p class="text-muted mb-3">فایل‌های PDF و PowerPoint</p>
-                    <button class="soft-button primary btn-sm">
-                      <i class="fa fa-download me-1"></i>
-                      مشاهده و دانلود
-                    </button>
-                  </div>
-                </div>
+          <!-- Congress Booklets -->
+          <div 
+            @click="openCategory('congress')"
+            class="group relative overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-emerald-50 to-white p-8 shadow-sm transition-all hover:shadow-2xl hover:border-emerald-300 cursor-pointer dark:border-slate-800 dark:from-slate-900 dark:to-slate-900"
+          >
+            <div class="absolute top-0 right-0 h-24 w-24 translate-x-6 -translate-y-6 rounded-full bg-emerald-500/5 blur-2xl transition-all group-hover:scale-150"></div>
+            <div class="relative">
+              <div class="mb-6 flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-500 to-green-600 shadow-lg shadow-emerald-500/20 transition-transform group-hover:scale-110">
+                <span class="material-symbols-outlined text-white text-4xl">book</span>
+              </div>
+              <h3 class="mb-3 text-xl font-black">کتابچه کنگره‌ها</h3>
+              <p class="mb-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                کتابچه‌های کنگره‌ها و همایش‌ها
+              </p>
+              <div class="flex items-center gap-2 text-emerald-600 font-bold group-hover:gap-3 transition-all">
+                <span>2 فایل</span>
+                <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+              </div>
+            </div>
+          </div>
 
-                <!-- Books -->
-                <div class="col-lg-4 col-md-6">
-                  <div class="category-card glass-card p-4 text-center h-100" @click="handleCategoryClick('books')">
-                    <div class="category-icon mb-3">
-                      <i class="fa fa-book fa-3x text-primary"></i>
-                    </div>
-                    <h5 class="fw-bold mb-2">کتاب</h5>
-                    <p class="text-muted mb-3">کتاب‌های آموزشی با دسته‌بندی موضوعی</p>
-                    <button class="soft-button primary btn-sm">
-                      <i class="fa fa-download me-1"></i>
-                      مشاهده و دانلود
-                    </button>
-                  </div>
-                </div>
+          <!-- Journal -->
+          <a 
+            href="https://brieflands.com/journals/jcp" 
+            target="_blank"
+            class="group relative overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-pink-50 to-white p-8 shadow-sm transition-all hover:shadow-2xl hover:border-pink-300 dark:border-slate-800 dark:from-slate-900 dark:to-slate-900"
+          >
+            <div class="absolute top-0 right-0 h-24 w-24 translate-x-6 -translate-y-6 rounded-full bg-pink-500/5 blur-2xl transition-all group-hover:scale-150"></div>
+            <div class="relative">
+              <div class="mb-6 flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-pink-500 to-pink-600 shadow-lg shadow-pink-500/20 transition-transform group-hover:scale-110">
+                <span class="material-symbols-outlined text-white text-4xl">description</span>
+              </div>
+              <h3 class="mb-3 text-xl font-black">مجله انجمن</h3>
+              <p class="mb-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                مجله علمی در سایت Brieflands
+              </p>
+              <div class="flex items-center gap-2 text-pink-600 font-bold group-hover:gap-3 transition-all">
+                <span>مشاهده در سایت</span>
+                <span class="material-symbols-outlined text-[20px]">open_in_new</span>
+              </div>
+            </div>
+          </a>
 
-                <!-- Resources -->
-                <div class="col-lg-4 col-md-6">
-                  <div class="category-card glass-card p-4 text-center h-100" @click="handleCategoryClick('resources')">
-                    <div class="category-icon mb-3">
-                      <i class="fa fa-folder-open fa-3x text-primary"></i>
-                    </div>
-                    <h5 class="fw-bold mb-2">منابع و مدارک</h5>
-                    <p class="text-muted mb-3">سایر فایل‌های PDF و منابع علمی</p>
-                    <button class="soft-button primary btn-sm">
-                      <i class="fa fa-download me-1"></i>
-                      مشاهده و دانلود
-                    </button>
-                  </div>
-                </div>
+          <!-- Other Products -->
+          <div 
+            @click="openCategory('other')"
+            class="group relative overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-orange-50 to-white p-8 shadow-sm transition-all hover:shadow-2xl hover:border-orange-300 cursor-pointer dark:border-slate-800 dark:from-slate-900 dark:to-slate-900"
+          >
+            <div class="absolute top-0 right-0 h-24 w-24 translate-x-6 -translate-y-6 rounded-full bg-orange-500/5 blur-2xl transition-all group-hover:scale-150"></div>
+            <div class="relative">
+              <div class="mb-6 flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-orange-500 to-orange-600 shadow-lg shadow-orange-500/20 transition-transform group-hover:scale-110">
+                <span class="material-symbols-outlined text-white text-4xl">folder_open</span>
+              </div>
+              <h3 class="mb-3 text-xl font-black">سایر محصولات</h3>
+              <p class="mb-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                سایر انتشارات و محصولات علمی
+              </p>
+              <div class="flex items-center gap-2 text-orange-600 font-bold group-hover:gap-3 transition-all">
+                <span>1 فایل</span>
+                <span class="material-symbols-outlined text-[20px]">arrow_back</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Research -->
+          <div 
+            @click="openCategory('research')"
+            class="group relative overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-red-50 to-white p-8 shadow-sm transition-all hover:shadow-2xl hover:border-red-300 cursor-pointer dark:border-slate-800 dark:from-slate-900 dark:to-slate-900"
+          >
+            <div class="absolute top-0 right-0 h-24 w-24 translate-x-6 -translate-y-6 rounded-full bg-red-500/5 blur-2xl transition-all group-hover:scale-150"></div>
+            <div class="relative">
+              <div class="mb-6 flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-red-500 to-red-600 shadow-lg shadow-red-500/20 transition-transform group-hover:scale-110">
+                <span class="material-symbols-outlined text-white text-4xl">science</span>
+              </div>
+              <h3 class="mb-3 text-xl font-black">تحقیقات و پژوهش</h3>
+              <p class="mb-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                مقالات و تحقیقات علمی انجمن
+              </p>
+              <div class="inline-flex items-center gap-2 rounded-full bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-600">
+                <span class="material-symbols-outlined text-[16px]">schedule</span>
+                به زودی
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+
+        <!-- Stats Section -->
+        <div class="mt-16 grid grid-cols-2 gap-6 md:grid-cols-4">
+          <div class="rounded-xl border border-slate-200 bg-white p-6 text-center shadow-sm transition-all hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
+            <div class="mb-2 flex justify-center">
+              <span class="material-symbols-outlined text-4xl text-primary">menu_book</span>
+            </div>
+            <div class="text-3xl font-black text-slate-900 dark:text-white">19+</div>
+            <div class="text-sm text-slate-500 dark:text-slate-400">کتاب و راهنما</div>
+          </div>
+          <div class="rounded-xl border border-slate-200 bg-white p-6 text-center shadow-sm transition-all hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
+            <div class="mb-2 flex justify-center">
+              <span class="material-symbols-outlined text-4xl text-primary">category</span>
+            </div>
+            <div class="text-3xl font-black text-slate-900 dark:text-white">6</div>
+            <div class="text-sm text-slate-500 dark:text-slate-400">دسته‌بندی</div>
+          </div>
+          <div class="rounded-xl border border-slate-200 bg-white p-6 text-center shadow-sm transition-all hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
+            <div class="mb-2 flex justify-center">
+              <span class="material-symbols-outlined text-4xl text-primary">download</span>
+            </div>
+            <div class="text-3xl font-black text-slate-900 dark:text-white">5K+</div>
+            <div class="text-sm text-slate-500 dark:text-slate-400">دانلود</div>
+          </div>
+          <div class="rounded-xl border border-slate-200 bg-white p-6 text-center shadow-sm transition-all hover:shadow-lg dark:border-slate-800 dark:bg-slate-900">
+            <div class="mb-2 flex justify-center">
+              <span class="material-symbols-outlined text-4xl text-primary">update</span>
+            </div>
+            <div class="text-3xl font-black text-slate-900 dark:text-white">2025</div>
+            <div class="text-sm text-slate-500 dark:text-slate-400">به‌روزرسانی</div>
+          </div>
+        </div>
+      </main>
+    </div>
 
     <!-- Files Modal -->
-    <div v-if="showFilesModal" class="modal fade show d-block" tabindex="-1" style="background: rgba(0,0,0,0.5);" @click.self="showFilesModal = false">
-      <div class="modal-dialog modal-lg modal-dialog-centered">
-        <div class="modal-content glass-card border-0">
-          <div class="modal-header border-0">
-            <h5 class="modal-title">{{ currentCategoryTitle }}</h5>
-            <button type="button" class="btn-close" @click="showFilesModal = false"></button>
+    <div 
+      v-if="showModal" 
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      @click.self="closeModal"
+    >
+      <div class="max-h-[80vh] w-full max-w-4xl overflow-y-auto rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-slate-800 dark:bg-slate-900">
+        <div class="sticky top-0 flex items-center justify-between border-b border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900">
+          <h2 class="text-2xl font-black">{{ modalTitle }}</h2>
+          <button @click="closeModal" class="rounded-lg p-2 hover:bg-slate-100 transition-colors dark:hover:bg-slate-800">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </div>
+        <div class="p-6">
+          <!-- Books with Categories -->
+          <div v-if="currentCategory === 'books'" class="space-y-8">
+            <div v-for="(category, key) in booksData" :key="key">
+              <h3 class="mb-4 flex items-center gap-2 text-lg font-bold">
+                <span class="material-symbols-outlined text-primary">folder</span>
+                {{ category.title }}
+              </h3>
+              <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+                <a 
+                  v-for="book in category.files" 
+                  :key="book.path"
+                  :href="book.path" 
+                  target="_blank"
+                  class="group flex items-center gap-4 rounded-xl border border-slate-200 p-4 transition-all hover:border-primary/30 hover:bg-slate-50 hover:shadow-md dark:border-slate-800 dark:hover:bg-slate-800"
+                >
+                  <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+                    <span class="material-symbols-outlined text-primary text-2xl">picture_as_pdf</span>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <div class="font-bold truncate group-hover:text-primary transition-colors">{{ book.name }}</div>
+                    <div class="text-sm text-slate-500">{{ book.size }}</div>
+                  </div>
+                  <span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">download</span>
+                </a>
+              </div>
+            </div>
           </div>
-          <div class="modal-body modal-body-scrollable">
-            <div v-if="loading" class="text-center py-4">
-              <i class="fa fa-spinner fa-spin fa-2x text-primary"></i>
-              <p class="mt-2">در حال بارگذاری...</p>
-            </div>
-            <div v-else-if="files.length === 0" class="text-center py-4">
-              <i class="fa fa-folder-open fa-2x text-muted"></i>
-              <p class="mt-2 text-muted">فایلی در این دسته یافت نشد</p>
-            </div>
-            <div v-else>
-              <!-- Group by folder for books -->
-              <template v-if="currentCategory === 'books' && hasFolders">
-                <div v-for="(folderFiles, folder) in groupedFiles" :key="folder" class="mb-4">
-                  <h6 class="fw-bold mb-3" v-if="folder">
-                    <i class="fa fa-folder me-2 text-primary"></i>{{ folder }}
-                  </h6>
-                  <div class="row g-3">
-                    <div v-for="file in folderFiles" :key="file.name" class="col-12">
-                      <div class="file-item">
-                        <div class="file-item-inner glass-card p-3 d-flex align-items-center">
-                        <div class="file-icon me-3">
-                          <i :class="getFileIcon(file.type)" class="fa-2x text-primary"></i>
-                        </div>
-                        <div class="file-info flex-grow-1">
-                          <h6 class="mb-1">{{ file.name }}</h6>
-                          <small v-if="file.size > 0" class="text-muted">{{ formatFileSize(file.size) }}</small>
-                        </div>
-                        <button @click="downloadFile(file)" class="soft-button primary btn-sm">
-                          <i class="fa fa-download me-1"></i>
-                          دانلود
-                        </button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </template>
-              <!-- Regular list for other categories -->
-              <template v-else>
-                <div class="row g-3">
-                  <div v-for="file in files" :key="file.name" class="col-12">
-                    <div class="file-item">
-                      <div class="file-item-inner glass-card p-3 d-flex align-items-center">
-                      <div class="file-icon me-3">
-                        <i :class="getFileIcon(file.type)" class="fa-2x text-primary"></i>
-                      </div>
-                      <div class="file-info flex-grow-1">
-                        <h6 class="mb-1">{{ file.name }}</h6>
-                        <small v-if="file.size > 0" class="text-muted">{{ formatFileSize(file.size) }}</small>
-                      </div>
-                      <button @click="downloadFile(file)" class="soft-button primary btn-sm">
-                        <i class="fa fa-download me-1"></i>
-                        دانلود
-                      </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </template>
-            </div>
+
+          <!-- Other Categories -->
+          <div v-else class="grid grid-cols-1 gap-3">
+            <a 
+              v-for="file in currentFiles" 
+              :key="file.path"
+              :href="file.path" 
+              target="_blank"
+              class="group flex items-center gap-4 rounded-xl border border-slate-200 p-4 transition-all hover:border-primary/30 hover:bg-slate-50 hover:shadow-md dark:border-slate-800 dark:hover:bg-slate-800"
+            >
+              <div class="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
+                <span class="material-symbols-outlined text-primary text-2xl">picture_as_pdf</span>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="font-bold group-hover:text-primary transition-colors">{{ file.name }}</div>
+                <div class="text-sm text-slate-500">{{ file.size }}</div>
+              </div>
+              <span class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors">download</span>
+            </a>
           </div>
         </div>
       </div>
@@ -180,484 +244,101 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
-import { getApiUrl } from '@/utils/api';
+import { ref, computed } from 'vue';
 
-const showFilesModal = ref(false);
-const currentCategoryTitle = ref('');
+const showModal = ref(false);
 const currentCategory = ref('');
-const files = ref<any[]>([]);
-const loading = ref(false);
 
-const categoryTitles: Record<string, string> = {
-  skyroom: 'اسکای روم',
-  video: 'ویدیو',
-  slides: 'اسلایدها',
-  books: 'کتاب',
-  resources: 'منابع و مدارک'
+const booksData = {
+  development: {
+    title: "تکامل کودک",
+    files: [
+      { name: "کتاب تکامل دوران ابتدای کودکی", path: "/Content/Books/تکامل/کتاب-تکامل-دوران-ابتدای-کودکی.pdf", size: "2.5 MB" },
+      { name: "تقویت تکامل در اوایل کودکی", path: "/Content/Books/تکامل/تقویت-تکامل-در-اوایل-کودکی-.pdf", size: "1.8 MB" },
+      { name: "فعالیت‌هایی برای ارتقای تکامل کودک", path: "/Content/Books/تکامل/فعالیت-هایی-برای-ارتقای-تکامل-کودک.pdf", size: "3.2 MB" },
+      { name: "152 Games and Exercises", path: "/Content/Books/تکامل/152-games-and-exercises-for-childrens-development.pdf", size: "4.1 MB" },
+      { name: "Children's Development Book", path: "/Content/Books/تکامل/Childrens-development-book.pdf", size: "2.9 MB" }
+    ]
+  },
+  family: {
+    title: "گفتار خانواده",
+    files: [
+      { name: "راهنمای خانواده", path: "/Content/Books/گفتار خانواده/khanevade.pdf", size: "1.5 MB" }
+    ]
+  },
+  imci: {
+    title: "مراقبت‌های ادغام ناخوشی‌های اطفال (IMCI)",
+    files: [
+      { name: "دستورالعمل نهایی اجرا", path: "/Content/Books/مراقبت های ادغام ناخوشی های اطفال/Final-instructions-implementation.pdf", size: "2.1 MB" },
+      { name: "راهنمای غیرپزشک", path: "/Content/Books/مراقبت های ادغام ناخوشی های اطفال/mana-np.pdf", size: "1.8 MB" },
+      { name: "راهنمای پزشک", path: "/Content/Books/مراقبت های ادغام ناخوشی های اطفال/mana-p.pdf", size: "2.3 MB" }
+    ]
+  },
+  imnci: {
+    title: "مراقبت‌های ادغام یافته کودک سالم (IMNCI)",
+    files: [
+      { name: "کتابچه غیرپزشک", path: "/Content/Books/مراقبت های ادغام یافته‌ی کودک سالم/booklet-غیر-پزشک.pdf", size: "1.9 MB" },
+      { name: "کتابچه پزشک کودک سالم", path: "/Content/Books/مراقبت های ادغام یافته‌ی کودک سالم/booklet-پزشک-کودک-سالم.pdf", size: "2.2 MB" },
+      { name: "راهنمای مشاوره", path: "/Content/Books/مراقبت های ادغام یافته‌ی کودک سالم/counselling-guide-23-12-1400_compressed.pdf", size: "3.1 MB" },
+      { name: "راهنمای غیرپزشک", path: "/Content/Books/مراقبت های ادغام یافته‌ی کودک سالم/non-physician-guide-25-12-1400_compressed.pdf", size: "2.8 MB" },
+      { name: "راهنمای پزشک", path: "/Content/Books/مراقبت های ادغام یافته‌ی کودک سالم/physician-guide-30-1-1401_compressed.pdf", size: "3.5 MB" },
+      { name: "راهنمای جامع کودک", path: "/Content/Books/مراقبت های ادغام یافته‌ی کودک سالم/rahnamay-jame-koodak.pdf", size: "4.2 MB" }
+    ]
+  },
+  hypothyroidism: {
+    title: "هیپوتیروئیدی",
+    files: [
+      { name: "کتاب بیماری کم‌کاری تیرویید", path: "/Content/Books/هیپوتیروئیدی/کتاب-بیماری-کم-کاری-تیرویید-99.pdf", size: "2.7 MB" }
+    ]
+  },
+  vaccination: {
+    title: "واکسیناسیون",
+    files: [
+      { name: "برنامه و راهنمای ایمن‌سازی 1403", path: "/Content/Books/واکسیناسیون/برنامه-و-راهنمای-ایمن-سازی-1403.pdf", size: "3.8 MB" }
+    ]
+  },
+  gina: {
+    title: "GINA - راهنمای آسم",
+    files: [
+      { name: "GINA Summary Guide 2025", path: "/Content/lAST/GINA-Summary-Guide-2025-WEB_FINAL-WMS.pdf", size: "2.1 MB" },
+      { name: "GINA 2025 Update", path: "/Content/lAST/GINA-2025-Update-25_11_08-WMS.pdf", size: "1.5 MB" }
+    ]
+  }
 };
 
-const hasFolders = computed(() => {
-  return files.value.some((file: any) => file.folder);
+const filesData = {
+  congress: [
+    { name: 'کتابچه کنگره', path: '/Content/Other/1_23033290624.pdf', size: '5.2 MB' },
+    { name: 'خلاصه مقالات پنجمین همایش 1403', path: '/Content/Other/خلاصه مقالات 5 همایش 403.pdf', size: '3.7 MB' }
+  ],
+  other: [
+    { name: 'سند علمی', path: '/Content/Other/DOC-20251227-WA0007.pdf', size: '1.2 MB' }
+  ]
+};
+
+const modalTitle = computed(() => {
+  const titles: Record<string, string> = {
+    books: 'کتاب‌های آموزشی',
+    newsletters: 'خبرنامه‌ها',
+    congress: 'کتابچه کنگره‌ها و همایش‌ها',
+    other: 'سایر محصولات',
+    research: 'تحقیقات و پژوهش'
+  };
+  return titles[currentCategory.value] || '';
 });
 
-const groupedFiles = computed(() => {
-  if (!hasFolders.value) return { '': files.value };
-  
-  const grouped: Record<string, any[]> = {};
-  files.value.forEach((file: any) => {
-    const folder = file.folder || '';
-    if (!grouped[folder]) {
-      grouped[folder] = [];
-    }
-    grouped[folder].push(file);
-  });
-  return grouped;
+const currentFiles = computed(() => {
+  return filesData[currentCategory.value as keyof typeof filesData] || [];
 });
 
-const handleCategoryClick = async (category: string) => {
-  currentCategoryTitle.value = categoryTitles[category] || category;
+function openCategory(category: string) {
   currentCategory.value = category;
-  showFilesModal.value = true;
-  loading.value = true;
-  files.value = [];
-  
-  // Handle "Books" from local files
-  if (category === 'books') {
-    // Load books from local Content/Books directory
-    files.value = [
-      // مراقبت های ادغام ناخوشی های اطفال
-      {
-        name: 'Final-instructions-implementation.pdf',
-        url: '/Content/Books/مراقبت های ادغام ناخوشی های اطفال/Final-instructions-implementation.pdf',
-        type: 'application/pdf',
-        size: 0,
-        folder: 'مراقبت های ادغام ناخوشی های اطفال'
-      },
-      {
-        name: 'mana-np.pdf',
-        url: '/Content/Books/مراقبت های ادغام ناخوشی های اطفال/mana-np.pdf',
-        type: 'application/pdf',
-        size: 0,
-        folder: 'مراقبت های ادغام ناخوشی های اطفال'
-      },
-      {
-        name: 'mana-p.pdf',
-        url: '/Content/Books/مراقبت های ادغام ناخوشی های اطفال/mana-p.pdf',
-        type: 'application/pdf',
-        size: 0,
-        folder: 'مراقبت های ادغام ناخوشی های اطفال'
-      },
-      // مراقبت های ادغام یافته‌ی کودک سالم
-      {
-        name: 'booklet-پزشک-کودک-سالم.pdf',
-        url: '/Content/Books/مراقبت های ادغام یافته‌ی کودک سالم/booklet-پزشک-کودک-سالم.pdf',
-        type: 'application/pdf',
-        size: 0,
-        folder: 'مراقبت های ادغام یافته‌ی کودک سالم'
-      },
-      {
-        name: 'booklet-غیر-پزشک.pdf',
-        url: '/Content/Books/مراقبت های ادغام یافته‌ی کودک سالم/booklet-غیر-پزشک.pdf',
-        type: 'application/pdf',
-        size: 0,
-        folder: 'مراقبت های ادغام یافته‌ی کودک سالم'
-      },
-      {
-        name: 'counselling-guide-23-12-1400_compressed.pdf',
-        url: '/Content/Books/مراقبت های ادغام یافته‌ی کودک سالم/counselling-guide-23-12-1400_compressed.pdf',
-        type: 'application/pdf',
-        size: 0,
-        folder: 'مراقبت های ادغام یافته‌ی کودک سالم'
-      },
-      {
-        name: 'non-physician-guide-25-12-1400_compressed.pdf',
-        url: '/Content/Books/مراقبت های ادغام یافته‌ی کودک سالم/non-physician-guide-25-12-1400_compressed.pdf',
-        type: 'application/pdf',
-        size: 0,
-        folder: 'مراقبت های ادغام یافته‌ی کودک سالم'
-      },
-      {
-        name: 'physician-guide-30-1-1401_compressed.pdf',
-        url: '/Content/Books/مراقبت های ادغام یافته‌ی کودک سالم/physician-guide-30-1-1401_compressed.pdf',
-        type: 'application/pdf',
-        size: 0,
-        folder: 'مراقبت های ادغام یافته‌ی کودک سالم'
-      },
-      {
-        name: 'rahnamay-jame-koodak.pdf',
-        url: '/Content/Books/مراقبت های ادغام یافته‌ی کودک سالم/rahnamay-jame-koodak.pdf',
-        type: 'application/pdf',
-        size: 0,
-        folder: 'مراقبت های ادغام یافته‌ی کودک سالم'
-      },
-      // واکسیناسیون
-      {
-        name: 'برنامه-و-راهنمای-ایمن-سازی-1403.pdf',
-        url: '/Content/Books/واکسیناسیون/برنامه-و-راهنمای-ایمن-سازی-1403.pdf',
-        type: 'application/pdf',
-        size: 0,
-        folder: 'واکسیناسیون'
-      },
-      // GINA - راهنمای آسم
-      {
-        name: 'GINA-Summary-Guide-2025-WEB_FINAL-WMS.pdf',
-        url: '/Content/lAST/GINA-Summary-Guide-2025-WEB_FINAL-WMS.pdf',
-        type: 'application/pdf',
-        size: 0,
-        folder: 'GINA - راهنمای آسم'
-      },
-      {
-        name: 'GINA-2025-Update-25_11_08-WMS.pdf',
-        url: '/Content/lAST/GINA-2025-Update-25_11_08-WMS.pdf',
-        type: 'application/pdf',
-        size: 0,
-        folder: 'GINA - راهنمای آسم'
-      }
-    ];
-    loading.value = false;
-    return;
-  }
-  
-  // Handle other categories from API
-  try {
-    const response = await fetch(getApiUrl(`/api/doctors/files/?category=${category}`), {
-      credentials: 'include'
-    });
-    
-    const data = await response.json();
-    
-    if (data.success) {
-      files.value = data.files || [];
-    } else {
-      console.error('Error loading files:', data.errors);
-      files.value = [];
-    }
-  } catch (error) {
-    console.error('Error loading files:', error);
-    files.value = [];
-  } finally {
-    loading.value = false;
-  }
-};
+  showModal.value = true;
+  document.body.style.overflow = 'hidden';
+}
 
-const getFileIcon = (fileType: string) => {
-  if (fileType.includes('pdf')) return 'fa fa-file-pdf-o';
-  if (fileType.includes('video')) return 'fa fa-file-video-o';
-  if (fileType.includes('image')) return 'fa fa-file-image-o';
-  if (fileType.includes('powerpoint') || fileType.includes('presentation')) return 'fa fa-file-powerpoint-o';
-  if (fileType.includes('word')) return 'fa fa-file-word-o';
-  return 'fa fa-file-o';
-};
-
-const formatFileSize = (bytes: number) => {
-  if (!bytes || bytes === 0) return '';
-  const k = 1024;
-  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-  const i = Math.floor(Math.log(bytes) / Math.log(k));
-  return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
-};
-
-const downloadFile = async (file: any) => {
-  try {
-    // Build URL properly - encode each path segment separately
-    const urlParts = file.url.split('/').filter((part: string) => part !== '');
-    const encodedParts = urlParts.map((part: string) => {
-      // Don't encode if it's already encoded or is a protocol
-      if (part.includes('://') || part.startsWith('http')) {
-        return part;
-      }
-      // Encode each part to handle Persian characters and special characters
-      return encodeURIComponent(decodeURIComponent(part));
-    });
-    const encodedUrl = '/' + encodedParts.join('/');
-    
-    // Fetch the file as blob with proper headers
-    const response = await fetch(encodedUrl, {
-      method: 'GET',
-      headers: {
-        'Accept': file.type || 'application/octet-stream'
-      }
-    });
-    
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
-    
-    // Check content type - if HTML, file doesn't exist
-    const contentType = response.headers.get('content-type') || '';
-    if (contentType.includes('text/html')) {
-      throw new Error('Server returned HTML instead of file. File may not exist.');
-    }
-    
-    // Get blob
-    const blob = await response.blob();
-    
-    // Verify blob is not empty
-    if (blob.size === 0) {
-      throw new Error('Downloaded file is empty');
-    }
-    
-    // Create download link with proper MIME type
-    const blobUrl = window.URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = blobUrl;
-    link.download = file.name;
-    link.style.display = 'none';
-    link.setAttribute('download', file.name);
-    
-    // Force download by setting download attribute
-    document.body.appendChild(link);
-    link.click();
-    
-    // Clean up immediately
-    setTimeout(() => {
-      if (document.body.contains(link)) {
-        document.body.removeChild(link);
-      }
-      window.URL.revokeObjectURL(blobUrl);
-    }, 100);
-  } catch (error: any) {
-    console.error('Download error:', error);
-    
-    // Fallback: create direct download link with download attribute
-    try {
-      const urlParts = file.url.split('/').filter((part: string) => part !== '');
-      const encodedParts = urlParts.map((part: string) => {
-        if (part.includes('://') || part.startsWith('http')) {
-          return part;
-        }
-        return encodeURIComponent(decodeURIComponent(part));
-      });
-      const encodedUrl = '/' + encodedParts.join('/');
-      
-      // Create link with download attribute to force download
-      const link = document.createElement('a');
-      link.href = encodedUrl;
-      link.download = file.name;
-      link.style.display = 'none';
-      link.setAttribute('download', file.name);
-      document.body.appendChild(link);
-      link.click();
-      
-      setTimeout(() => {
-        if (document.body.contains(link)) {
-          document.body.removeChild(link);
-        }
-      }, 100);
-    } catch (fallbackError) {
-      console.error('Fallback failed:', fallbackError);
-      alert(`خطا در دانلود فایل "${file.name}". لطفاً دوباره تلاش کنید.`);
-    }
-  }
-};
-
-onMounted(() => {
-  window.scrollTo(0, 0);
-});
+function closeModal() {
+  showModal.value = false;
+  document.body.style.overflow = 'auto';
+}
 </script>
-
-<style scoped>
-.doctors-view {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-}
-
-.category-card {
-  transition: var(--transition-snappy);
-  cursor: pointer;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.category-card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--glass-shadow-hover);
-  border-color: rgba(13, 110, 253, 0.3);
-}
-
-.category-icon {
-  height: 80px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* File item styles moved to bottom to avoid conflicts */
-
-.file-icon {
-  width: 50px;
-  min-width: 50px;
-  flex-shrink: 0;
-  text-align: center;
-}
-
-.modal-dialog {
-  max-height: 90vh;
-  height: 90vh;
-  max-width: 90vw;
-  width: 100%;
-  margin: 1.75rem auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  overflow: hidden;
-  box-sizing: border-box;
-}
-
-.modal-content {
-  overflow: hidden !important;
-  border-radius: var(--radius-lg);
-  backdrop-filter: blur(20px);
-  max-height: 90vh;
-  height: 90vh;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-.modal-header {
-  flex-shrink: 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 1rem 1.5rem;
-  min-height: 60px;
-  box-sizing: border-box;
-  width: 100%;
-}
-
-.modal-body-scrollable {
-  overflow-y: auto !important;
-  flex: 1 1 auto;
-  overflow-x: hidden;
-  padding: 1.5rem;
-  min-height: 0;
-  max-height: 100%;
-  position: relative;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.modal-body-scrollable > div {
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
-.modal-body-scrollable .row {
-  margin: 0;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-.modal-body-scrollable .col-12 {
-  padding-left: 0.75rem;
-  padding-right: 0.75rem;
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  min-width: 0;
-  flex: 0 0 100%;
-}
-
-.modal-body-scrollable::-webkit-scrollbar {
-  width: 10px;
-}
-
-.modal-body-scrollable::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 5px;
-}
-
-.modal-body-scrollable::-webkit-scrollbar-thumb {
-  background: rgba(13, 110, 253, 0.6);
-  border-radius: 5px;
-}
-
-.modal-body-scrollable::-webkit-scrollbar-thumb:hover {
-  background: rgba(13, 110, 253, 0.8);
-}
-
-.file-item {
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  margin-bottom: 0.75rem;
-  min-width: 0;
-}
-
-.file-item:last-child {
-  margin-bottom: 0;
-}
-
-.file-item-inner {
-  transition: var(--transition-snappy);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  width: 100%;
-  max-width: 100%;
-  box-sizing: border-box;
-  min-width: 0;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-}
-
-.file-item-inner h6 {
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  max-width: 100%;
-  min-width: 0;
-}
-
-.file-item:hover .file-item-inner {
-  border-color: rgba(13, 110, 253, 0.3);
-  transform: translateX(5px);
-}
-
-.file-info {
-  min-width: 0;
-  flex: 1 1 auto;
-  flex-shrink: 1;
-  overflow: hidden;
-  max-width: 100%;
-}
-
-.file-info h6 {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  max-width: 100%;
-  min-width: 0;
-}
-
-.file-item-inner .soft-button {
-  flex-shrink: 0;
-  min-width: fit-content;
-  white-space: nowrap;
-}
-
-@media (max-width: 768px) {
-  .category-card {
-    margin-bottom: 1rem;
-  }
-  
-  .modal-dialog {
-    margin: 1rem;
-    max-height: 95vh;
-    height: 95vh;
-  }
-  
-  .modal-content {
-    height: 95vh;
-    max-height: 95vh;
-  }
-}
-</style>
-

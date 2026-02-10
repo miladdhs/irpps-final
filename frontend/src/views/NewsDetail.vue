@@ -1,217 +1,150 @@
 <template>
-  <div class="news-detail-view">
-    <section class="hero-section glass-section py-5 mb-4">
-      <div class="container-xl">
-        <nav class="breadcrumb-nav mb-3">
-          <router-link to="/services#news-section" class="breadcrumb-link">
-            <i class="fa fa-chevron-right"></i>
-            بازگشت به خدمات
-          </router-link>
+  <div class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
+    <div class="relative flex min-h-screen flex-col overflow-x-hidden">
+      <main class="mx-auto w-full max-w-[1024px] grow px-6 py-8 lg:px-10">
+        <!-- Breadcrumb -->
+        <nav class="mb-6 flex items-center gap-2 text-sm text-slate-500">
+          <router-link to="/" class="hover:text-primary">{{ $t('nav.home') }}</router-link>
+          <span class="material-symbols-outlined text-[16px]">chevron_left</span>
+          <router-link to="/news" class="hover:text-primary">{{ $t('nav.news') }}</router-link>
+          <span class="material-symbols-outlined text-[16px]">chevron_left</span>
+          <span class="text-slate-900 dark:text-white">جزئیات خبر</span>
         </nav>
-        <div class="row align-items-center">
-          <div class="col-lg-8">
-            <h1 class="display-6 fw-bold text-primary mb-3">{{ newsItem?.title || 'بارگذاری...' }}</h1>
-            <div v-if="newsItem" class="meta d-flex flex-wrap gap-3 text-muted">
-              <span><i class="fa fa-calendar me-2"></i>{{ formatDate(newsItem.created_at) }}</span>
-              <span><i class="fa fa-user me-2"></i>{{ newsItem.author }}</span>
-              <span><i class="fa fa-eye me-2"></i>{{ newsItem.views.toLocaleString() }} بازدید</span>
+
+        <!-- Article Header -->
+        <article class="rounded-xl border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+          <div class="mb-6">
+            <div class="mb-4 inline-block rounded-full bg-primary/10 px-4 py-2 text-sm font-bold text-primary">
+              مقاله علمی
+            </div>
+            <h1 class="mb-4 text-3xl font-black leading-tight md:text-4xl">
+              تازه‌های درمان آسم در کودکان: پروتکل‌های سال ۲۰۲۴
+            </h1>
+            <div class="flex flex-wrap items-center gap-4 text-sm text-slate-500">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">person</span>
+                <span>دکتر محمد رضایی</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">calendar_today</span>
+                <span>۱۵ آبان ۱۴۰۲</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[18px]">visibility</span>
+                <span>۱,۲۳۴ بازدید</span>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-    </section>
 
-    <section class="detail-section pb-5">
-      <div class="container-xl">
-        <div v-if="loading" class="text-center py-5">
-          <i class="fa fa-spinner fa-spin fa-3x col_blue"></i>
-          <p class="mt-3 text-muted">در حال بارگذاری خبر...</p>
-        </div>
-
-        <div v-else-if="errorMessage" class="alert alert-danger border-0 rounded-4">
-          <i class="fa fa-exclamation-triangle me-2"></i>{{ errorMessage }}
-        </div>
-
-        <article v-else-if="newsItem" class="news-article glass-card p-4 p-md-5">
-          <div v-if="newsItem.image" class="article-image mb-4">
-            <img :src="newsItem.image" :alt="newsItem.title">
+          <!-- Featured Image -->
+          <div class="mb-8 aspect-video overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800">
+            <img 
+              src="/img/logo.png" 
+              alt="تازه‌های درمان آسم" 
+              class="h-full w-full object-contain p-8"
+            />
           </div>
-          <div class="article-content" v-html="formattedContent"></div>
+
+          <!-- Article Content -->
+          <div class="prose prose-slate max-w-none dark:prose-invert">
+            <p class="lead text-lg leading-relaxed text-slate-600 dark:text-slate-400">
+              مروری بر جدیدترین پروتکل‌های درمانی ارائه شده در سال ۲۰۲۴ برای مدیریت آسم در اطفال و روش‌های نوین استفاده از اسپری‌های ترکیبی که توسط سازمان بهداشت جهانی تأیید شده است.
+            </p>
+
+            <h2 class="mt-8 mb-4 text-2xl font-bold">مقدمه</h2>
+            <p class="leading-relaxed">
+              آسم یکی از شایع‌ترین بیماری‌های مزمن دوران کودکی است که بر کیفیت زندگی کودکان و خانواده‌های آنها تأثیر قابل توجهی دارد. با پیشرفت علم پزشکی و تحقیقات گسترده در این زمینه، پروتکل‌های درمانی جدیدی برای مدیریت بهتر این بیماری ارائه شده است.
+            </p>
+
+            <h2 class="mt-8 mb-4 text-2xl font-bold">پروتکل‌های جدید درمانی</h2>
+            <p class="leading-relaxed">
+              در سال ۲۰۲۴، سازمان بهداشت جهانی (WHO) و انجمن بین‌المللی آسم (GINA) راهنماهای به‌روز شده‌ای را برای درمان آسم در کودکان منتشر کردند. این راهنماها بر اساس آخرین یافته‌های علمی و تجربیات بالینی تدوین شده‌اند.
+            </p>
+
+            <h3 class="mt-6 mb-3 text-xl font-bold">نکات کلیدی:</h3>
+            <ul class="list-disc pr-6 space-y-2">
+              <li>استفاده از اسپری‌های ترکیبی ICS-LABA به عنوان خط اول درمان</li>
+              <li>تأکید بر آموزش صحیح تکنیک استفاده از اسپری به کودکان و والدین</li>
+              <li>پایش منظم عملکرد ریوی با اسپیرومتری</li>
+              <li>شناسایی و کنترل عوامل محرک محیطی</li>
+              <li>برنامه‌ریزی برای مدیریت حملات حاد</li>
+            </ul>
+
+            <h2 class="mt-8 mb-4 text-2xl font-bold">نتیجه‌گیری</h2>
+            <p class="leading-relaxed">
+              با پیروی از پروتکل‌های جدید و استفاده از روش‌های درمانی به‌روز، می‌توان کنترل بهتری بر آسم کودکان داشت و کیفیت زندگی آنها را به طور قابل توجهی بهبود بخشید.
+            </p>
+          </div>
+
+          <!-- Tags -->
+          <div class="mt-8 flex flex-wrap gap-2 border-t border-slate-200 pt-6 dark:border-slate-800">
+            <span class="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium dark:bg-slate-800">آسم</span>
+            <span class="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium dark:bg-slate-800">کودکان</span>
+            <span class="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium dark:bg-slate-800">درمان</span>
+            <span class="rounded-full bg-slate-100 px-4 py-2 text-sm font-medium dark:bg-slate-800">پروتکل</span>
+          </div>
+
+          <!-- Share -->
+          <div class="mt-6 flex items-center gap-4 border-t border-slate-200 pt-6 dark:border-slate-800">
+            <span class="font-medium">اشتراک‌گذاری:</span>
+            <button class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 hover:bg-primary hover:text-white transition-colors dark:bg-slate-800">
+              <span class="material-symbols-outlined text-[20px]">share</span>
+            </button>
+          </div>
         </article>
-      </div>
-    </section>
+
+        <!-- Related News -->
+        <div class="mt-12">
+          <h2 class="mb-6 text-2xl font-bold">اخبار مرتبط</h2>
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-3">
+            <router-link 
+              to="/news/related"
+              class="group rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-lg hover:border-primary/30 dark:border-slate-800 dark:bg-slate-900"
+            >
+              <div class="mb-3 aspect-video overflow-hidden rounded-lg bg-slate-100 dark:bg-slate-800">
+                <img 
+                  src="/img/logo.png" 
+                  alt="خبر مرتبط" 
+                  class="h-full w-full object-contain p-4 transition-transform group-hover:scale-110"
+                />
+              </div>
+              <h3 class="mb-2 font-bold line-clamp-2 group-hover:text-primary">عنوان خبر مرتبط شماره 1</h3>
+              <p class="text-sm text-slate-500">۱۰ آبان ۱۴۰۲</p>
+            </router-link>
+            <router-link 
+              to="/news/related"
+              class="group rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-lg hover:border-primary/30 dark:border-slate-800 dark:bg-slate-900"
+            >
+              <div class="mb-3 aspect-video overflow-hidden rounded-lg bg-slate-100 dark:bg-slate-800">
+                <img 
+                  src="/img/logo.png" 
+                  alt="خبر مرتبط" 
+                  class="h-full w-full object-contain p-4 transition-transform group-hover:scale-110"
+                />
+              </div>
+              <h3 class="mb-2 font-bold line-clamp-2 group-hover:text-primary">عنوان خبر مرتبط شماره 2</h3>
+              <p class="text-sm text-slate-500">۱۰ آبان ۱۴۰۲</p>
+            </router-link>
+            <router-link 
+              to="/news/related"
+              class="group rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-lg hover:border-primary/30 dark:border-slate-800 dark:bg-slate-900"
+            >
+              <div class="mb-3 aspect-video overflow-hidden rounded-lg bg-slate-100 dark:bg-slate-800">
+                <img 
+                  src="/img/logo.png" 
+                  alt="خبر مرتبط" 
+                  class="h-full w-full object-contain p-4 transition-transform group-hover:scale-110"
+                />
+              </div>
+              <h3 class="mb-2 font-bold line-clamp-2 group-hover:text-primary">عنوان خبر مرتبط شماره 3</h3>
+              <p class="text-sm text-slate-500">۱۰ آبان ۱۴۰۲</p>
+            </router-link>
+          </div>
+        </div>
+      </main>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
-import { getApiUrl } from '@/utils/api';
-
-type NewsDetail = {
-  id: number;
-  title: string;
-  slug: string;
-  content: string;
-  image: string | null;
-  author: string;
-  views: number;
-  created_at: string;
-  updated_at: string;
-};
-
-const route = useRoute();
-
-const newsItem = ref<NewsDetail | null>(null);
-const loading = ref(true);
-const errorMessage = ref<string | null>(null);
-
-const formatDate = (isoDate: string) => {
-  try {
-    return new Date(isoDate).toLocaleDateString('fa-IR');
-  } catch (error) {
-    console.warn('Unable to format date:', isoDate, error);
-    return isoDate;
-  }
-};
-
-const formattedContent = computed(() => {
-  if (!newsItem.value) {
-    return '';
-  }
-
-  // تبدیل خط جدید به پاراگراف برای نمایش تمیز
-  return newsItem.value.content
-    .split(/\n{2,}/)
-    .map((paragraph) => `<p>${paragraph.trim().replace(/\n/g, '<br>')}</p>`)
-    .join('');
-});
-
-const fetchNewsDetail = async (slug: string) => {
-  if (!slug) {
-    errorMessage.value = 'شناسه خبر نامعتبر است.';
-    return;
-  }
-
-  loading.value = true;
-  errorMessage.value = null;
-
-  try {
-    const response = await fetch(getApiUrl(`/api/news/${encodeURIComponent(slug)}/`), {
-      credentials: 'include',
-    });
-
-    if (response.status === 404) {
-      throw new Error('خبر مورد نظر پیدا نشد یا منتشر نشده است.');
-    }
-
-    if (!response.ok) {
-      throw new Error('خطا در دریافت اطلاعات خبر از سرور.');
-    }
-
-    const data = await response.json();
-
-    if (!data.success || !data.news) {
-      throw new Error('ساختار داده خبر نامعتبر است.');
-    }
-
-    newsItem.value = data.news;
-  } catch (error: any) {
-    console.error('Failed to load news detail:', error);
-    errorMessage.value = error.message || 'خطای ناشناخته هنگام دریافت خبر.';
-  } finally {
-    loading.value = false;
-  }
-};
-
-const resolveSlug = () => {
-  const { slug } = route.params;
-  return Array.isArray(slug) ? slug[0] : slug;
-};
-
-watch(
-  () => route.params.slug,
-  (newSlug) => {
-    const slug = Array.isArray(newSlug) ? newSlug[0] : newSlug;
-    if (slug) {
-      fetchNewsDetail(slug);
-    }
-  }
-);
-
-onMounted(() => {
-  const slug = resolveSlug();
-  if (slug) {
-    fetchNewsDetail(slug);
-  } else {
-    errorMessage.value = 'شناسه خبر نامعتبر است.';
-  }
-});
 </script>
-
-<style scoped>
-.news-detail-view {
-  min-height: 100vh;
-  background: #f3f4f8;
-  padding-bottom: 3rem;
-}
-
-.hero-section {
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 0 0 32px 32px;
-  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
-}
-
-.breadcrumb-nav {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-
-.breadcrumb-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  color: #0d6efd;
-  font-weight: 600;
-  text-decoration: none;
-}
-
-.breadcrumb-link i {
-  transform: rotate(180deg);
-}
-
-.detail-section {
-  margin-top: -40px;
-}
-
-.news-article {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 24px;
-  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.12);
-}
-
-.article-image img {
-  width: 100%;
-  border-radius: 18px;
-  object-fit: cover;
-}
-
-.article-content p {
-  color: #37465e;
-  line-height: 2;
-  margin-bottom: 1.4rem;
-  font-size: 1.05rem;
-}
-
-.article-content p:last-child {
-  margin-bottom: 0;
-}
-
-@media (max-width: 575.98px) {
-  .hero-section {
-    border-radius: 0 0 24px 24px;
-  }
-}
-</style>
-

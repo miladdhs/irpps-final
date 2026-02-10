@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+
+<html dir="rtl" lang="fa"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>رویدادها و کنگره‌ها - انجمن ریه کودکان ایران</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Public Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Public Sans', sans-serif;
+        }
+        /* Custom RTL tweaks if needed */
+        .material-symbols-outlined {
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark text-[#0d141b] font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<!-- Navigation Bar -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-primary/10 bg-white px-6 md:px-20 py-3 sticky top-0 z-50 shadow-sm">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-primary">
+<div class="size-8">
+<svg class="w-full h-full" fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M13.8261 30.5736C16.7203 29.8826 20.2244 29.4783 24 29.4783C27.7756 29.4783 31.2797 29.8826 34.1739 30.5736C36.9144 31.2278 39.9967 32.7669 41.3563 33.8352L24.8486 7.36089C24.4571 6.73303 23.5429 6.73303 23.1514 7.36089L6.64374 33.8352C8.00331 32.7669 11.0856 31.2278 13.8261 30.5736Z" fill="currentColor"></path>
+<path clip-rule="evenodd" d="M39.998 35.764C39.9944 35.7463 39.9875 35.7155 39.9748 35.6706C39.9436 35.5601 39.8949 35.4259 39.8346 35.2825C39.8168 35.2403 39.7989 35.1993 39.7813 35.1602C38.5103 34.2887 35.9788 33.0607 33.7095 32.5189C30.9875 31.8691 27.6413 31.4783 24 31.4783C20.3587 31.4783 17.0125 31.8691 14.2905 32.5189C12.0012 33.0654 9.44505 34.3104 8.18538 35.1832C8.17384 35.2075 8.16216 35.233 8.15052 35.2592C8.09919 35.3751 8.05721 35.4886 8.02977 35.589C8.00356 35.6848 8.00039 35.7333 8.00004 35.7388C8.00004 35.739 8 35.7393 8.00004 35.7388C8.00004 35.7641 8.0104 36.0767 8.68485 36.6314C9.34546 37.1746 10.4222 37.7531 11.9291 38.2772C14.9242 39.319 19.1919 40 24 40C28.8081 40 33.0758 39.319 36.0709 38.2772C37.5778 37.7531 38.6545 37.1746 39.3151 36.6314C39.9006 36.1499 39.9857 35.8511 39.998 35.764ZM4.95178 32.7688L21.4543 6.30267C22.6288 4.4191 25.3712 4.41909 26.5457 6.30267L43.0534 32.777C43.0709 32.8052 43.0878 32.8338 43.104 32.8629L41.3563 33.8352C43.104 32.8629 43.1038 32.8626 43.104 32.8629L43.1051 32.865L43.1065 32.8675L43.1101 32.8739L43.1199 32.8918C43.1276 32.906 43.1377 32.9246 43.1497 32.9473C43.1738 32.9925 43.2062 33.0545 43.244 33.1299C43.319 33.2792 43.4196 33.489 43.5217 33.7317C43.6901 34.1321 44 34.9311 44 35.7391C44 37.4427 43.003 38.7775 41.8558 39.7209C40.6947 40.6757 39.1354 41.4464 37.385 42.0552C33.8654 43.2794 29.133 44 24 44C18.867 44 14.1346 43.2794 10.615 42.0552C8.86463 41.4464 7.30529 40.6757 6.14419 39.7209C4.99695 38.7775 3.99999 37.4427 3.99999 35.7391C3.99999 34.8725 4.29264 34.0922 4.49321 33.6393C4.60375 33.3898 4.71348 33.1804 4.79687 33.0311C4.83898 32.9556 4.87547 32.8935 4.9035 32.8471C4.91754 32.8238 4.92954 32.8043 4.93916 32.7889L4.94662 32.777L4.95178 32.7688ZM35.9868 29.004L24 9.77997L12.0131 29.004C12.4661 28.8609 12.9179 28.7342 13.3617 28.6282C16.4281 27.8961 20.0901 27.4783 24 27.4783C27.9099 27.4783 31.5719 27.8961 34.6383 28.6282C35.082 28.7342 35.5339 28.8609 35.9868 29.004Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-[#0d141b] text-xl font-bold leading-tight tracking-tight">انجمن ریه کودکان ایران</h2>
+</div>
+<nav class="hidden md:flex items-center gap-9">
+<a class="text-[#0d141b] text-sm font-medium hover:text-primary transition-colors" href="#">صفحه اصلی</a>
+<a class="text-primary text-sm font-bold border-b-2 border-primary pb-1" href="#">رویدادها</a>
+<a class="text-[#0d141b] text-sm font-medium hover:text-primary transition-colors" href="#">درباره ما</a>
+<a class="text-[#0d141b] text-sm font-medium hover:text-primary transition-colors" href="#">تماس با ما</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<label class="hidden lg:flex flex-col min-w-40 h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full bg-[#e7edf3]">
+<div class="text-[#4c739a] flex items-center justify-center pr-3">
+<span class="material-symbols-outlined" style="font-size: 20px;">search</span>
+</div>
+<input class="bg-transparent flex-1 border-none focus:ring-0 text-sm placeholder:text-[#4c739a] px-2" placeholder="جستجو در رویدادها..."/>
+</div>
+</label>
+<button class="flex min-w-[100px] cursor-pointer items-center justify-center rounded-lg h-10 px-5 bg-primary text-white text-sm font-bold hover:bg-primary/90 transition-all">
+<span>ورود / ثبت‌نام</span>
+</button>
+</div>
+</header>
+<!-- Main Content Container -->
+<main class="flex-1 flex flex-col max-w-[1200px] mx-auto w-full px-6 md:px-10 py-10">
+<!-- Page Hero / Intro -->
+<div class="flex flex-col gap-4 mb-8">
+<h1 class="text-4xl font-black text-[#0d141b] tracking-tight">رویدادها و کنگره‌های علمی</h1>
+<p class="text-[#4c739a] text-lg max-w-2xl leading-relaxed">
+                        مرجع تخصصی برگزاری کنگره‌ها، وبینارها و دوره‌های آموزشی حوزه ریه و بیماری‌های تنفسی کودکان در ایران.
+                    </p>
+</div>
+<!-- Tabs Container -->
+<div class="flex flex-col bg-white rounded-xl shadow-sm border border-primary/10 overflow-hidden">
+<!-- Tabs Header -->
+<div class="flex border-b border-[#cfdbe7] px-6 gap-10 overflow-x-auto no-scrollbar">
+<button class="flex flex-col items-center justify-center border-b-[3px] border-primary text-[#0d141b] pb-4 pt-5 whitespace-nowrap group">
+<span class="text-sm font-bold tracking-tight">رویدادهای جاری (آماده ثبت‌نام)</span>
+</button>
+<button class="flex flex-col items-center justify-center border-b-[3px] border-transparent text-[#4c739a] pb-4 pt-5 hover:text-primary transition-colors whitespace-nowrap">
+<span class="text-sm font-bold tracking-tight">رویدادهای گذشته</span>
+</button>
+</div>
+<!-- Filter Bar (Optional addition for professional feel) -->
+<div class="p-6 flex flex-wrap items-center justify-between gap-4 bg-slate-50/50">
+<div class="flex gap-2">
+<span class="text-sm text-[#4c739a] font-medium py-2 ml-2">فیلتر بر اساس:</span>
+<button class="px-4 py-1.5 rounded-full bg-primary/10 text-primary text-sm font-medium border border-primary/20">همه</button>
+<button class="px-4 py-1.5 rounded-full bg-white text-[#4c739a] text-sm font-medium border border-[#cfdbe7] hover:border-primary/30">کنگره سالانه</button>
+<button class="px-4 py-1.5 rounded-full bg-white text-[#4c739a] text-sm font-medium border border-[#cfdbe7] hover:border-primary/30">وبینار</button>
+<button class="px-4 py-1.5 rounded-full bg-white text-[#4c739a] text-sm font-medium border border-[#cfdbe7] hover:border-primary/30">کارگاه آموزشی</button>
+</div>
+<div class="text-sm text-[#4c739a]">نمایش ۳ رویداد فعال</div>
+</div>
+<!-- Events Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+<!-- Event Card 1 -->
+<div class="flex flex-col bg-white border border-[#cfdbe7] rounded-xl overflow-hidden hover:shadow-lg hover:border-primary/30 transition-all group">
+<div class="relative w-full aspect-[16/9] bg-center bg-cover" data-alt="Medical conference room with screen and doctors" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAIr4we1Ngz-vGCBqNZf9cEkF313k1eF-QBFzU4vpDN7v4crmAk61Oo82pFJzGX0E6btKX2sAThxeN2hanCM_qIvQzH49aqsb93eVZrz9iUFMG0Sr_uAimBzMT-AAzgTbKlGrFvNZ1Fzia8qeGsMVeDthBX1AFSBjjSDK6Uj4b4yAaJhI6WpiibNsdIGabbWZq7J4OFjR5vmFrEt_6MFyz_2JdUY43mRd-sclELUx6tKkhxyB5Yabq5DCmLLa0WTO0sF2zlcc-RYxA");'>
+<div class="absolute top-3 right-3 bg-green-500 text-white text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
+<span class="size-1.5 rounded-full bg-white animate-pulse"></span>
+                                    در حال ثبت‌نام
+                                </div>
+<div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+<span class="text-white text-xs font-medium">مشاهده جزئیات کامل</span>
+</div>
+</div>
+<div class="p-5 flex flex-col gap-4 flex-1">
+<div class="flex flex-col gap-2">
+<h3 class="text-[#0d141b] text-lg font-bold leading-tight line-clamp-2 min-h-[3.5rem]">نهمین کنگره بیماری‌های ریوی کودکان و نوزادان ایران</h3>
+<div class="flex items-center gap-2 text-[#4c739a] text-xs">
+<span class="material-symbols-outlined text-primary text-base">calendar_month</span>
+<span>۲۵ لغایت ۲۷ مهر ۱۴۰۳</span>
+</div>
+<div class="flex items-center gap-2 text-[#4c739a] text-xs">
+<span class="material-symbols-outlined text-primary text-base">location_on</span>
+<span>تهران، مرکز طبی کودکان - تالار همایش‌ها</span>
+</div>
+<div class="flex items-center gap-2 text-red-600 text-xs font-bold mt-1 bg-red-50 p-2 rounded-lg">
+<span class="material-symbols-outlined text-base">timer</span>
+<span>مهلت ثبت‌نام: تا ۱۵ مهر</span>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-slate-100">
+<button class="w-full bg-primary text-white py-2.5 rounded-lg text-sm font-bold hover:bg-primary/90 transition-colors">ثبت‌نام در کنگره</button>
+</div>
+</div>
+</div>
+<!-- Event Card 2 -->
+<div class="flex flex-col bg-white border border-[#cfdbe7] rounded-xl overflow-hidden hover:shadow-lg hover:border-primary/30 transition-all group">
+<div class="relative w-full aspect-[16/9] bg-center bg-cover" data-alt="Online webinar interface showing medical charts" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCgQQrt-xEC6NSDq1R_x2ixE5cwgy6Dad-eVcJP8ORtYEu_hzkyQ2O0lsHwMttADbBGJ4_eMRVxvi14av_kMWBGAbep0VEly7EATAQ7w66SP6tFYG5amB8e1043W4EHnSEjO2Ltl0sUy9i44TUz28s2tWpifjlNAqy4b2zRianHVUls6iZ0AwAvZW6-cryMMG6FW5mFlDwqMjClF8jSNWbSvsyUnX2mrVEeiMjB6jJncJ1DvsnyqI8VMiVAkNsz1qxKRq9lHduy5B8");'>
+<div class="absolute top-3 right-3 bg-amber-500 text-white text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                                    ظرفیت محدود
+                                </div>
+<div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-primary text-[10px] font-bold px-3 py-1 rounded-full border border-primary/20">
+                                    وبینار آنلاین
+                                </div>
+</div>
+<div class="p-5 flex flex-col gap-4 flex-1">
+<div class="flex flex-col gap-2">
+<h3 class="text-[#0d141b] text-lg font-bold leading-tight line-clamp-2 min-h-[3.5rem]">وبینار کشوری تازه‌های تشخیص و درمان آسم در اطفال</h3>
+<div class="flex items-center gap-2 text-[#4c739a] text-xs">
+<span class="material-symbols-outlined text-primary text-base">calendar_month</span>
+<span>۱۰ آبان ۱۴۰۳ | ساعت ۱۸ تا ۲۰</span>
+</div>
+<div class="flex items-center gap-2 text-[#4c739a] text-xs">
+<span class="material-symbols-outlined text-primary text-base">video_library</span>
+<span>پلتفرم اسکای‌روم (آنلاین)</span>
+</div>
+<div class="flex items-center gap-2 text-primary text-xs font-bold mt-1 bg-primary/5 p-2 rounded-lg">
+<span class="material-symbols-outlined text-base">school</span>
+<span>دارای امتیاز بازآموزی برای پزشکان عمومی و اطفال</span>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-slate-100">
+<button class="w-full bg-primary text-white py-2.5 rounded-lg text-sm font-bold hover:bg-primary/90 transition-colors">رزرو صندلی مجازی</button>
+</div>
+</div>
+</div>
+<!-- Event Card 3 -->
+<div class="flex flex-col bg-white border border-[#cfdbe7] rounded-xl overflow-hidden hover:shadow-lg hover:border-primary/30 transition-all group">
+<div class="relative w-full aspect-[16/9] bg-center bg-cover" data-alt="Medical staff training with equipment" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCtaLCm4icxz6Fy8qtIL5ChQvs5O3J1rq3xDVwBdqIbfdPODhKzAQdPYHrYYRVN1s82m1sCpsIQua0oy6YFTGITWukteHD45M86J7j3sujsAX79TPHiCoqs7Vme6NE5r_20zY4T4_BaNvqG1oXX6ZXWZFJzamYIaRgAzAc4anREy8Y6f4ykR4df_-5YH-L4vTYUVXD2dr5_nCnz_zj76rDVHxioB-jGxeE7__w4dnw2pTMUbNuv0z18NOIddDwgCLrbQXZAe37xXnE");'>
+<div class="absolute top-3 right-3 bg-green-500 text-white text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1">
+                                    در حال ثبت‌نام
+                                </div>
+</div>
+<div class="p-5 flex flex-col gap-4 flex-1">
+<div class="flex flex-col gap-2">
+<h3 class="text-[#0d141b] text-lg font-bold leading-tight line-clamp-2 min-h-[3.5rem]">کارگاه آموزشی پیشرفته اسپیرومتری و تفسیر نوار ریه</h3>
+<div class="flex items-center gap-2 text-[#4c739a] text-xs">
+<span class="material-symbols-outlined text-primary text-base">calendar_month</span>
+<span>۱۵ آذر ۱۴۰۳</span>
+</div>
+<div class="flex items-center gap-2 text-[#4c739a] text-xs">
+<span class="material-symbols-outlined text-primary text-base">location_on</span>
+<span>تهران، هتل المپیک - سالن نشست‌های تخصصی</span>
+</div>
+<div class="flex items-center gap-2 text-[#4c739a] text-xs mt-1 bg-slate-50 p-2 rounded-lg italic">
+<span class="material-symbols-outlined text-base">info</span>
+<span>ویژه پرستاران و تکنیسین‌های تنفسی</span>
+</div>
+</div>
+<div class="mt-auto pt-4 border-t border-slate-100">
+<button class="w-full bg-primary text-white py-2.5 rounded-lg text-sm font-bold hover:bg-primary/90 transition-colors">ثبت‌نام کارگاه</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="p-6 border-t border-[#cfdbe7] flex items-center justify-center gap-2">
+<button class="size-9 flex items-center justify-center rounded-lg border border-[#cfdbe7] text-[#4c739a] hover:bg-slate-50">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+<button class="size-9 flex items-center justify-center rounded-lg bg-primary text-white font-bold text-sm">۱</button>
+<button class="size-9 flex items-center justify-center rounded-lg border border-[#cfdbe7] text-[#0d141b] hover:bg-slate-50 text-sm">۲</button>
+<button class="size-9 flex items-center justify-center rounded-lg border border-[#cfdbe7] text-[#0d141b] hover:bg-slate-50 text-sm">۳</button>
+<button class="size-9 flex items-center justify-center rounded-lg border border-[#cfdbe7] text-[#4c739a] hover:bg-slate-50">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+</div>
+</div>
+<!-- Past Events Preview Banner -->
+<div class="mt-12 bg-primary/5 rounded-xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 border border-primary/10">
+<div class="flex flex-col gap-2 text-center md:text-right">
+<h2 class="text-[#0d141b] text-xl font-bold">دسترسی به آرشیو رویدادهای گذشته</h2>
+<p class="text-[#4c739a] text-sm">شما می‌توانید مستندات علمی، تصاویر و ویدئوهای ضبط شده از همایش‌های قبلی انجمن را در این بخش مشاهده کنید.</p>
+</div>
+<button class="flex items-center gap-2 px-6 py-3 bg-white text-primary border border-primary/20 rounded-lg font-bold text-sm hover:bg-primary/5 transition-all">
+                        مشاهده آرشیو گذشته
+                        <span class="material-symbols-outlined">history</span>
+</button>
+</div>
+</main>
+<!-- Simple Footer -->
+<footer class="bg-white border-t border-primary/10 px-6 md:px-20 py-12">
+<div class="max-w-[1200px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-10">
+<div class="col-span-1 md:col-span-1 flex flex-col gap-4">
+<div class="flex items-center gap-2 text-primary">
+<span class="material-symbols-outlined text-3xl">pulmonology</span>
+<span class="font-bold">انجمن ریه کودکان ایران</span>
+</div>
+<p class="text-xs text-[#4c739a] leading-loose">
+                            ارتقای سطح سلامت تنفسی کودکان ایران از طریق آموزش‌های تخصصی و پژوهش‌های علمی مداوم.
+                        </p>
+</div>
+<div class="flex flex-col gap-3">
+<h4 class="text-sm font-bold text-[#0d141b]">دسترسی سریع</h4>
+<a class="text-xs text-[#4c739a] hover:text-primary" href="#">آخرین اخبار</a>
+<a class="text-xs text-[#4c739a] hover:text-primary" href="#">کتابخانه‌ دیجیتال</a>
+<a class="text-xs text-[#4c739a] hover:text-primary" href="#">عضویت در انجمن</a>
+</div>
+<div class="flex flex-col gap-3">
+<h4 class="text-sm font-bold text-[#0d141b]">پشتیبانی</h4>
+<a class="text-xs text-[#4c739a] hover:text-primary" href="#">سوالات متداول</a>
+<a class="text-xs text-[#4c739a] hover:text-primary" href="#">قوانین ثبت‌نام</a>
+<a class="text-xs text-[#4c739a] hover:text-primary" href="#">تماس با دبیرخانه</a>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="text-sm font-bold text-[#0d141b]">عضویت در خبرنامه</h4>
+<div class="flex gap-2">
+<input class="bg-[#e7edf3] border-none text-xs rounded-lg px-3 py-2 flex-1" placeholder="ایمیل شما"/>
+<button class="bg-primary text-white px-4 py-2 rounded-lg text-xs font-bold">تایید</button>
+</div>
+</div>
+</div>
+<div class="max-w-[1200px] mx-auto mt-12 pt-6 border-t border-slate-100 flex justify-between items-center text-[10px] text-[#4c739a]">
+<p>© ۱۴۰۳ تمامی حقوق برای انجمن ریه کودکان ایران محفوظ است.</p>
+<div class="flex gap-4">
+<a class="hover:text-primary" href="#">اینستاگرام</a>
+<a class="hover:text-primary" href="#">لینکدین</a>
+<a class="hover:text-primary" href="#">تلگرام</a>
+</div>
+</div>
+</footer>
+</div>
+</div>
+</body></html>

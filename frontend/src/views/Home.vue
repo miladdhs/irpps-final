@@ -1,267 +1,191 @@
 <template>
-  <div class="home-view position-relative">
-    <span class="home-bubble bubble-1 blurred-bubble"></span>
-    <span class="home-bubble bubble-2 blurred-bubble"></span>
-    <span class="home-bubble bubble-3 blurred-bubble"></span>
-
-    <section id="hero" class="hero-section page-hero glass-section py-5 mb-4">
-      <div class="container-xl">
-        <div class="row align-items-center min-vh-80">
-          <div class="col-md-6">
-            <div class="hero-content animate__animated animate__fadeInRight">
-              <span class="soft-badge secondary mb-3">
-                <i class="fa fa-heartbeat"></i>
-                {{ $t('home.badge') }}
-              </span>
-              <h1 class="display-4 fw-bold mb-4 text-primary">{{ $t('home.title') }}</h1>
-              <p class="lead mb-4">{{ $t('home.subtitle') }}</p>
-              <p class="mb-4 text-muted">{{ $t('home.description') }}</p>
-              <div class="hero-buttons">
-                <a class="soft-button primary hero-cta animate__animated animate__pulse" href="#about">
-                  <i class="fa fa-arrow-right"></i>
-                  {{ $t('home.learnMore') }}
-                </a>
-                <a class="soft-button outline hero-cta" href="#contact">
-                  <i class="fa fa-phone"></i>
-                  {{ $t('home.contactUs') }}
-                </a>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="hero-image animate__animated animate__fadeInLeft">
-              <div class="hero-image-wrapper image-frame image-frame--compact">
-                <img :src="getAssetUrl('img/hero-home.svg')" class="img-fluid rounded-4 shadow-lg" :alt="$t('home.title')">
-                <div class="floating-elements">
-                  <div class="floating-icon floating-icon-1">
-                    <i class="fa fa-heartbeat"></i>
-                  </div>
-                  <div class="floating-icon floating-icon-2">
-                    <i class="fa fa-stethoscope"></i>
-                  </div>
-                  <div class="floating-icon floating-icon-3">
-                    <i class="fa fa-user-md"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+  <div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+    <!-- Hero Section -->
+    <section class="relative h-[600px] w-full flex items-center justify-center text-center px-4 overflow-hidden">
+      <div class="absolute inset-0 z-0">
+        <div class="absolute inset-0 bg-gradient-to-l from-primary/40 to-slate-900/80 z-10"></div>
+        <img 
+          alt="Hero Image" 
+          class="w-full h-full object-cover" 
+          src="/img/image3-1024x684.webp"
+        />
+      </div>
+      <div class="relative z-20 max-w-3xl flex flex-col items-center gap-6">
+        <h2 class="text-white text-4xl md:text-6xl font-black leading-tight tracking-tight">
+          {{ $t('home.title') }}
+        </h2>
+        <p class="text-white/90 text-lg md:text-xl font-normal max-w-2xl leading-relaxed">
+          {{ $t('home.subtitle') }}
+        </p>
+        <div class="flex flex-wrap gap-4 justify-center mt-4">
+          <button class="min-w-[160px] h-14 rounded-xl bg-primary text-white text-lg font-bold shadow-lg shadow-primary/30 hover:scale-105 transition-transform">
+            {{ $t('home.learnMore') }}
+          </button>
+          <button class="min-w-[160px] h-14 rounded-xl bg-white/20 backdrop-blur-md border border-white/30 text-white text-lg font-bold hover:bg-white/30 transition-all">
+            {{ $t('home.contactUs') }}
+          </button>
         </div>
       </div>
     </section>
 
-    <section id="about" class="p_3 home-section glass-section">
-      <div class="container-xl">
-        <div class="row">
-          <div class="col-md-12 text-center mb-5 section-heading">
-            <h2 class="display-5 fw-bold mb-4 animate__animated animate__fadeInUp">{{ $t('home.aboutTitle') }}</h2>
-            <p class="lead animate__animated animate__fadeInUp animate__delay-1s">{{ $t('home.aboutSubtitle') }}</p>
-          </div>
+    <!-- Stats Section -->
+    <section class="max-w-7xl mx-auto px-4 -mt-16 relative z-30">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+        <div class="bg-white dark:bg-slate-900 p-8 rounded-xl shadow-xl border-b-4 border-primary flex flex-col items-center text-center">
+          <span class="material-symbols-outlined text-primary text-4xl mb-2">clinical_notes</span>
+          <p class="text-3xl font-black text-slate-900 dark:text-white mb-1">۵۰+</p>
+          <p class="text-slate-500 dark:text-slate-400 font-bold">{{ $t('home.stat1') }}</p>
         </div>
-        <div class="row g-4">
-          <div class="col-md-4">
-            <div class="feature-card glass-card text-center border-0 p-5 h-100 animate__animated animate__fadeInUp animate__delay-2s">
-              <div class="feature-icon mb-4">
-                <i class="fa fa-heartbeat fa-3x col_blue"></i>
-              </div>
-              <h5 class="fw-bold mb-3">{{ $t('home.feature1Title') }}</h5>
-              <p class="text-muted">{{ $t('home.feature1Desc') }}</p>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="feature-card glass-card text-center border-0 p-5 h-100 animate__animated animate__fadeInUp animate__delay-3s">
-              <div class="feature-icon mb-4">
-                <i class="fa fa-graduation-cap fa-3x col_blue"></i>
-              </div>
-              <h5 class="fw-bold mb-3">{{ $t('home.feature2Title') }}</h5>
-              <p class="text-muted">{{ $t('home.feature2Desc') }}</p>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="feature-card glass-card text-center border-0 p-5 h-100 animate__animated animate__fadeInUp animate__delay-4s">
-              <div class="feature-icon mb-4">
-                <i class="fa fa-users fa-3x col_blue"></i>
-              </div>
-              <h5 class="fw-bold mb-3">{{ $t('home.feature3Title') }}</h5>
-              <p class="text-muted">{{ $t('home.feature3Desc') }}</p>
-            </div>
-          </div>
+        <div class="bg-white dark:bg-slate-900 p-8 rounded-xl shadow-xl border-b-4 border-primary flex flex-col items-center text-center">
+          <span class="material-symbols-outlined text-primary text-4xl mb-2">groups</span>
+          <p class="text-3xl font-black text-slate-900 dark:text-white mb-1">۱۰۰۰+</p>
+          <p class="text-slate-500 dark:text-slate-400 font-bold">{{ $t('home.stat2') }}</p>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-8 rounded-xl shadow-xl border-b-4 border-primary flex flex-col items-center text-center">
+          <span class="material-symbols-outlined text-primary text-4xl mb-2">article</span>
+          <p class="text-3xl font-black text-slate-900 dark:text-white mb-1">۲۵</p>
+          <p class="text-slate-500 dark:text-slate-400 font-bold">{{ $t('home.stat3') }}</p>
+        </div>
+        <div class="bg-white dark:bg-slate-900 p-8 rounded-xl shadow-xl border-b-4 border-primary flex flex-col items-center text-center">
+          <span class="material-symbols-outlined text-primary text-4xl mb-2">emoji_events</span>
+          <p class="text-3xl font-black text-slate-900 dark:text-white mb-1">۱۵</p>
+          <p class="text-slate-500 dark:text-slate-400 font-bold">{{ $t('home.stat4') }}</p>
         </div>
       </div>
     </section>
 
-    <section id="stats" class="p_3 home-stats-section">
-      <div class="container-xl">
-        <div class="row text-center">
-          <div class="col-md-3 col-sm-6 mb-4">
-            <div class="stat-item glass-card animate__animated animate__fadeInUp">
-              <div class="stat-icon mb-3">
-                <i class="fa fa-user-md fa-2x"></i>
-              </div>
-              <h2 class="fw-bold counter" ref="counter1" data-target="50">0</h2>
-              <p class="mb-0">{{ $t('home.stat1') }}</p>
-            </div>
+    <!-- Services Section -->
+    <section class="max-w-7xl mx-auto px-4 py-20">
+      <div class="flex flex-col items-center text-center mb-16">
+        <span class="text-primary font-bold tracking-widest uppercase text-sm mb-3">{{ $t('home.servicesTitle') }}</span>
+        <h2 class="text-slate-900 dark:text-white text-3xl md:text-4xl font-black">{{ $t('home.servicesSubtitle') }}</h2>
+        <div class="h-1 w-20 bg-primary mt-4 rounded-full"></div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <!-- Service 1 -->
+        <div class="group bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-100 dark:border-slate-800 hover:shadow-2xl hover:-translate-y-2 transition-all">
+          <div class="w-14 h-14 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+            <span class="material-symbols-outlined text-3xl">medical_information</span>
           </div>
-          <div class="col-md-3 col-sm-6 mb-4">
-            <div class="stat-item glass-card animate__animated animate__fadeInUp animate__delay-1s">
-              <div class="stat-icon mb-3">
-                <i class="fa fa-heart fa-2x"></i>
-              </div>
-              <h2 class="fw-bold counter" ref="counter2" data-target="1000">0</h2>
-              <p class="mb-0">{{ $t('home.stat2') }}</p>
-            </div>
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">{{ $t('home.service1Title') }}</h3>
+          <p class="text-slate-500 dark:text-slate-400 leading-relaxed">{{ $t('home.service1Desc') }}</p>
+        </div>
+        <!-- Service 2 -->
+        <div class="group bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-100 dark:border-slate-800 hover:shadow-2xl hover:-translate-y-2 transition-all">
+          <div class="w-14 h-14 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+            <span class="material-symbols-outlined text-3xl">healing</span>
           </div>
-          <div class="col-md-3 col-sm-6 mb-4">
-            <div class="stat-item glass-card animate__animated animate__fadeInUp animate__delay-2s">
-              <div class="stat-icon mb-3">
-                <i class="fa fa-book fa-2x"></i>
-              </div>
-              <h2 class="fw-bold counter" ref="counter3" data-target="25">0</h2>
-              <p class="mb-0">{{ $t('home.stat3') }}</p>
-            </div>
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">{{ $t('home.service2Title') }}</h3>
+          <p class="text-slate-500 dark:text-slate-400 leading-relaxed">{{ $t('home.service2Desc') }}</p>
+        </div>
+        <!-- Service 3 -->
+        <div class="group bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-100 dark:border-slate-800 hover:shadow-2xl hover:-translate-y-2 transition-all">
+          <div class="w-14 h-14 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+            <span class="material-symbols-outlined text-3xl">health_and_safety</span>
           </div>
-          <div class="col-md-3 col-sm-6 mb-4">
-            <div class="stat-item glass-card animate__animated animate__fadeInUp animate__delay-3s">
-              <div class="stat-icon mb-3">
-                <i class="fa fa-trophy fa-2x"></i>
-              </div>
-              <h2 class="fw-bold counter" ref="counter4" data-target="15">0</h2>
-              <p class="mb-0">{{ $t('home.stat4') }}</p>
-            </div>
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">{{ $t('home.service3Title') }}</h3>
+          <p class="text-slate-500 dark:text-slate-400 leading-relaxed">{{ $t('home.service3Desc') }}</p>
+        </div>
+        <!-- Service 4 -->
+        <div class="group bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-100 dark:border-slate-800 hover:shadow-2xl hover:-translate-y-2 transition-all">
+          <div class="w-14 h-14 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+            <span class="material-symbols-outlined text-3xl">school</span>
           </div>
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">{{ $t('home.service4Title') }}</h3>
+          <p class="text-slate-500 dark:text-slate-400 leading-relaxed">{{ $t('home.service4Desc') }}</p>
+        </div>
+        <!-- Service 5 -->
+        <div class="group bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-100 dark:border-slate-800 hover:shadow-2xl hover:-translate-y-2 transition-all">
+          <div class="w-14 h-14 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+            <span class="material-symbols-outlined text-3xl">biotech</span>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">{{ $t('home.service5Title') }}</h3>
+          <p class="text-slate-500 dark:text-slate-400 leading-relaxed">{{ $t('home.service5Desc') }}</p>
+        </div>
+        <!-- Service 6 -->
+        <div class="group bg-white dark:bg-slate-900 p-8 rounded-2xl border border-slate-100 dark:border-slate-800 hover:shadow-2xl hover:-translate-y-2 transition-all">
+          <div class="w-14 h-14 bg-primary/10 text-primary rounded-xl flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+            <span class="material-symbols-outlined text-3xl">volunteer_activism</span>
+          </div>
+          <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-3">{{ $t('home.service6Title') }}</h3>
+          <p class="text-slate-500 dark:text-slate-400 leading-relaxed">{{ $t('home.service6Desc') }}</p>
         </div>
       </div>
     </section>
 
-    <section id="services" class="p_3 home-section glass-section">
-      <div class="container-xl">
-        <div class="row text-center mb-5 section-heading">
-          <div class="col-md-12">
-            <h2 class="display-5 fw-bold mb-4 animate__animated animate__fadeInUp">{{ $t('home.servicesTitle') }}</h2>
-            <p class="lead animate__animated animate__fadeInUp animate__delay-1s">{{ $t('home.servicesSubtitle') }}</p>
+    <!-- About Summary Section -->
+    <section class="bg-slate-100 dark:bg-slate-800/50 py-24">
+      <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+        <div class="order-2 lg:order-1 relative">
+          <div class="absolute -top-4 -right-4 w-32 h-32 bg-primary/10 rounded-full blur-3xl"></div>
+          <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-primary/20 rounded-full blur-3xl"></div>
+          <img 
+            alt="About Image" 
+            class="rounded-3xl shadow-2xl relative z-10 w-full object-cover" 
+            src="/img/about-insight.svg"
+          />
+          <div class="absolute bottom-6 right-6 bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-xl z-20 flex items-center gap-4 border border-slate-100 dark:border-slate-700">
+            <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white">
+              <span class="material-symbols-outlined">verified</span>
+            </div>
+            <div>
+              <p class="text-xs text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">{{ $t('about.verifiedBy') }}</p>
+              <p class="text-lg font-black text-slate-900 dark:text-white">{{ $t('about.ministry') }}</p>
+            </div>
           </div>
         </div>
-        <div class="row g-4">
-          <div class="col-md-6 col-lg-4">
-            <div class="service-card glass-card p-4 h-100 animate__animated animate__fadeInUp animate__delay-2s">
-              <div class="service-icon mb-4">
-                <i class="fa fa-stethoscope fa-2x col_blue"></i>
-              </div>
-              <h5 class="fw-bold mb-3">{{ $t('home.service1Title') }}</h5>
-              <p class="text-muted">{{ $t('home.service1Desc') }}</p>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-4">
-            <div class="service-card glass-card p-4 h-100 animate__animated animate__fadeInUp animate__delay-3s">
-              <div class="service-icon mb-4">
-                <i class="fa fa-medkit fa-2x col_blue"></i>
-              </div>
-              <h5 class="fw-bold mb-3">{{ $t('home.service2Title') }}</h5>
-              <p class="text-muted">{{ $t('home.service2Desc') }}</p>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-4">
-            <div class="service-card glass-card p-4 h-100 animate__animated animate__fadeInUp animate__delay-4s">
-              <div class="service-icon mb-4">
-                <i class="fa fa-heart fa-2x col_blue"></i>
-              </div>
-              <h5 class="fw-bold mb-3">{{ $t('home.service3Title') }}</h5>
-              <p class="text-muted">{{ $t('home.service3Desc') }}</p>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-4">
-            <div class="service-card glass-card p-4 h-100 animate__animated animate__fadeInUp animate__delay-5s">
-              <div class="service-icon mb-4">
-                <i class="fa fa-graduation-cap fa-2x col_blue"></i>
-              </div>
-              <h5 class="fw-bold mb-3">{{ $t('home.service4Title') }}</h5>
-              <p class="text-muted">{{ $t('home.service4Desc') }}</p>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-4">
-            <div class="service-card glass-card p-4 h-100 animate__animated animate__fadeInUp animate__delay-6s">
-              <div class="service-icon mb-4">
-                <i class="fa fa-microscope fa-2x col_blue"></i>
-              </div>
-              <h5 class="fw-bold mb-3">{{ $t('home.service5Title') }}</h5>
-              <p class="text-muted">{{ $t('home.service5Desc') }}</p>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-4">
-            <div class="service-card glass-card p-4 h-100 animate__animated animate__fadeInUp animate__delay-7s">
-              <div class="service-icon mb-4">
-                <i class="fa fa-phone fa-2x col_blue"></i>
-              </div>
-              <h5 class="fw-bold mb-3">{{ $t('home.service6Title') }}</h5>
-              <p class="text-muted">{{ $t('home.service6Desc') }}</p>
-            </div>
-          </div>
+        <div class="order-1 lg:order-2">
+          <span class="text-primary font-bold tracking-widest uppercase text-sm mb-3 block">{{ $t('about.badge') }}</span>
+          <h2 class="text-slate-900 dark:text-white text-3xl md:text-5xl font-black leading-tight mb-8">
+            {{ $t('about.heroTitle') }} <span class="text-primary">{{ $t('about.heroHighlight') }}</span> {{ $t('about.heroEnd') }}
+          </h2>
+          <p class="text-slate-600 dark:text-slate-300 text-lg leading-relaxed mb-8">
+            {{ $t('about.heroDescription') }}
+          </p>
+          <ul class="space-y-4 mb-10">
+            <li class="flex items-center gap-3">
+              <span class="material-symbols-outlined text-primary">check_circle</span>
+              <span class="text-slate-700 dark:text-slate-200 font-medium">{{ $t('about.feature1') }}</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <span class="material-symbols-outlined text-primary">check_circle</span>
+              <span class="text-slate-700 dark:text-slate-200 font-medium">{{ $t('about.feature2') }}</span>
+            </li>
+            <li class="flex items-center gap-3">
+              <span class="material-symbols-outlined text-primary">check_circle</span>
+              <span class="text-slate-700 dark:text-slate-200 font-medium">{{ $t('about.feature3') }}</span>
+            </li>
+          </ul>
+          <button class="px-10 h-14 bg-primary text-white rounded-xl font-bold text-lg hover:shadow-xl hover:shadow-primary/40 transition-all">
+            {{ $t('home.learnMore') }}
+          </button>
         </div>
       </div>
     </section>
-
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import { getAssetUrl } from '@/utils/assets';
-
-const counter1 = ref<HTMLElement | null>(null);
-const counter2 = ref<HTMLElement | null>(null);
-const counter3 = ref<HTMLElement | null>(null);
-const counter4 = ref<HTMLElement | null>(null);
-
-function animateCounter(element: HTMLElement) {
-  const target = parseInt(element.getAttribute('data-target') || '0');
-  const duration = 1200;
-  const increment = target / (duration / 16);
-  let current = 0;
-  
-  const timer = setInterval(() => {
-    current += increment;
-    if (current >= target) {
-      current = target;
-      clearInterval(timer);
-    }
-    element.textContent = Math.floor(current).toString();
-  }, 16);
-}
+import { onMounted } from 'vue';
 
 onMounted(() => {
-  const observerOptions = {
-    threshold: 0.1,
-    rootMargin: '0px 0px -50px 0px'
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('animate__animated');
-        if (entry.target.classList.contains('counter')) {
-          animateCounter(entry.target as HTMLElement);
-          observer.unobserve(entry.target);
-        }
-      }
-    });
-  }, observerOptions);
-
-  document.querySelectorAll('.animate__fadeInUp, .animate__fadeInLeft, .animate__fadeInRight, .counter').forEach(el => {
-    observer.observe(el);
-  });
-
+  // Smooth scroll for anchor links
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
-      e.preventDefault();
-      const target = document.querySelector((this as HTMLElement).getAttribute('href') || '');
-      if (target) {
-        target.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start'
-        });
+      const href = (this as HTMLElement).getAttribute('href');
+      if (href && href !== '#' && href.length > 1) {
+        e.preventDefault();
+        const target = document.querySelector(href);
+        if (target) {
+          const offset = 80;
+          const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+          });
+        }
       }
     });
   });
 });
 </script>
-
