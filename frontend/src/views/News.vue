@@ -67,7 +67,29 @@
           </aside>
 
           <!-- News List -->
-          <div class="flex flex-col gap-6 lg:col-span-3">
+          <div v-if="newsLoading" class="flex flex-col gap-6 lg:col-span-3">
+            <div class="text-center py-12">
+              <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+              <p class="mt-4 text-slate-500">در حال بارگذاری اخبار...</p>
+            </div>
+          </div>
+
+          <div v-else-if="newsError" class="flex flex-col gap-6 lg:col-span-3">
+            <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-6 text-center">
+              <span class="material-symbols-outlined text-red-600 text-4xl mb-2">error</span>
+              <p class="text-red-600 dark:text-red-400">{{ newsError }}</p>
+            </div>
+          </div>
+
+          <div v-else-if="newsItems.length === 0" class="flex flex-col gap-6 lg:col-span-3">
+            <div class="bg-slate-50 dark:bg-slate-800 rounded-xl p-12 text-center">
+              <span class="material-symbols-outlined text-slate-400 text-5xl mb-4">info</span>
+              <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">خبری یافت نشد</h3>
+              <p class="text-slate-500 dark:text-slate-400">در حال حاضر خبری برای نمایش وجود ندارد.</p>
+            </div>
+          </div>
+
+          <div v-else class="flex flex-col gap-6 lg:col-span-3">
             <!-- News Card -->
             <article 
               v-for="news in newsList" 
@@ -108,16 +130,28 @@
             </article>
 
             <!-- Pagination -->
-            <div class="mt-8 flex items-center justify-center gap-2">
-              <button class="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900">
+            <div v-if="totalPages > 1" class="mt-8 flex items-center justify-center gap-2">
+              <button 
+                @click="loadPage(currentPage - 1)"
+                :disabled="!hasPrevPage"
+                class="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 <span class="material-symbols-outlined">chevron_right</span>
               </button>
-              <button class="flex h-10 w-10 items-center justify-center rounded-lg bg-primary font-bold text-white">۱</button>
-              <button class="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900">۲</button>
-              <button class="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900">۳</button>
-              <span class="px-2 text-slate-400">...</span>
-              <button class="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900">۱۲</button>
-              <button class="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900">
+              <button 
+                v-for="page in Math.min(totalPages, 5)" 
+                :key="page"
+                @click="loadPage(page)"
+                :class="currentPage === page ? 'bg-primary text-white' : 'border border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900'"
+                class="flex h-10 w-10 items-center justify-center rounded-lg font-bold"
+              >
+                {{ page }}
+              </button>
+              <button 
+                @click="loadPage(currentPage + 1)"
+                :disabled="!hasNextPage"
+                class="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
                 <span class="material-symbols-outlined">chevron_left</span>
               </button>
             </div>
@@ -129,10 +163,30 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, onMounted, computed } from 'vue';
+import { getApiUrl } from '@/utils/api';
+
+type NewsItem = {
+  id: number;
+  title: string;
+  slug: string;
+  content: string;
+  image: string | null;
+  author: string;
+  is_published: boolean;
+  views: number;
+  created_at: string;
+};
 
 const searchQuery = ref('');
 const selectedCategory = ref('all');
+const newsItems = ref<NewsItem[]>([]);
+const newsLoading = ref(true);
+const newsError = ref<string | null>(null);
+const currentPage = ref(1);
+const totalPages = ref(1);
+const hasNextPage = ref(false);
+const hasPrevPage = ref(false);
 
 const categories = ref([
   { id: 'all', name: 'همه' },
@@ -143,45 +197,84 @@ const categories = ref([
   { id: 'congenital', name: 'ناهنجاری‌های مادرزادی' }
 ]);
 
-const latestNews = ref([
-  { id: 1, date: '۲۲ آبان ۱۴۰۲', title: 'برگزاری دهمین کنگره بین‌المللی ریه کودکان' },
-  { id: 2, date: '۱۸ آبان ۱۴۰۲', title: 'فراخوان مقاله برای ژورنال تخصصی انجمن' },
-  { id: 3, date: '۱۴ آبان ۱۴۰۲', title: 'راهنمای جدید واکسیناسیون آنفولانزا در کودکان' }
-]);
-
-const newsList = ref([
-  {
-    id: 1,
-    title: 'تازه های درمان آسم در کودکان: پروتکل های سال ۲۰۲۴',
-    excerpt: 'مروری بر جدیدترین پروتکل‌های درمانی ارائه شده در سال ۲۰۲۴ برای مدیریت آسم در اطفال و روش‌های نوین استفاده از اسپری‌های ترکیبی...',
-    category: 'مقاله علمی',
-    categoryClass: 'bg-primary/10 text-primary',
-    date: '۱۵ آبان ۱۴۰۲',
-    author: 'دکتر محمد رضایی',
-    image: '/img/news1.jpg',
-    slug: 'asthma-treatment-2024'
-  },
-  {
-    id: 2,
-    title: 'تاثیر آلودگی هوای کلان‌شهرها بر تشدید بیماری‌های ریوی نوزادان',
-    excerpt: 'مطالعه آماری انجام شده در بیمارستان‌های تخصصی تهران نشان‌دهنده افزایش ۱۵ درصدی بستری‌های تنفسی نوزادان در روزهای آلوده است...',
-    category: 'گزارش موردی',
-    categoryClass: 'bg-amber-100 text-amber-600',
-    date: '۱۲ آبان ۱۴۰۲',
-    author: 'تیم پژوهشی انجمن',
-    image: '/img/news2.jpg',
-    slug: 'air-pollution-impact'
-  },
-  {
-    id: 3,
-    title: 'استانداردهای نوین در تجهیز بخش‌های NICU و مراقبت‌های ریوی',
-    excerpt: 'ابلاغیه جدید وزارت بهداشت در خصوص استانداردهای فیزیکی و تجهیزاتی بخش‌های مراقبت ویژه نوزادان با رویکرد سلامت ریه...',
-    category: 'اطلاعیه',
-    categoryClass: 'bg-emerald-100 text-emerald-600',
-    date: '۰۸ آبان ۱۴۰۲',
-    author: 'وزارت بهداشت',
-    image: '/img/news3.jpg',
-    slug: 'nicu-standards'
+const formatDate = (isoDate: string) => {
+  try {
+    return new Date(isoDate).toLocaleDateString('fa-IR');
+  } catch (error) {
+    return isoDate;
   }
-]);
+};
+
+const latestNews = computed(() => {
+  return newsItems.value.slice(0, 3).map(item => ({
+    id: item.id,
+    date: formatDate(item.created_at),
+    title: item.title
+  }));
+});
+
+const newsList = computed(() => {
+  return newsItems.value.map(item => ({
+    id: item.id,
+    title: item.title,
+    excerpt: item.content,
+    category: 'خبر',
+    categoryClass: 'bg-primary/10 text-primary',
+    date: formatDate(item.created_at),
+    author: item.author,
+    image: item.image ? getApiUrl(item.image) : '/img/hero-events.svg',
+    slug: item.slug
+  }));
+});
+
+const loadPage = async (page: number) => {
+  if (page < 1 || page > totalPages.value) return;
+  currentPage.value = page;
+  await fetchNews();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+const fetchNews = async () => {
+  newsLoading.value = true;
+  newsError.value = null;
+
+  try {
+    const response = await fetch(getApiUrl(`/api/news/?page=${currentPage.value}&per_page=12`), {
+      credentials: 'include',
+    });
+
+    if (response.status === 404) {
+      newsItems.value = [];
+      newsLoading.value = false;
+      return;
+    }
+
+    if (!response.ok) {
+      throw new Error(`خطا در دریافت اخبار از سرور (${response.status})`);
+    }
+
+    const data = await response.json();
+
+    if (!data.success || !Array.isArray(data.news)) {
+      throw new Error('ساختار داده اخبار نامعتبر است');
+    }
+
+    newsItems.value = data.news;
+    
+    if (data.pagination) {
+      totalPages.value = data.pagination.pages || 1;
+      hasNextPage.value = data.pagination.has_next || false;
+      hasPrevPage.value = data.pagination.has_prev || false;
+    }
+  } catch (error: any) {
+    console.error('Failed to load news:', error);
+    newsError.value = error.message || 'خطای ناشناخته هنگام دریافت اخبار';
+  } finally {
+    newsLoading.value = false;
+  }
+};
+
+onMounted(() => {
+  fetchNews();
+});
 </script>

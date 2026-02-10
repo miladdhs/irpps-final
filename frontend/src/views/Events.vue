@@ -47,7 +47,25 @@
           </div>
 
           <!-- Events Grid -->
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+          <div v-if="eventsLoading" class="p-12 text-center">
+            <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+            <p class="mt-4 text-slate-500">در حال بارگذاری رویدادها...</p>
+          </div>
+
+          <div v-else-if="eventsError" class="p-6">
+            <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-6 text-center">
+              <span class="material-symbols-outlined text-red-600 text-4xl mb-2">error</span>
+              <p class="text-red-600 dark:text-red-400">{{ eventsError }}</p>
+            </div>
+          </div>
+
+          <div v-else-if="filteredEvents.length === 0" class="p-12 text-center">
+            <span class="material-symbols-outlined text-slate-400 text-5xl mb-4">info</span>
+            <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">رویدادی یافت نشد</h3>
+            <p class="text-slate-500 dark:text-slate-400">در حال حاضر رویدادی برای نمایش وجود ندارد.</p>
+          </div>
+
+          <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
             <!-- Event Card -->
             <div 
               v-for="event in filteredEvents" 
@@ -97,14 +115,28 @@
           </div>
 
           <!-- Pagination -->
-          <div class="p-6 border-t border-slate-200 dark:border-slate-800 flex items-center justify-center gap-2">
-            <button class="size-9 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800">
+          <div v-if="totalPages > 1" class="p-6 border-t border-slate-200 dark:border-slate-800 flex items-center justify-center gap-2">
+            <button 
+              @click="loadPage(currentPage - 1)"
+              :disabled="!hasPrevPage"
+              class="size-9 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               <span class="material-symbols-outlined">chevron_right</span>
             </button>
-            <button class="size-9 flex items-center justify-center rounded-lg bg-primary text-white font-bold text-sm">۱</button>
-            <button class="size-9 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800 text-sm">۲</button>
-            <button class="size-9 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800 text-sm">۳</button>
-            <button class="size-9 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800">
+            <button 
+              v-for="page in Math.min(totalPages, 5)" 
+              :key="page"
+              @click="loadPage(page)"
+              :class="currentPage === page ? 'bg-primary text-white' : 'border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-800'"
+              class="size-9 flex items-center justify-center rounded-lg font-bold text-sm"
+            >
+              {{ page }}
+            </button>
+            <button 
+              @click="loadPage(currentPage + 1)"
+              :disabled="!hasNextPage"
+              class="size-9 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               <span class="material-symbols-outlined">chevron_left</span>
             </button>
           </div>
@@ -127,10 +159,39 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
+import { getApiUrl } from '@/utils/api';
+
+type EventItem = {
+  id: number;
+  title: string;
+  slug: string;
+  description: string;
+  event_type: string;
+  event_type_code?: string;
+  image: string | null;
+  location: string;
+  start_date: string;
+  end_date: string;
+  registration_deadline: string | null;
+  max_participants: number | null;
+  price: number;
+  is_published: boolean;
+  is_featured: boolean;
+  is_registration_open: boolean;
+  views: number;
+  created_at: string;
+};
 
 const activeTab = ref('current');
 const selectedFilter = ref('all');
+const eventItems = ref<EventItem[]>([]);
+const eventsLoading = ref(true);
+const eventsError = ref<string | null>(null);
+const currentPage = ref(1);
+const totalPages = ref(1);
+const hasNextPage = ref(false);
+const hasPrevPage = ref(false);
 
 const tabs = ref([
   { id: 'current', name: 'رویدادهای جاری (آماده ثبت‌نام)' },
@@ -144,67 +205,121 @@ const filters = ref([
   { id: 'workshop', name: 'کارگاه آموزشی' }
 ]);
 
-const events = ref([
-  {
-    id: 1,
-    title: 'نهمین کنگره بیماری‌های ریوی کودکان و نوزادان ایران',
-    date: '۲۵ لغایت ۲۷ مهر ۱۴۰۳',
-    location: 'تهران، مرکز طبی کودکان - تالار همایش‌ها',
-    locationIcon: 'location_on',
-    status: 'active',
-    statusText: 'در حال ثبت‌نام',
-    statusClass: 'bg-green-500',
-    badge: 'مهلت ثبت‌نام: تا ۱۵ مهر',
-    badgeIcon: 'timer',
-    badgeClass: 'text-red-600 bg-red-50',
-    buttonText: 'ثبت‌نام در کنگره',
-    image: '/img/event1.jpg',
-    slug: 'congress-2024',
-    type: null,
-    filter: 'congress'
-  },
-  {
-    id: 2,
-    title: 'وبینار کشوری تازه‌های تشخیص و درمان آسم در اطفال',
-    date: '۱۰ آبان ۱۴۰۳ | ساعت ۱۸ تا ۲۰',
-    location: 'پلتفرم اسکای‌روم (آنلاین)',
-    locationIcon: 'video_library',
-    status: 'limited',
-    statusText: 'ظرفیت محدود',
-    statusClass: 'bg-amber-500',
-    type: 'وبینار آنلاین',
-    badge: 'دارای امتیاز بازآموزی برای پزشکان عمومی و اطفال',
-    badgeIcon: 'school',
-    badgeClass: 'text-primary bg-primary/5',
-    buttonText: 'رزرو صندلی مجازی',
-    image: '/img/event2.jpg',
-    slug: 'asthma-webinar',
-    filter: 'webinar'
-  },
-  {
-    id: 3,
-    title: 'کارگاه آموزشی پیشرفته اسپیرومتری و تفسیر نوار ریه',
-    date: '۱۵ آذر ۱۴۰۳',
-    location: 'تهران، هتل المپیک - سالن نشست‌های تخصصی',
-    locationIcon: 'location_on',
-    status: 'active',
-    statusText: 'در حال ثبت‌نام',
-    statusClass: 'bg-green-500',
-    badge: 'ویژه پرستاران و تکنیسین‌های تنفسی',
-    badgeIcon: 'info',
-    badgeClass: 'text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-slate-800 italic',
-    buttonText: 'ثبت‌نام کارگاه',
-    image: '/img/event3.jpg',
-    slug: 'spirometry-workshop',
-    type: null,
-    filter: 'workshop'
+const formatDate = (isoDate: string | null) => {
+  if (!isoDate) return '';
+  try {
+    return new Date(isoDate).toLocaleDateString('fa-IR', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    });
+  } catch (error) {
+    return isoDate;
   }
-]);
+};
+
+const isEventFinished = (event: EventItem): boolean => {
+  if (!event.is_registration_open) {
+    return true;
+  }
+  if (event.registration_deadline) {
+    const deadline = new Date(event.registration_deadline);
+    const now = new Date();
+    deadline.setHours(23, 59, 59, 999);
+    if (deadline < now) {
+      return true;
+    }
+  }
+  if (event.end_date) {
+    const endDate = new Date(event.end_date);
+    const now = new Date();
+    return endDate < now;
+  }
+  return false;
+};
+
+const activeEvents = computed(() => {
+  return eventItems.value.filter(event => !isEventFinished(event));
+});
+
+const finishedEvents = computed(() => {
+  return eventItems.value.filter(event => isEventFinished(event));
+});
 
 const filteredEvents = computed(() => {
-  if (selectedFilter.value === 'all') {
-    return events.value;
+  const events = activeTab.value === 'current' ? activeEvents.value : finishedEvents.value;
+  
+  return events.map(event => ({
+    id: event.id,
+    title: event.title,
+    date: formatDate(event.start_date) + (event.end_date ? ' تا ' + formatDate(event.end_date) : ''),
+    location: event.location,
+    locationIcon: 'location_on',
+    status: event.is_registration_open ? 'active' : 'closed',
+    statusText: event.is_registration_open ? 'در حال ثبت‌نام' : 'ثبت‌نام بسته',
+    statusClass: event.is_registration_open ? 'bg-green-500' : 'bg-gray-500',
+    badge: event.registration_deadline ? `مهلت ثبت‌نام: ${formatDate(event.registration_deadline)}` : null,
+    badgeIcon: 'timer',
+    badgeClass: 'text-red-600 bg-red-50',
+    buttonText: event.is_registration_open ? 'ثبت‌نام در رویداد' : 'مشاهده جزئیات',
+    image: event.image ? getApiUrl(event.image) : '/img/hero-events.svg',
+    slug: event.slug,
+    type: event.event_type,
+    filter: event.event_type_code || 'other'
+  })).filter(event => {
+    if (selectedFilter.value === 'all') return true;
+    return event.filter === selectedFilter.value;
+  });
+});
+
+const loadPage = async (page: number) => {
+  if (page < 1 || page > totalPages.value) return;
+  currentPage.value = page;
+  await fetchEvents();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+};
+
+const fetchEvents = async () => {
+  eventsLoading.value = true;
+  eventsError.value = null;
+
+  try {
+    const response = await fetch(getApiUrl(`/api/events/?page=${currentPage.value}&per_page=12`), {
+      credentials: 'include',
+    });
+
+    if (response.status === 404) {
+      eventItems.value = [];
+      eventsLoading.value = false;
+      return;
+    }
+
+    if (!response.ok) {
+      throw new Error(`خطا در دریافت رویدادها از سرور (${response.status})`);
+    }
+
+    const data = await response.json();
+
+    if (!data.success || !Array.isArray(data.events)) {
+      throw new Error('ساختار داده رویدادها نامعتبر است');
+    }
+
+    eventItems.value = data.events;
+    
+    if (data.pagination) {
+      totalPages.value = data.pagination.pages || 1;
+      hasNextPage.value = data.pagination.has_next || false;
+      hasPrevPage.value = data.pagination.has_prev || false;
+    }
+  } catch (error: any) {
+    console.error('Failed to load events:', error);
+    eventsError.value = error.message || 'خطای ناشناخته هنگام دریافت رویدادها';
+  } finally {
+    eventsLoading.value = false;
   }
-  return events.value.filter(event => event.filter === selectedFilter.value);
+};
+
+onMounted(() => {
+  fetchEvents();
 });
 </script>
