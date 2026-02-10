@@ -222,7 +222,7 @@ const newsList = computed(() => {
     categoryClass: 'bg-primary/10 text-primary',
     date: formatDate(item.created_at),
     author: item.author,
-    image: item.image ? getApiUrl(item.image) : '/img/hero-events.svg',
+    image: item.image ? getApiUrl(item.image) : '/img/news.png',
     slug: item.slug
   }));
 });

@@ -122,7 +122,7 @@
           <img 
             alt="About Image" 
             class="rounded-3xl shadow-2xl relative z-10 w-full object-cover h-[500px]" 
-            src="/img/about us.webp"
+            src="/img/about-us.jpg"
           />
           <div class="absolute bottom-6 right-6 bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-xl z-20 flex items-center gap-4 border border-slate-100 dark:border-slate-700">
             <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-white">

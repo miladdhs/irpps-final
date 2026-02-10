@@ -28,7 +28,7 @@
               <!-- Featured Image -->
               <div class="mb-8 aspect-video overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800">
                 <img 
-                  src="/Content/photo_2025-12-05_21-18-04.jpg" 
+                  src="/img/events.png" 
                   alt="کنگره" 
                   class="h-full w-full object-cover"
                 />

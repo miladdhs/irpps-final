@@ -262,7 +262,7 @@ const filteredEvents = computed(() => {
     badgeIcon: 'timer',
     badgeClass: 'text-red-600 bg-red-50',
     buttonText: event.is_registration_open ? 'ثبت‌نام در رویداد' : 'مشاهده جزئیات',
-    image: event.image ? getApiUrl(event.image) : '/img/hero-events.svg',
+    image: event.image ? getApiUrl(event.image) : '/img/events.png',
     slug: event.slug,
     type: event.event_type,
     filter: event.event_type_code || 'other'

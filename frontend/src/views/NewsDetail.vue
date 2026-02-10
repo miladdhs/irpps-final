@@ -39,7 +39,7 @@
           <!-- Featured Image -->
           <div class="mb-8 aspect-video overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800">
             <img 
-              src="/img/logo.png" 
+              src="/img/news.png" 
               alt="تازه‌های درمان آسم" 
               class="h-full w-full object-contain p-8"
             />
@@ -103,7 +103,7 @@
             >
               <div class="mb-3 aspect-video overflow-hidden rounded-lg bg-slate-100 dark:bg-slate-800">
                 <img 
-                  src="/img/logo.png" 
+                  src="/img/news.png" 
                   alt="خبر مرتبط" 
                   class="h-full w-full object-contain p-4 transition-transform group-hover:scale-110"
                 />
@@ -117,7 +117,7 @@
             >
               <div class="mb-3 aspect-video overflow-hidden rounded-lg bg-slate-100 dark:bg-slate-800">
                 <img 
-                  src="/img/logo.png" 
+                  src="/img/news.png" 
                   alt="خبر مرتبط" 
                   class="h-full w-full object-contain p-4 transition-transform group-hover:scale-110"
                 />
@@ -131,7 +131,7 @@
             >
               <div class="mb-3 aspect-video overflow-hidden rounded-lg bg-slate-100 dark:bg-slate-800">
                 <img 
-                  src="/img/logo.png" 
+                  src="/img/news.png" 
                   alt="خبر مرتبط" 
                   class="h-full w-full object-contain p-4 transition-transform group-hover:scale-110"
                 />
