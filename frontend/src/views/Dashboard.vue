@@ -555,7 +555,7 @@ async function uploadProfileImage() {
     const formData = new FormData()
     formData.append('profile_image', selectedFile.value)
 
-    const response = await fetch(getApiUrl('/api/accounts/profile/image/upload/'), {
+    const response = await fetch(getApiUrl('/api/accounts/upload-profile-image/'), {
       method: 'POST',
       credentials: 'include',
       body: formData
@@ -597,7 +597,7 @@ async function deleteProfileImage() {
   photoLoading.value = true
 
   try {
-    const response = await fetch(getApiUrl('/api/accounts/profile/image/delete/'), {
+    const response = await fetch(getApiUrl('/api/accounts/delete-profile-image/'), {
       method: 'DELETE',
       credentials: 'include'
     })
@@ -623,7 +623,7 @@ async function updateResume() {
   resumeError.value = false
 
   try {
-    const response = await fetch(getApiUrl('/api/accounts/profile/resume/update/'), {
+    const response = await fetch(getApiUrl('/api/accounts/update-resume/'), {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

@@ -117,6 +117,8 @@
               <h3 class="text-lg font-bold mb-8 relative after:content-[''] after:absolute after:bottom-[-10px] after:right-0 after:w-10 after:h-1 after:bg-primary">{{ $t('footer.quickContact') }}</h3>
               <ul class="space-y-4">
                 <li><router-link class="text-slate-400 hover:text-white transition-colors" to="/contact">{{ $t('nav.contact') }}</router-link></li>
+                <li><router-link class="text-slate-400 hover:text-white transition-colors" to="/news">{{ $t('nav.newsItem') }}</router-link></li>
+                <li><router-link class="text-slate-400 hover:text-white transition-colors" to="/events">{{ $t('nav.eventsItem') }}</router-link></li>
               </ul>
             </div>
             <div>
@@ -139,10 +141,6 @@
           </div>
           <div class="pt-10 flex flex-col md:flex-row justify-between items-center gap-4 text-slate-500 text-sm">
             <p>{{ $t('footer.copyright') }}</p>
-            <div class="flex gap-8">
-              <a class="hover:text-white transition-colors" href="#">{{ $t('footer.privacy') }}</a>
-              <a class="hover:text-white transition-colors" href="#">{{ $t('footer.terms') }}</a>
-            </div>
           </div>
         </div>
       </footer>

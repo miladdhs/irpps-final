@@ -121,7 +121,7 @@
           <div class="absolute -bottom-4 -left-4 w-32 h-32 bg-primary/20 rounded-full blur-3xl"></div>
           <img 
             alt="About Image" 
-            class="rounded-3xl shadow-2xl relative z-10 w-full object-cover" 
+            class="rounded-3xl shadow-2xl relative z-10 w-full object-cover h-[500px]" 
             src="/img/about us.webp"
           />
           <div class="absolute bottom-6 right-6 bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-xl z-20 flex items-center gap-4 border border-slate-100 dark:border-slate-700">
