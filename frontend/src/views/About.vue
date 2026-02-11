@@ -99,69 +99,24 @@
         </div>
       </section>
 
-      <!-- Board Members Section -->
+      <!-- Founders Section - موسسین انجمن -->
       <section class="mb-10">
         <div class="text-center mb-16">
-          <h3 class="text-slate-900 dark:text-white text-3xl font-bold mb-4">{{ $t('about.foundersTitle') }}</h3>
+          <h3 class="text-slate-900 dark:text-white text-3xl font-bold mb-4">موسسین انجمن</h3>
           <p class="text-slate-500 dark:text-slate-400">{{ $t('about.foundersSubtitle') }}</p>
+          <p class="text-slate-600 dark:text-slate-400 mt-2 text-sm">تاریخ تأسیس: ۱۶ آذر ۱۳۹۵</p>
         </div>
 
-        <div class="space-y-16">
-          <!-- هیئت مدیره فعلی - دوره 1403 -->
-          <div>
-            <h4 class="text-center text-2xl font-bold text-slate-900 dark:text-white mb-8">
-              {{ $t('about.boardMembers1403Title') }}
-            </h4>
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-              <div v-for="(member, index) in board1403" :key="index" class="group text-center">
-                <div class="relative w-32 h-32 mx-auto mb-3 rounded-full overflow-hidden border-4 border-white dark:border-slate-800 shadow-lg group-hover:border-primary transition-all">
-                  <div class="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-                    <span class="material-symbols-outlined text-5xl text-primary/40">person</span>
-                  </div>
-                </div>
-                <h5 class="text-slate-900 dark:text-white text-base font-bold mb-1">{{ member.name }}</h5>
-                <p class="text-primary font-medium text-sm mb-1">{{ member.position }}</p>
-                <p class="text-slate-500 dark:text-slate-400 text-xs">{{ member.specialty }}</p>
+        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div v-for="(member, index) in founders1395" :key="index" class="group text-center">
+            <div class="relative w-32 h-32 mx-auto mb-3 rounded-full overflow-hidden border-4 border-white dark:border-slate-800 shadow-lg group-hover:border-primary transition-all">
+              <div class="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+                <span class="material-symbols-outlined text-5xl text-primary/40">person</span>
               </div>
             </div>
-          </div>
-
-          <!-- هیئت مدیره دوره 1400 -->
-          <div>
-            <h4 class="text-center text-2xl font-bold text-slate-900 dark:text-white mb-8">
-              {{ $t('about.boardMembers1400Title') }}
-            </h4>
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-              <div v-for="(member, index) in board1400" :key="index" class="group text-center">
-                <div class="relative w-32 h-32 mx-auto mb-3 rounded-full overflow-hidden border-4 border-white dark:border-slate-800 shadow-lg group-hover:border-primary transition-all">
-                  <div class="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-                    <span class="material-symbols-outlined text-5xl text-primary/40">person</span>
-                  </div>
-                </div>
-                <h5 class="text-slate-900 dark:text-white text-base font-bold mb-1">{{ member.name }}</h5>
-                <p class="text-primary font-medium text-sm mb-1">{{ member.position }}</p>
-                <p class="text-slate-500 dark:text-slate-400 text-xs">{{ member.specialty }}</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- موسسین انجمن - دوره 1395 -->
-          <div>
-            <h4 class="text-center text-2xl font-bold text-slate-900 dark:text-white mb-8">
-              موسسین انجمن (۱۳۹۵)
-            </h4>
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-              <div v-for="(member, index) in founders1395" :key="index" class="group text-center">
-                <div class="relative w-32 h-32 mx-auto mb-3 rounded-full overflow-hidden border-4 border-white dark:border-slate-800 shadow-lg group-hover:border-primary transition-all">
-                  <div class="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-                    <span class="material-symbols-outlined text-5xl text-primary/40">person</span>
-                  </div>
-                </div>
-                <h5 class="text-slate-900 dark:text-white text-base font-bold mb-1">{{ member.name }}</h5>
-                <p class="text-primary font-medium text-sm mb-1">{{ member.position }}</p>
-                <p class="text-slate-500 dark:text-slate-400 text-xs">{{ member.specialty }}</p>
-              </div>
-            </div>
+            <h5 class="text-slate-900 dark:text-white text-base font-bold mb-1">{{ member.name }}</h5>
+            <p class="text-primary font-medium text-sm mb-1">{{ member.position }}</p>
+            <p class="text-slate-500 dark:text-slate-400 text-xs">{{ member.specialty }}</p>
           </div>
         </div>
       </section>
@@ -173,94 +128,6 @@
 import { ref } from 'vue';
 
 const goals = ref(Array.from({ length: 10 }, (_, i) => i));
-
-// هیئت مدیره فعلی - دوره 1403
-const board1403 = ref([
-  {
-    name: 'دکتر قمر تاج خانبابائی',
-    position: 'رئیس انجمن',
-    specialty: 'فوق تخصص آسم و آلرژی کودکان'
-  },
-  {
-    name: 'دکتر سهیلا خلیل زاده',
-    position: 'نائب رئیس',
-    specialty: 'فوق تخصص ریه کودکان'
-  },
-  {
-    name: 'دکتر محمد رضائی',
-    position: 'دبیر انجمن',
-    specialty: 'فوق تخصص ریه کودکان'
-  },
-  {
-    name: 'دکتر نازنین فرحبخش',
-    position: 'خزانه دار',
-    specialty: 'فوق تخصص ریه کودکان'
-  },
-  {
-    name: 'دکتر امیر رضائی',
-    position: 'عضو هیئت مدیره',
-    specialty: 'فوق تخصص ریه کودکان'
-  },
-  {
-    name: 'دکتر ذلفا مدرسی',
-    position: 'عضو هیئت مدیره',
-    specialty: 'فوق تخصص ریه کودکان'
-  },
-  {
-    name: 'دکتر علیرضا عشقی',
-    position: 'عضو هیئت مدیره',
-    specialty: 'فوق تخصص ریه کودکان'
-  },
-  {
-    name: 'دکتر معصومه قاسمپور علمداری',
-    position: 'بازرس اصلی',
-    specialty: 'فوق تخصص ریه کودکان'
-  }
-]);
-
-// هیئت مدیره دوره 1400
-const board1400 = ref([
-  {
-    name: 'دکتر مجید کیوانفر',
-    position: 'رئیس انجمن',
-    specialty: 'فوق تخصص ریه کودکان'
-  },
-  {
-    name: 'دکتر محمد رضائی',
-    position: 'نائب رئیس',
-    specialty: 'فوق تخصص ریه کودکان'
-  },
-  {
-    name: 'دکتر امیر رضائی',
-    position: 'دبیر انجمن',
-    specialty: 'فوق تخصص ریه کودکان'
-  },
-  {
-    name: 'دکتر علیرضا عشقی',
-    position: 'خزانه دار',
-    specialty: 'فوق تخصص ریه کودکان'
-  },
-  {
-    name: 'دکتر سید محمد رضا میرکریمی',
-    position: 'عضو هیئت مدیره',
-    specialty: 'فوق تخصص ریه کودکان'
-  },
-  {
-    name: 'دکتر بابک قالیباف',
-    position: 'عضو هیئت مدیره',
-    specialty: 'فوق تخصص ریه کودکان'
-  },
-  {
-    name: 'دکتر سید حسین میر لوحی',
-    position: 'عضو هیئت مدیره',
-    specialty: 'فوق تخصص ریه کودکان'
-  },
-  {
-    name: 'دکتر لعبت شاهکار',
-    position: 'بازرس اصلی',
-    specialty: 'فوق تخصص ریه کودکان'
-  }
-]);
 
 // موسسین انجمن - دوره 1395
 const founders1395 = ref([

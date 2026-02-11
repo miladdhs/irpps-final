@@ -25,9 +25,7 @@
                   <router-link class="block px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" to="/about/history">{{ $t('nav.aboutHistory') }}</router-link>
                   <router-link class="block px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" to="/about/gallery">{{ $t('nav.aboutGallery') }}</router-link>
                   <div class="border-t border-slate-100 dark:border-slate-800"></div>
-                  <router-link class="block px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" to="/about/board-third">{{ $t('nav.boardThird') }}</router-link>
-                  <router-link class="block px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" to="/about/board-second">{{ $t('nav.boardSecond') }}</router-link>
-                  <router-link class="block px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" to="/about/board-first">{{ $t('nav.boardFirst') }}</router-link>
+                  <router-link class="block px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" to="/about/board-members">اعضای هیئت مدیره</router-link>
                 </div>
               </div>
               <router-link class="text-sm font-medium leading-normal hover:text-primary transition-colors" to="/services">{{ $t('nav.services') }}</router-link>
