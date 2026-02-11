@@ -297,6 +297,94 @@ def members_list_view(request):
         }, status=500)
 
 
+@require_http_methods(["GET"])
+def board_members_view(request):
+    """Get list of board members grouped by period"""
+    try:
+        from django.contrib.auth import get_user_model
+        User = get_user_model()
+        
+        # Define board member usernames for each period
+        board_members_config = {
+            '1395': [
+                'board_سهیلا_خلیل_زاده',
+                'board_قمر_تاج_خانبابائی',
+                'board_محمد_رضائی',
+                'board_مجید_کیوانفر',
+                'board_سید_احمد_طباطبائی',
+                'board_محسن_علی_سمیر',
+                'board_حسینعلی_غفاری_پور',
+                'board_محمد_رضا_مدرسی',
+                'board_سید_جواد_سیدی',
+                'board_روح_الله_شیرزادی',
+                'board_علیرضا_اسدی',
+            ],
+            '1400': [
+                'board_مجید_کیوانفر',
+                'board_محمد_رضائی',
+                'board_امیر_رضائی',
+                'board_علیرضا_عشقی',
+                'board_سید_محمد_رضا_میرکریمی',
+                'board_بابک_قالیباف',
+                'board_سید_حسین_میر_لوحی',
+                'board_لعبت_شاهکار',
+            ],
+            '1403': [
+                'board_قمر_تاج_خانبابائی',
+                'board_سهیلا_خلیل_زاده',
+                'board_محمد_رضائی',
+                'board_نازنین_فرحبخش',
+                'board_امیر_رضائی',
+                'board_ذلفا_مدرسی',
+                'board_علیرضا_عشقی',
+                'board_معصومه_قاسمپور_علمداری',
+            ]
+        }
+        
+        result = {}
+        
+        for period, usernames in board_members_config.items():
+            members = User.objects.filter(username__in=usernames)
+            
+            members_data = []
+            for member in members:
+                persian_name = member.first_name or ''
+                english_name = member.last_name or ''
+                display_name = persian_name or english_name or member.username
+                
+                profile_image_url = ''
+                if member.profile_image:
+                    try:
+                        profile_image_url = member.profile_image.url
+                        if profile_image_url and not profile_image_url.startswith('/'):
+                            profile_image_url = f"/{profile_image_url}"
+                    except Exception as e:
+                        profile_image_url = ''
+                
+                members_data.append({
+                    'id': member.id,
+                    'persian_name': persian_name,
+                    'english_name': english_name,
+                    'display_name': display_name,
+                    'specialty': member.specialty or '',
+                    'bio': member.bio or '',
+                    'profile_image': profile_image_url,
+                })
+            
+            result[period] = members_data
+        
+        return JsonResponse({
+            'success': True,
+            'board_members': result
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'errors': str(e)
+        }, status=500)
+
+
 @login_required
 @csrf_exempt
 @require_http_methods(["POST"])

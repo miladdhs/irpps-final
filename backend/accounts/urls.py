@@ -11,6 +11,7 @@ urlpatterns = [
     path('delete-profile-image/', views.delete_profile_image_view, name='delete_profile_image_api'),
     path('update-resume/', views.update_resume_view, name='update_resume_api'),
     path('members/', views.members_list_view, name='members_list_api'),
+    path('board-members/', views.board_members_view, name='board_members_api'),
     
     # Membership management endpoints (admin only)
     path('members/pending/', views.pending_members_view, name='pending_members_api'),
