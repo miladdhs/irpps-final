@@ -25,11 +25,11 @@
                   <router-link class="block px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" to="/about/history">{{ $t('nav.aboutHistory') }}</router-link>
                   <router-link class="block px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" to="/about/gallery">{{ $t('nav.aboutGallery') }}</router-link>
                   <div class="border-t border-slate-100 dark:border-slate-800"></div>
-                  <router-link class="block px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" to="/about/board-members">اعضای هیئت مدیره</router-link>
+                  <router-link class="block px-4 py-3 text-sm hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors" to="/about/board-members">{{ $t('nav.boardMembers') }}</router-link>
                 </div>
               </div>
               <router-link class="text-sm font-medium leading-normal hover:text-primary transition-colors" to="/services">{{ $t('nav.services') }}</router-link>
-              <router-link class="text-sm font-medium leading-normal hover:text-primary transition-colors" to="/team">اعضا</router-link>
+              <router-link class="text-sm font-medium leading-normal hover:text-primary transition-colors" to="/team">{{ $t('nav.members') }}</router-link>
               <div class="relative group">
                 <button class="text-sm font-medium leading-normal hover:text-primary transition-colors flex items-center gap-1">
                   {{ $t('nav.news') }}
@@ -44,13 +44,18 @@
             </nav>
           </div>
           <div class="flex items-center gap-4">
+            <!-- Language Toggle Button -->
+            <button @click="toggleLanguage" class="flex items-center justify-center rounded-lg h-10 px-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-all text-sm font-medium">
+              <span class="material-symbols-outlined text-sm mr-1">language</span>
+              {{ currentLocale === 'fa' ? 'EN' : 'FA' }}
+            </button>
             <button class="flex items-center justify-center rounded-lg h-10 w-10 bg-primary/10 text-primary lg:hidden" @click="toggleMobileMenu">
               <span class="material-symbols-outlined">{{ isMobileMenuOpen ? 'close' : 'menu' }}</span>
             </button>
             <!-- Admin Panel Button (only for staff users) -->
             <router-link v-if="isLoggedIn && authStore.isAdmin" to="/admin" class="hidden lg:flex items-center justify-center rounded-lg h-10 px-4 bg-purple-600 text-white font-bold text-sm hover:bg-purple-700 transition-all">
               <span class="material-symbols-outlined text-sm mr-1">admin_panel_settings</span>
-              پنل مدیریت
+              {{ $t('nav.adminPanel') }}
             </router-link>
             <router-link v-if="!isLoggedIn" to="/login" class="flex items-center justify-center rounded-lg h-10 px-4 bg-primary text-white font-bold text-sm hover:bg-primary/90 transition-all">
               {{ $t('nav.login') }}
@@ -66,16 +71,48 @@
         <div v-if="isMobileMenuOpen" class="lg:hidden mt-4 pb-4 border-t border-slate-200 dark:border-slate-800 pt-4">
           <nav class="flex flex-col gap-2">
             <router-link class="px-4 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/" @click="closeMobileMenu">{{ $t('nav.home') }}</router-link>
-            <router-link class="px-4 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/about" @click="closeMobileMenu">{{ $t('nav.about') }}</router-link>
+            
+            <!-- About with submenu -->
+            <div>
+              <button @click="toggleAboutSubmenu" class="w-full px-4 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center justify-between">
+                <span>{{ $t('nav.about') }}</span>
+                <span class="material-symbols-outlined text-sm transition-transform" :class="{ 'rotate-180': isAboutSubmenuOpen }">expand_more</span>
+              </button>
+              <div v-if="isAboutSubmenuOpen" class="mr-4 mt-1 flex flex-col gap-1">
+                <router-link class="px-4 py-2 text-sm rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/about" @click="closeMobileMenu">{{ $t('nav.aboutForum') }}</router-link>
+                <router-link class="px-4 py-2 text-sm rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/about/history" @click="closeMobileMenu">{{ $t('nav.aboutHistory') }}</router-link>
+                <router-link class="px-4 py-2 text-sm rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/about/gallery" @click="closeMobileMenu">{{ $t('nav.aboutGallery') }}</router-link>
+                <router-link class="px-4 py-2 text-sm rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/about/board-members" @click="closeMobileMenu">{{ $t('nav.boardMembers') }}</router-link>
+              </div>
+            </div>
+            
             <router-link class="px-4 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/services" @click="closeMobileMenu">{{ $t('nav.services') }}</router-link>
-            <router-link class="px-4 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/team" @click="closeMobileMenu">اعضا</router-link>
-            <router-link class="px-4 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/news" @click="closeMobileMenu">{{ $t('nav.newsItem') }}</router-link>
-            <router-link class="px-4 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/events" @click="closeMobileMenu">{{ $t('nav.eventsItem') }}</router-link>
+            <router-link class="px-4 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/team" @click="closeMobileMenu">{{ $t('nav.members') }}</router-link>
+            
+            <!-- News with submenu -->
+            <div>
+              <button @click="toggleNewsSubmenu" class="w-full px-4 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors flex items-center justify-between">
+                <span>{{ $t('nav.news') }}</span>
+                <span class="material-symbols-outlined text-sm transition-transform" :class="{ 'rotate-180': isNewsSubmenuOpen }">expand_more</span>
+              </button>
+              <div v-if="isNewsSubmenuOpen" class="mr-4 mt-1 flex flex-col gap-1">
+                <router-link class="px-4 py-2 text-sm rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/news" @click="closeMobileMenu">{{ $t('nav.newsItem') }}</router-link>
+                <router-link class="px-4 py-2 text-sm rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/events" @click="closeMobileMenu">{{ $t('nav.eventsItem') }}</router-link>
+              </div>
+            </div>
+            
             <router-link class="px-4 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/contact" @click="closeMobileMenu">{{ $t('nav.contact') }}</router-link>
+            
+            <!-- Language Toggle for Mobile -->
+            <button @click="toggleLanguage" class="px-4 py-2 text-sm font-medium rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors flex items-center gap-2">
+              <span class="material-symbols-outlined text-sm">language</span>
+              {{ currentLocale === 'fa' ? 'English' : 'فارسی' }}
+            </button>
+            
             <!-- Admin Panel Link for Mobile (only for staff users) -->
             <router-link v-if="isLoggedIn && authStore.isAdmin" class="px-4 py-2 text-sm font-medium rounded-lg bg-purple-600 text-white hover:bg-purple-700 transition-colors flex items-center gap-2" to="/admin" @click="closeMobileMenu">
               <span class="material-symbols-outlined text-sm">admin_panel_settings</span>
-              پنل مدیریت
+              {{ $t('nav.adminPanel') }}
             </router-link>
           </nav>
         </div>
@@ -164,10 +201,14 @@ import { useAuthStore } from '@/stores/auth';
 
 const route = useRoute();
 const router = useRouter();
-const { t } = useI18n();
+const { t, locale } = useI18n();
 const authStore = useAuthStore();
 
 const isMobileMenuOpen = ref(false);
+const isAboutSubmenuOpen = ref(false);
+const isNewsSubmenuOpen = ref(false);
+
+const currentLocale = computed(() => locale.value);
 
 const isLoggedIn = computed(() => authStore.isAuthenticated);
 const userDisplayName = computed(() => {
@@ -175,12 +216,36 @@ const userDisplayName = computed(() => {
   return authStore.user.first_name || authStore.user.username;
 });
 
+const toggleLanguage = () => {
+  const newLocale = locale.value === 'fa' ? 'en' : 'fa';
+  locale.value = newLocale;
+  localStorage.setItem('locale', newLocale);
+  
+  // Update document direction and language
+  document.documentElement.setAttribute('dir', newLocale === 'fa' ? 'rtl' : 'ltr');
+  document.documentElement.setAttribute('lang', newLocale);
+};
+
 const toggleMobileMenu = () => {
   isMobileMenuOpen.value = !isMobileMenuOpen.value;
+  if (!isMobileMenuOpen.value) {
+    isAboutSubmenuOpen.value = false;
+    isNewsSubmenuOpen.value = false;
+  }
+};
+
+const toggleAboutSubmenu = () => {
+  isAboutSubmenuOpen.value = !isAboutSubmenuOpen.value;
+};
+
+const toggleNewsSubmenu = () => {
+  isNewsSubmenuOpen.value = !isNewsSubmenuOpen.value;
 };
 
 const closeMobileMenu = () => {
   isMobileMenuOpen.value = false;
+  isAboutSubmenuOpen.value = false;
+  isNewsSubmenuOpen.value = false;
 };
 
 watch(() => route.path, () => {
@@ -188,6 +253,11 @@ watch(() => route.path, () => {
 });
 
 onMounted(async () => {
+  // Set initial direction and language based on locale
+  const initialLocale = locale.value;
+  document.documentElement.setAttribute('dir', initialLocale === 'fa' ? 'rtl' : 'ltr');
+  document.documentElement.setAttribute('lang', initialLocale);
+  
   // Try to fetch profile on app mount
   if (!authStore.isAuthenticated) {
     await authStore.fetchProfile();

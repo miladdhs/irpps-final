@@ -8,8 +8,10 @@
     "boardFirst": "First Board of Directors",
     "boardSecond": "Second Board of Directors",
     "boardThird": "Third Board of Directors",
+    "boardMembers": "Board Members",
     "services": "Services",
     "team": "Team",
+    "members": "Members",
     "events": "Events",
     "news": "News & Events",
     "newsItem": "News",
@@ -22,7 +24,8 @@
     "education": "Education",
     "publications": "Publications",
     "associations": "Associations",
-    "advertising": "Advertising"
+    "advertising": "Advertising",
+    "adminPanel": "Admin Panel"
   },
   "home": {
     "badge": "Advanced Pediatric Respiratory Care",

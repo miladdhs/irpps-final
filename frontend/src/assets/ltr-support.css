@@ -5,6 +5,55 @@
   font-family: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
+[dir="rtl"] {
+  font-family: 'Vazirmatn', 'Tahoma', 'Arial', sans-serif;
+}
+
+/* Tailwind utility adjustments for LTR */
+[dir="ltr"] .mr-1 {
+  margin-right: 0 !important;
+  margin-left: 0.25rem !important;
+}
+
+[dir="ltr"] .mr-2 {
+  margin-right: 0 !important;
+  margin-left: 0.5rem !important;
+}
+
+[dir="ltr"] .mr-3 {
+  margin-right: 0 !important;
+  margin-left: 1rem !important;
+}
+
+[dir="ltr"] .ml-1 {
+  margin-left: 0 !important;
+  margin-right: 0.25rem !important;
+}
+
+[dir="ltr"] .ml-2 {
+  margin-left: 0 !important;
+  margin-right: 0.5rem !important;
+}
+
+[dir="ltr"] .ml-3 {
+  margin-left: 0 !important;
+  margin-right: 1rem !important;
+}
+
+/* Flex direction adjustments */
+[dir="ltr"] .flex-row-reverse {
+  flex-direction: row !important;
+}
+
+/* Text alignment */
+[dir="ltr"] .text-right {
+  text-align: left !important;
+}
+
+[dir="ltr"] .text-left {
+  text-align: right !important;
+}
+
 [dir="ltr"] .navbar-nav {
   margin-right: auto !important;
   margin-left: 0 !important;
@@ -129,5 +178,10 @@
     opacity: 1;
     transform: translate3d(0, 0, 0);
   }
+}
+
+/* Smooth transition for language change */
+* {
+  transition: margin 0.3s ease, padding 0.3s ease;
 }
 

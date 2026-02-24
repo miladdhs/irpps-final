@@ -8,8 +8,10 @@
     "boardFirst": "هیئت مدیره اول",
     "boardSecond": "هیئت مدیره دوم",
     "boardThird": "هیئت مدیره سوم",
+    "boardMembers": "اعضای هیئت مدیره",
     "services": "خدمات",
     "team": "اعضا",
+    "members": "اعضا",
     "events": "رویدادها",
     "news": "اخبار و رویدادها",
     "newsItem": "اخبار",
@@ -23,7 +25,8 @@
     "publications": "انتشارات",
     "associations": "انجمن‌ها",
     "advertising": "تبلیغات",
-    "search": "جستجو..."
+    "search": "جستجو...",
+    "adminPanel": "پنل مدیریت"
   },
   "home": {
     "badge": "مراقبت پیشرفته تنفس کودکان",

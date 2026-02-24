@@ -52,7 +52,7 @@
                 کتابچه‌های کنگره‌ها و همایش‌های علمی با خلاصه مقالات
               </p>
               <div class="mb-6 flex flex-wrap gap-2">
-                <span class="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-600">2 فایل</span>
+                <span class="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-600">3 فایل</span>
                 <span class="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-600">PDF</span>
                 <span class="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-bold text-emerald-600">دانلود رایگان</span>
               </div>
@@ -63,58 +63,7 @@
             </div>
           </div>
 
-          <!-- Journal -->
-          <a 
-            href="https://brieflands.com/journals/jcp" 
-            target="_blank"
-            class="group relative overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-purple-50 to-white p-8 shadow-sm transition-all hover:shadow-2xl hover:border-purple-300 dark:border-slate-800 dark:from-slate-900 dark:to-slate-900"
-          >
-            <div class="absolute top-0 right-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-purple-500/5 blur-3xl transition-all group-hover:scale-150"></div>
-            <div class="relative">
-              <div class="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-purple-500 to-purple-600 shadow-lg shadow-purple-500/30 transition-transform group-hover:scale-110">
-                <span class="material-symbols-outlined text-5xl text-white">description</span>
-              </div>
-              <h3 class="mb-3 text-2xl font-black">مجله انجمن</h3>
-              <p class="mb-6 text-slate-600 dark:text-slate-400">
-                مجله علمی انجمن در سایت Brieflands با مقالات داوری شده
-              </p>
-              <div class="mb-6 flex flex-wrap gap-2">
-                <span class="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-bold text-purple-600">Peer-Reviewed</span>
-                <span class="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-bold text-purple-600">ISI</span>
-                <span class="rounded-full bg-purple-500/10 px-3 py-1 text-xs font-bold text-purple-600">بین‌المللی</span>
-              </div>
-              <div class="flex items-center gap-2 text-purple-600 font-bold group-hover:gap-3 transition-all">
-                <span>مشاهده در سایت</span>
-                <span class="material-symbols-outlined">open_in_new</span>
-              </div>
-            </div>
-          </a>
 
-          <!-- Other Products -->
-          <div 
-            @click="openModal('other')"
-            class="group relative overflow-hidden rounded-2xl border border-slate-200 bg-gradient-to-br from-orange-50 to-white p-8 shadow-sm transition-all hover:shadow-2xl hover:border-orange-300 cursor-pointer dark:border-slate-800 dark:from-slate-900 dark:to-slate-900"
-          >
-            <div class="absolute top-0 right-0 h-32 w-32 translate-x-8 -translate-y-8 rounded-full bg-orange-500/5 blur-3xl transition-all group-hover:scale-150"></div>
-            <div class="relative">
-              <div class="mb-6 flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 shadow-lg shadow-orange-500/30 transition-transform group-hover:scale-110">
-                <span class="material-symbols-outlined text-5xl text-white">folder_open</span>
-              </div>
-              <h3 class="mb-3 text-2xl font-black">سایر محصولات</h3>
-              <p class="mb-6 text-slate-600 dark:text-slate-400">
-                سایر انتشارات و محصولات علمی انجمن
-              </p>
-              <div class="mb-6 flex flex-wrap gap-2">
-                <span class="rounded-full bg-orange-500/10 px-3 py-1 text-xs font-bold text-orange-600">1 فایل</span>
-                <span class="rounded-full bg-orange-500/10 px-3 py-1 text-xs font-bold text-orange-600">PDF</span>
-                <span class="rounded-full bg-orange-500/10 px-3 py-1 text-xs font-bold text-orange-600">دانلود رایگان</span>
-              </div>
-              <div class="flex items-center gap-2 text-orange-600 font-bold group-hover:gap-3 transition-all">
-                <span>مشاهده و دانلود</span>
-                <span class="material-symbols-outlined">download</span>
-              </div>
-            </div>
-          </div>
         </div>
 
         <!-- Research Section -->
@@ -226,16 +175,13 @@ const modalType = ref('');
 const files = {
   congress: [
     { name: 'کتابچه کنگره', path: '/Content/Other/1_23033290624.pdf', size: '5.2 MB' },
-    { name: 'خلاصه مقالات پنجمین همایش 1403', path: '/Content/Other/خلاصه مقالات 5 همایش 403.pdf', size: '3.7 MB' }
-  ],
-  other: [
+    { name: 'خلاصه مقالات پنجمین همایش 1403', path: '/Content/Other/خلاصه مقالات 5 همایش 403.pdf', size: '3.7 MB' },
     { name: 'سند علمی', path: '/Content/Other/DOC-20251227-WA0007.pdf', size: '1.2 MB' }
   ]
 };
 
 const modalTitle = computed(() => {
   if (modalType.value === 'congress') return 'کتابچه کنگره‌ها و همایش‌ها';
-  if (modalType.value === 'other') return 'سایر محصولات';
   return '';
 });
 
