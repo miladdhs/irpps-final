@@ -24,10 +24,11 @@ def update_event_images():
     print("=" * 80)
     
     # Base paths
-    base_dir = Path(__file__).parent.parent
-    frontend_content = base_dir / 'frontend' / 'public' / 'Content'
     media_dir = Path(__file__).parent / 'media' / 'events' / 'covers'
     media_dir.mkdir(parents=True, exist_ok=True)
+    
+    print(f"مسیر media: {media_dir}")
+    print(f"تصاویر موجود در media: {list(media_dir.glob('*.jpg'))}\n")
     
     # نقشه دقیق عنوان رویدادها به تصاویر
     event_image_mapping = {
@@ -59,10 +60,11 @@ def update_event_images():
                 break
         
         if image_file:
-            source_image = frontend_content / image_file
+            # بررسی وجود تصویر در media directory
+            dest_image = media_dir / image_file
             
-            if source_image.exists():
-                # حذف تصویر قبلی اگر وجود دارد
+            if dest_image.exists():
+                # حذف تصویر قبلی اگر وجود دارد و متفاوت است
                 if event.cover_image:
                     old_image_path = Path(__file__).parent / 'media' / str(event.cover_image)
                     if old_image_path.exists() and old_image_path.name != image_file:
@@ -72,10 +74,6 @@ def update_event_images():
                         except Exception as e:
                             print(f"  ⚠ خطا در حذف تصویر قبلی: {e}")
                 
-                # کپی تصویر جدید
-                dest_image = media_dir / image_file
-                shutil.copy2(source_image, dest_image)
-                
                 # به‌روزرسانی رویداد
                 event.cover_image = f'events/covers/{image_file}'
                 event.save()
@@ -83,7 +81,8 @@ def update_event_images():
                 updated_count += 1
                 print(f"  ✓ تصویر به‌روزرسانی شد: {image_file}")
             else:
-                print(f"  ⚠ تصویر یافت نشد: {source_image}")
+                print(f"  ⚠ تصویر یافت نشد در: {dest_image}")
+                print(f"     لطفاً ابتدا تصویر را به مسیر media/events/covers/ کپی کنید")
                 not_found_count += 1
         else:
             # رویدادهایی که در لیست نیستند را نگه می‌داریم
