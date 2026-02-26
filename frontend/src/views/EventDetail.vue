@@ -45,7 +45,7 @@
                 <img 
                   :src="event.image || '/img/events.png'" 
                   :alt="event.title" 
-                  class="h-full w-full object-cover"
+                  class="h-full w-full object-contain"
                 />
               </div>
 
