@@ -30,6 +30,7 @@
               </div>
               <router-link class="text-sm font-medium leading-normal hover:text-primary transition-colors" to="/services">{{ $t('nav.services') }}</router-link>
               <router-link class="text-sm font-medium leading-normal hover:text-primary transition-colors" to="/team">{{ $t('nav.members') }}</router-link>
+              <router-link class="text-sm font-medium leading-normal hover:text-primary transition-colors" to="/education">{{ $t('nav.education') }}</router-link>
               <div class="relative group">
                 <button class="text-sm font-medium leading-normal hover:text-primary transition-colors flex items-center gap-1">
                   {{ $t('nav.news') }}
@@ -88,6 +89,7 @@
             
             <router-link class="px-4 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/services" @click="closeMobileMenu">{{ $t('nav.services') }}</router-link>
             <router-link class="px-4 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/team" @click="closeMobileMenu">{{ $t('nav.members') }}</router-link>
+            <router-link class="px-4 py-2 text-sm font-medium rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors" to="/education" @click="closeMobileMenu">{{ $t('nav.education') }}</router-link>
             
             <!-- News with submenu -->
             <div>

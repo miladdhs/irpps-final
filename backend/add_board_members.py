@@ -28,10 +28,10 @@ BOARD_MEMBERS_DATA = {
             'role': 'president'
         },
         {
-            'persian_name': 'دکتر قمر تاج خانبابائی',
+            'persian_name': 'دکتر قرم تاج خان بابایی',
             'english_name': 'Dr. Ghamar Taj Khanbabai',
             'position': 'نائب رئیس',
-            'specialty': 'فوق تخصص آسم و آلرژی کودکان',
+            'specialty': 'فوق تخصص ریه کودکان',
             'period': '1395',
             'role': 'vice_president'
         },
@@ -180,10 +180,10 @@ BOARD_MEMBERS_DATA = {
     # اعضای هیئت مدیره سال 1403
     'board_1403': [
         {
-            'persian_name': 'دکتر قمر تاج خانبابائی',
+            'persian_name': 'دکتر قرم تاج خان بابایی',
             'english_name': 'Dr. Ghamar Taj Khanbabai',
             'position': 'رئیس انجمن',
-            'specialty': 'فوق تخصص آسم و آلرژی کودکان',
+            'specialty': 'فوق تخصص ریه کودکان',
             'period': '1403',
             'role': 'president'
         },
