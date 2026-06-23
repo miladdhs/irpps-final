@@ -110,4 +110,3 @@ volumes:
     driver: local
   mysql_data:
     driver: local
-
