@@ -88,10 +88,14 @@
               :key="news.id"
               class="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-slate-900 md:flex-row"
             >
-              <div
-                class="h-48 w-full shrink-0 bg-cover bg-center md:h-auto md:w-64"
-                :style="`background-image: url('${news.image}')`"
-              ></div>
+              <div class="h-48 w-full shrink-0 overflow-hidden bg-slate-100 md:h-auto md:w-64">
+                <img
+                  :src="news.image"
+                  :alt="news.title"
+                  class="h-full w-full object-cover"
+                  @error="handleNewsImageError"
+                >
+              </div>
               <div class="flex flex-1 flex-col p-6">
                 <div class="mb-2 flex items-center justify-between gap-4">
                   <span class="inline-block rounded px-2 py-1 text-xs font-bold" :class="news.categoryClass">
@@ -157,6 +161,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { getApiUrl } from '@/utils/api';
+import { DEFAULT_NEWS_IMAGE, resolveImageUrl } from '@/utils/assets';
 
 type NewsItem = {
   id: number;
@@ -255,10 +260,18 @@ const newsList = computed(() =>
     categoryClass: 'bg-primary/10 text-primary',
     date: formatDate(item.created_at),
     author: item.author,
-    image: item.image ? getApiUrl(item.image) : '/img/news.png',
+    image: resolveImageUrl(item.image, DEFAULT_NEWS_IMAGE),
     slug: item.slug,
   })),
 );
+
+function handleNewsImageError(event: Event) {
+  const img = event.target as HTMLImageElement
+  if (img.src.endsWith(DEFAULT_NEWS_IMAGE)) {
+    return
+  }
+  img.src = DEFAULT_NEWS_IMAGE
+}
 
 const loadPage = async (page: number) => {
   if (page < 1 || page > totalPages.value) {

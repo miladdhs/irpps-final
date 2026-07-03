@@ -45,9 +45,10 @@
             <tr v-for="event in eventsList" :key="event.id">
               <td class="px-6 py-4">
                 <img 
-                  :src="event.image || '/img/events.png'" 
+                  :src="eventImageUrl(event.image)" 
                   alt="تصویر رویداد" 
                   class="w-16 h-16 object-cover rounded"
+                  @error="handleEventImageError"
                 />
               </td>
               <td class="px-6 py-4">
@@ -319,6 +320,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { getApiUrl } from '@/utils/api';
+import { DEFAULT_EVENT_IMAGE, resolveImageUrl } from '@/utils/assets';
 
 type EventItem = {
   id: number;
@@ -374,6 +376,16 @@ const formData = ref({
   is_published: true,
   is_featured: false
 });
+
+const eventImageUrl = (image: string | null) => resolveImageUrl(image, DEFAULT_EVENT_IMAGE);
+
+function handleEventImageError(event: Event) {
+  const img = event.target as HTMLImageElement;
+  if (img.src.endsWith(DEFAULT_EVENT_IMAGE)) {
+    return;
+  }
+  img.src = DEFAULT_EVENT_IMAGE;
+}
 
 const fetchEvents = async () => {
   loading.value = true;

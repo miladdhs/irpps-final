@@ -64,7 +64,13 @@
               :key="event.id"
               class="group flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white transition-all hover:border-primary/30 hover:shadow-lg dark:border-slate-800 dark:bg-slate-900"
             >
-              <div class="relative aspect-[16/9] w-full bg-cover bg-center" :style="`background-image: url('${event.image}')`">
+              <div class="relative aspect-[16/9] w-full overflow-hidden bg-slate-100">
+                <img
+                  :src="event.image"
+                  :alt="event.title"
+                  class="h-full w-full object-cover"
+                  @error="handleEventImageError"
+                >
                 <div class="absolute right-3 top-3 flex items-center gap-1 rounded-full px-3 py-1 text-[10px] font-bold text-white" :class="event.statusClass">
                   <span v-if="event.statusCode === 'registration_open'" class="size-1.5 animate-pulse rounded-full bg-white"></span>
                   {{ event.statusText }}
@@ -160,6 +166,7 @@
 import { computed, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { getApiUrl } from '@/utils/api';
+import { DEFAULT_EVENT_IMAGE, resolveImageUrl } from '@/utils/assets';
 
 type EventItem = {
   id: number;
@@ -272,7 +279,7 @@ const normalizedEvents = computed(() =>
       badgeIcon: 'timer',
       badgeClass: 'bg-red-50 text-red-600',
       buttonText: statusCode === 'registration_open' && !event.retraining_number ? registerText.value : detailsText.value,
-      image: event.image ? getApiUrl(event.image) : '/img/events.png',
+      image: resolveImageUrl(event.image, DEFAULT_EVENT_IMAGE),
       slug: event.slug,
       type: event.event_type,
       filter: event.event_type_code || 'other',
@@ -346,4 +353,12 @@ const fetchEvents = async () => {
 onMounted(() => {
   fetchEvents();
 });
+
+function handleEventImageError(event: Event) {
+  const img = event.target as HTMLImageElement
+  if (img.src.endsWith(DEFAULT_EVENT_IMAGE)) {
+    return
+  }
+  img.src = DEFAULT_EVENT_IMAGE
+}
 </script>

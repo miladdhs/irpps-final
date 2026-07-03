@@ -33,7 +33,7 @@
               </div>
 
               <div class="mb-8 aspect-video overflow-hidden rounded-xl bg-slate-100 dark:bg-slate-800">
-                <img :src="event.image || '/img/events.png'" :alt="event.title" class="h-full w-full object-contain" />
+                <img :src="event.image" :alt="event.title" class="h-full w-full object-contain" @error="handleEventImageError" />
               </div>
 
               <div class="prose prose-slate max-w-none dark:prose-invert">
@@ -120,6 +120,7 @@ import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 import { getApiUrl } from '@/utils/api';
+import { DEFAULT_EVENT_IMAGE, resolveImageUrl } from '@/utils/assets';
 
 const route = useRoute();
 const { locale, t } = useI18n();
@@ -199,7 +200,7 @@ const fetchEvent = async () => {
 
     event.value = {
       ...data.event,
-      image: data.event.image ? getApiUrl(data.event.image) : '/img/events.png',
+      image: resolveImageUrl(data.event.image, DEFAULT_EVENT_IMAGE),
     };
   } catch (error: any) {
     console.error('Failed to load event:', error);
@@ -212,4 +213,12 @@ const fetchEvent = async () => {
 onMounted(() => {
   fetchEvent();
 });
+
+function handleEventImageError(event: Event) {
+  const img = event.target as HTMLImageElement
+  if (img.src.endsWith(DEFAULT_EVENT_IMAGE)) {
+    return
+  }
+  img.src = DEFAULT_EVENT_IMAGE
+}
 </script>

@@ -164,7 +164,9 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const response = await authAPI.uploadProfileImage(file)
       if (response.data.success) {
-        if (user.value) {
+        if (response.data.user) {
+          user.value = response.data.user
+        } else if (user.value) {
           user.value.profile_image = response.data.profile_image_url
         }
         return { success: true, message: response.data.message }
@@ -186,8 +188,10 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const response = await authAPI.deleteProfileImage()
       if (response.data.success) {
-        if (user.value) {
-          user.value.profile_image = undefined
+        if (response.data.user) {
+          user.value = response.data.user
+        } else if (user.value) {
+          user.value.profile_image = ''
         }
         return { success: true, message: response.data.message }
       }

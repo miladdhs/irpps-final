@@ -44,9 +44,10 @@
             <tr v-for="news in newsList" :key="news.id">
               <td class="px-6 py-4">
                 <img 
-                  :src="news.image || '/img/news.png'" 
+                  :src="newsImageUrl(news.image)" 
                   alt="تصویر خبر" 
                   class="w-16 h-16 object-cover rounded"
+                  @error="handleNewsImageError"
                 />
               </td>
               <td class="px-6 py-4">
@@ -202,6 +203,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import { getApiUrl } from '@/utils/api';
+import { DEFAULT_NEWS_IMAGE, resolveImageUrl } from '@/utils/assets';
 
 type NewsItem = {
   id: number;
@@ -242,6 +244,16 @@ const formatDate = (isoDate: string) => {
     return isoDate;
   }
 };
+
+const newsImageUrl = (image: string | null) => resolveImageUrl(image, DEFAULT_NEWS_IMAGE);
+
+function handleNewsImageError(event: Event) {
+  const img = event.target as HTMLImageElement;
+  if (img.src.endsWith(DEFAULT_NEWS_IMAGE)) {
+    return;
+  }
+  img.src = DEFAULT_NEWS_IMAGE;
+}
 
 const fetchNews = async () => {
   loading.value = true;

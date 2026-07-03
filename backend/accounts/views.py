@@ -406,7 +406,8 @@ def upload_profile_image_view(request):
         return JsonResponse({
             'success': True,
             'message': 'عکس پروفایل با موفقیت به‌روزرسانی شد',
-            'profile_image_url': profile_image_url
+            'profile_image_url': profile_image_url,
+            'user': serialize_user_payload(user),
         })
         
     except Exception as e:
@@ -439,7 +440,9 @@ def delete_profile_image_view(request):
         
         return JsonResponse({
             'success': True,
-            'message': 'عکس پروفایل با موفقیت حذف شد'
+            'message': 'عکس پروفایل با موفقیت حذف شد',
+            'profile_image_url': '',
+            'user': serialize_user_payload(user),
         })
         
     except Exception as e:

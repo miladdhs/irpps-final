@@ -49,6 +49,7 @@
               :src="newsImage"
               :alt="newsItem.title"
               class="h-full w-full object-contain p-4"
+              @error="handleNewsImageError"
             />
           </div>
 
@@ -94,6 +95,7 @@ import { useRoute } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 
 import { getApiUrl } from '@/utils/api'
+import { DEFAULT_NEWS_IMAGE, resolveImageUrl } from '@/utils/assets'
 
 type NewsDetailItem = {
   id: number
@@ -130,7 +132,7 @@ const sourceLinkLabel = computed(() => locale.value === 'fa' ? 'مشاهده ف�
 const viewsLabel = computed(() => locale.value === 'fa' ? 'بازدید' : 'views')
 
 const newsImage = computed(() => {
-  return newsItem.value?.image ? getApiUrl(newsItem.value.image) : '/img/news.png'
+  return resolveImageUrl(newsItem.value?.image, DEFAULT_NEWS_IMAGE)
 })
 
 const tagList = computed(() => {
@@ -188,6 +190,14 @@ const fetchNewsDetail = async () => {
       cache: 'no-store',
     })
 
+    if (response.status === 404) {
+      error.value = locale.value === 'fa'
+        ? 'این خبر دیگر وجود ندارد یا حذف شده است.'
+        : 'This news item no longer exists.'
+      newsItem.value = null
+      return
+    }
+
     if (!response.ok) {
       throw new Error(
         locale.value === 'fa'
@@ -212,4 +222,12 @@ const fetchNewsDetail = async () => {
 watch(() => route.params.slug, fetchNewsDetail)
 
 onMounted(fetchNewsDetail)
+
+function handleNewsImageError(event: Event) {
+  const img = event.target as HTMLImageElement
+  if (img.src.endsWith(DEFAULT_NEWS_IMAGE)) {
+    return
+  }
+  img.src = DEFAULT_NEWS_IMAGE
+}
 </script>

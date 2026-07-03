@@ -8,8 +8,8 @@
             <div v-if="profileImage" class="w-20 h-20 rounded-full overflow-hidden border-4 border-blue-100">
               <img :src="profileImage" :alt="greeting" class="w-full h-full object-cover" />
             </div>
-            <div v-else class="w-20 h-20 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white text-2xl font-bold">
-              {{ userInitials }}
+            <div v-else class="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center">
+              <img src="/iconly/Svg/Light/Profile.svg" alt="" aria-hidden="true" class="h-10 w-10 opacity-60" />
             </div>
             <div>
               <h1 class="text-2xl font-bold text-gray-900">{{ greeting }}</h1>
@@ -97,6 +97,31 @@
           {{ personalInfoMessage }}
         </div>
 
+        <div class="mb-6 rounded-xl border border-gray-200 p-5">
+          <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div class="flex items-center gap-4">
+              <div v-if="profileImage" class="h-24 w-24 overflow-hidden rounded-full border-4 border-blue-100">
+                <img :src="profileImage" :alt="greeting" class="h-full w-full object-cover" @error="handleProfileImageError" />
+              </div>
+              <div v-else class="flex h-24 w-24 items-center justify-center rounded-full bg-gray-100">
+                <img src="/iconly/Svg/Light/Profile.svg" alt="" aria-hidden="true" class="h-14 w-14 opacity-60" />
+              </div>
+              <div class="text-sm text-gray-500">
+                عکس پروفایل شما در کارت اعضا و پنل کاربری نمایش داده می‌شود.
+              </div>
+            </div>
+            <div class="flex flex-col gap-3 md:w-64">
+              <input ref="profileImageInput" type="file" accept="image/*" class="hidden" @change="handleProfileImageUpload" />
+              <button type="button" class="rounded-lg bg-blue-600 px-4 py-3 text-sm font-medium text-white transition hover:bg-blue-700 disabled:opacity-50" :disabled="profileImageLoading" @click="openProfileImagePicker">
+                {{ profileImageLoading ? 'در حال آپلود...' : 'تغییر عکس پروفایل' }}
+              </button>
+              <button type="button" class="rounded-lg border border-gray-300 px-4 py-3 text-sm font-medium text-gray-700 transition hover:bg-gray-50 disabled:opacity-50" :disabled="profileImageLoading || !profileImage" @click="deleteProfileImage">
+                حذف عکس
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">نام فارسی</label>
@@ -154,6 +179,8 @@ const authStore = useAuthStore()
 
 const activeTab = ref('profile')
 const profileImage = ref('')
+const profileImageInput = ref<HTMLInputElement | null>(null)
+const profileImageLoading = ref(false)
 const personalInfoLoading = ref(false)
 const personalInfoMessage = ref('')
 const personalInfoError = ref(false)
@@ -163,13 +190,6 @@ const personalInfo = ref({
   last_name: '',
   email: '',
   phone: ''
-})
-
-const userInitials = computed(() => {
-  if (!authStore.user) return 'U'
-  const firstName = personalInfo.value.first_name || ''
-  const lastName = personalInfo.value.last_name || ''
-  return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase() || authStore.user.username.charAt(0).toUpperCase()
 })
 
 const greeting = computed(() => {
@@ -198,6 +218,8 @@ async function fetchProfile() {
         profileImage.value = data.user.profile_image.startsWith('http') 
           ? data.user.profile_image 
           : getApiUrl(data.user.profile_image)
+      } else {
+        profileImage.value = ''
       }
     }
   } catch (error) {
@@ -242,6 +264,57 @@ async function updatePersonalInfo() {
 async function handleLogout() {
   await authStore.logout()
   router.push('/')
+}
+
+function openProfileImagePicker() {
+  profileImageInput.value?.click()
+}
+
+async function handleProfileImageUpload(event: Event) {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+  if (!file) {
+    return
+  }
+
+  profileImageLoading.value = true
+  personalInfoMessage.value = ''
+  personalInfoError.value = false
+
+  const result = await authStore.uploadProfileImage(file)
+  if (result.success) {
+    profileImage.value = authStore.user?.profile_image
+      ? (authStore.user.profile_image.startsWith('http') ? authStore.user.profile_image : getApiUrl(authStore.user.profile_image))
+      : ''
+    personalInfoMessage.value = result.message || 'عکس پروفایل با موفقیت به‌روزرسانی شد'
+  } else {
+    personalInfoMessage.value = result.error || 'خطا در آپلود عکس پروفایل'
+    personalInfoError.value = true
+  }
+
+  target.value = ''
+  profileImageLoading.value = false
+}
+
+async function deleteProfileImage() {
+  profileImageLoading.value = true
+  personalInfoMessage.value = ''
+  personalInfoError.value = false
+
+  const result = await authStore.deleteProfileImage()
+  if (result.success) {
+    profileImage.value = ''
+    personalInfoMessage.value = result.message || 'عکس پروفایل حذف شد'
+  } else {
+    personalInfoMessage.value = result.error || 'خطا در حذف عکس پروفایل'
+    personalInfoError.value = true
+  }
+
+  profileImageLoading.value = false
+}
+
+function handleProfileImageError() {
+  profileImage.value = ''
 }
 
 onMounted(() => {

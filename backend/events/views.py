@@ -12,6 +12,8 @@ from django.utils.dateparse import parse_datetime
 import json
 from .models import Event, EventRegistration
 
+DEFAULT_EVENT_IMAGE = '/img/events.png'
+
 # Try to import jdatetime for Persian date conversion
 try:
     import jdatetime
@@ -38,6 +40,26 @@ def _safe_positive_int(value, default, max_value=None):
 
 def is_staff(user):
     return user.is_staff
+
+
+def _image_url(image_field, default_url=None):
+    if not image_field:
+        return default_url
+
+    try:
+        if not image_field.storage.exists(image_field.name):
+            return default_url
+        return image_field.url
+    except Exception:
+        return default_url
+
+
+def _event_image_url(event):
+    return (
+        _image_url(event.cover_image)
+        or _image_url(event.image)
+        or DEFAULT_EVENT_IMAGE
+    )
 
 
 def calculate_event_dates(event_year, event_month):
@@ -181,7 +203,7 @@ def event_list(request):
             'short_description': item.short_description or '',
             'event_type': item.get_event_type_display(),
             'event_type_code': item.event_type,
-            'image': item.cover_image.url if item.cover_image else (item.image.url if item.image else None),
+            'image': _event_image_url(item),
             'location': item.location,
             'event_month': item.event_month,
             'event_year': item.event_year,
@@ -247,7 +269,7 @@ def event_detail(request, slug):
             'short_description': event.short_description or '',
             'event_type': event.get_event_type_display(),
             'event_type_code': event.event_type,
-            'image': event.cover_image.url if event.cover_image else (event.image.url if event.image else None),
+            'image': _event_image_url(event),
             'location': event.location,
             'event_month': event.event_month,
             'event_year': event.event_year,

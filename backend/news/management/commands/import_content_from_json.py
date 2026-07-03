@@ -4,6 +4,7 @@ Usage: python manage.py import_content_from_json --file path/to/file.json [--aut
 """
 import json
 import os
+import shutil
 import sys
 import re
 from datetime import datetime, timedelta
@@ -35,6 +36,16 @@ User = get_user_model()
 
 class Command(BaseCommand):
     help = 'Import News and Announcements from structured_content_complete.json file'
+    NEWS_IMAGE_OVERRIDES = {}
+    EVENT_COVER_OVERRIDES = {
+        'fifth-annual-conference-ispp': 'photo_2025-12-05_21-18-04.jpg',
+        'chaharomin-hamayesh-webinar-1400': 'chaharomin hamayesh.jpg',
+        'sevomin-kongre-bimarihaye-tanafosi-1398': 'sevomin kongere.jpg',
+        'sheshomin-seminar-bimarihaye-tanafosi-1404': 'seshomin seminar.jpg',
+        'webinar-world-asthma-day-2025': 'asthma.jpg',
+        'webinar-world-pneumonia-day': 'penomoni.jpg',
+        'first-national-congress-pediatric-respiratory': 'avalin kongere.jpg',
+    }
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -123,11 +134,13 @@ class Command(BaseCommand):
 
         self.stdout.write(self.style.SUCCESS(f'Using author: {author.username} (ID: {author.id})'))
 
+        content_dir = file_path.parent
+
         # Import data
         with transaction.atomic():
-            news_count = self.import_news(data.get('news', []), author, update_existing)
-            announcements_count = self.import_announcements(data.get('announcements', []), author, update_existing)
-            events_count = self.import_events(data.get('events', []), author, update_existing)
+            news_count = self.import_news(data.get('news', []), author, update_existing, content_dir)
+            announcements_count = self.import_announcements(data.get('announcements', []), author, update_existing, content_dir)
+            events_count = self.import_events(data.get('events', []), author, update_existing, content_dir)
 
         self.stdout.write(self.style.SUCCESS(
             f'\nImport completed successfully!\n'
@@ -158,7 +171,7 @@ class Command(BaseCommand):
         any_user = User.objects.first()
         return any_user
 
-    def import_news(self, news_list, author, update_existing):
+    def import_news(self, news_list, author, update_existing, content_dir):
         """Import news items"""
         created_count = 0
         updated_count = 0
@@ -205,8 +218,8 @@ class Command(BaseCommand):
             }
 
             # Handle image (if provided as path)
-            image = news_data.get('image')
-            if image and image not in (None, '', 'null'):
+            image = self.resolve_news_image(slug, news_data.get('image') or news_data.get('cover_image_path'), content_dir)
+            if image:
                 defaults['image'] = image
 
             # Handle dates - set created_at to one month before current time
@@ -246,7 +259,7 @@ class Command(BaseCommand):
 
         return {'created': created_count, 'updated': updated_count}
 
-    def import_announcements(self, announcements_list, author, update_existing):
+    def import_announcements(self, announcements_list, author, update_existing, content_dir):
         """Import announcement items"""
         created_count = 0
         updated_count = 0
@@ -290,8 +303,8 @@ class Command(BaseCommand):
             }
 
             # Handle image (if provided as path)
-            image = ann_data.get('image')
-            if image and image not in (None, '', 'null'):
+            image = self.resolve_news_image(slug, ann_data.get('image'), content_dir)
+            if image:
                 defaults['image'] = image
 
             # Handle dates - set created_at to one month before current time
@@ -330,7 +343,7 @@ class Command(BaseCommand):
 
         return {'created': created_count, 'updated': updated_count}
 
-    def import_events(self, events_list, author, update_existing):
+    def import_events(self, events_list, author, update_existing, content_dir):
         """Import event items"""
         created_count = 0
         updated_count = 0
@@ -382,12 +395,16 @@ class Command(BaseCommand):
             }
 
             # Handle image (if provided as path)
-            image = event_data.get('image')
-            if image and image not in (None, '', 'null'):
+            image = self.resolve_event_cover_image(slug, event_data.get('image'), content_dir, fallback_name='events.png')
+            if image:
                 defaults['image'] = image
 
-            cover_image = event_data.get('cover_image')
-            if cover_image and cover_image not in (None, '', 'null'):
+            cover_image = self.resolve_event_cover_image(
+                slug,
+                event_data.get('cover_image') or event_data.get('cover_image_path'),
+                content_dir,
+            )
+            if cover_image:
                 defaults['cover_image'] = cover_image
 
             # Calculate event date from Persian year and month
@@ -462,4 +479,43 @@ class Command(BaseCommand):
                 self.stdout.write(f'  + Created: {event_data.get("title", slug)}')
 
         return {'created': created_count, 'updated': updated_count}
+
+    def resolve_news_image(self, slug, image_name, content_dir: Path):
+        preferred_name = image_name if image_name not in (None, '', 'null') else self.NEWS_IMAGE_OVERRIDES.get(slug)
+        if preferred_name:
+            copied = self.copy_content_asset(content_dir / preferred_name, 'news/imported')
+            if copied:
+                return copied
+        return self.copy_public_default('news.png', 'news/default-news.png')
+
+    def resolve_event_cover_image(self, slug, image_name, content_dir: Path, fallback_name='events.png'):
+        preferred_name = image_name if image_name not in (None, '', 'null') else self.EVENT_COVER_OVERRIDES.get(slug)
+        if preferred_name:
+            copied = self.copy_content_asset(content_dir / preferred_name, 'events/covers')
+            if copied:
+                return copied
+        return self.copy_public_default(fallback_name, f'events/covers/default-{fallback_name}')
+
+    def copy_content_asset(self, source: Path, target_subdir: str):
+        if not source.exists():
+            return None
+
+        target_dir = Path(settings.MEDIA_ROOT) / target_subdir
+        target_dir.mkdir(parents=True, exist_ok=True)
+        target = target_dir / source.name
+        shutil.copy2(source, target)
+        return f'{target_subdir}/{source.name}'.replace('\\', '/')
+
+    def copy_public_default(self, source_name: str, relative_target: str):
+        candidates = [
+            Path(settings.BASE_DIR).parent / 'frontend' / 'public' / 'img' / source_name,
+            Path(settings.BASE_DIR).parent.parent / 'frontend' / 'public' / 'img' / source_name,
+            Path('/opt/irpps/src/frontend/public/img') / source_name,
+        ]
+        source = next((path for path in candidates if path.exists()), candidates[0])
+        target = Path(settings.MEDIA_ROOT) / relative_target
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if source.exists() and not target.exists():
+            shutil.copy2(source, target)
+        return relative_target.replace('\\', '/')
 

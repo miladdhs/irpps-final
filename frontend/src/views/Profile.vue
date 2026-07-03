@@ -28,6 +28,7 @@
                 class="h-full w-full object-cover"
                 @error="handleProfileImageError"
               >
+              <img v-else-if="!defaultIconBroken" src="/iconly/Svg/Light/Profile.svg" alt="" aria-hidden="true" class="h-24 w-24 opacity-60" @error="defaultIconBroken = true">
               <span v-else class="material-symbols-outlined text-7xl text-gray-400">person</span>
             </div>
 
@@ -139,6 +140,7 @@
 <script setup lang="ts">
 import { computed, onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
+import { resolveImageUrl } from '@/utils/assets'
 
 const authStore = useAuthStore()
 
@@ -155,6 +157,7 @@ const successMessage = ref('')
 const errorMessage = ref('')
 const imageInput = ref<HTMLInputElement | null>(null)
 const imageBroken = ref(false)
+const defaultIconBroken = ref(false)
 
 onMounted(() => {
   if (authStore.user) {
@@ -172,9 +175,7 @@ const currentProfileImage = computed(() => {
   if (!image) {
     return ''
   }
-  return image.startsWith('http://') || image.startsWith('https://') || image.startsWith('/')
-    ? image
-    : `/${image}`
+  return resolveImageUrl(image, '')
 })
 
 async function handleUpdateProfile() {

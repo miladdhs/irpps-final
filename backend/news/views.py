@@ -8,6 +8,42 @@ import json
 from .models import News, Announcement
 
 
+DEFAULT_NEWS_IMAGE = '/img/news.png'
+
+
+def _image_url(image_field, default_url=DEFAULT_NEWS_IMAGE):
+    if not image_field:
+        return default_url
+
+    try:
+        if not image_field.storage.exists(image_field.name):
+            return default_url
+        return image_field.url
+    except Exception:
+        return default_url
+
+
+def _serialize_news(item, include_content=True):
+    payload = {
+        'id': item.id,
+        'title': item.title,
+        'slug': item.slug,
+        'short_content': item.short_content or '',
+        'category': item.category or '',
+        'tags': item.tags or '',
+        'source': item.source or '',
+        'image': _image_url(item.image),
+        'author': item.author.get_full_name() or item.author.username,
+        'is_published': item.is_published,
+        'views': item.views,
+        'created_at': item.created_at.isoformat(),
+        'updated_at': item.updated_at.isoformat(),
+    }
+    if include_content:
+        payload['content'] = item.content
+    return payload
+
+
 def _safe_positive_int(value, default, max_value=None):
     """Convert value to a positive int, falling back to default when invalid."""
     try:
@@ -46,22 +82,7 @@ def news_list(request):
     paginator = Paginator(news, per_page)
     page_obj = paginator.get_page(page)
     
-    news_data = [{
-        'id': item.id,
-        'title': item.title,
-        'slug': item.slug,
-        'content': item.content,
-        'short_content': item.short_content or '',
-        'category': item.category or '',
-        'tags': item.tags or '',
-        'source': item.source or '',
-        'image': item.image.url if item.image else None,
-        'author': item.author.get_full_name() or item.author.username,
-        'is_published': item.is_published,
-        'views': item.views,
-        'created_at': item.created_at.isoformat(),
-        'updated_at': item.updated_at.isoformat(),
-    } for item in page_obj]
+    news_data = [_serialize_news(item) for item in page_obj]
     
     return JsonResponse({
         'success': True,
@@ -79,27 +100,28 @@ def news_list(request):
 @require_http_methods(["GET"])
 def news_detail(request, slug):
     """Get single news item"""
-    news = get_object_or_404(News, slug=slug, is_published=True)
+    queryset = News.objects.all() if request.user.is_authenticated and request.user.is_staff else News.objects.filter(is_published=True)
+    news = get_object_or_404(queryset, slug=slug)
     news.views += 1
     news.save(update_fields=['views'])
     
     return JsonResponse({
         'success': True,
-        'news': {
-            'id': news.id,
-            'title': news.title,
-            'slug': news.slug,
-            'content': news.content,
-            'short_content': news.short_content or '',
-            'category': news.category or '',
-            'tags': news.tags or '',
-            'source': news.source or '',
-            'image': news.image.url if news.image else None,
-            'author': news.author.get_full_name() or news.author.username,
-            'views': news.views,
-            'created_at': news.created_at.isoformat(),
-            'updated_at': news.updated_at.isoformat(),
-        }
+        'news': _serialize_news(news)
+    })
+
+
+@require_http_methods(["GET"])
+def news_detail_by_id(request, id):
+    """Get single news item by numeric id for legacy links."""
+    queryset = News.objects.all() if request.user.is_authenticated and request.user.is_staff else News.objects.filter(is_published=True)
+    news = get_object_or_404(queryset, id=id)
+    news.views += 1
+    news.save(update_fields=['views'])
+
+    return JsonResponse({
+        'success': True,
+        'news': _serialize_news(news)
     })
 
 
@@ -236,7 +258,7 @@ def announcement_list(request):
         'title': item.title,
         'slug': item.slug,
         'content': item.content[:200] + '...' if len(item.content) > 200 else item.content,
-        'image': item.image.url if item.image else None,
+        'image': _image_url(item.image),
         'author': item.author.get_full_name() or item.author.username,
         'is_important': item.is_important,
         'is_published': item.is_published,

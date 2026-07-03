@@ -19,6 +19,7 @@ urlpatterns = [
     # News detail URLs (must be after specific paths)
     path('<int:id>/update/', views.news_update, name='news_update'),
     path('<int:id>/delete/', views.news_delete, name='news_delete'),
+    path('<int:id>/', views.news_detail_by_id, name='news_detail_by_id'),
     path('<slug:slug>/', views.news_detail, name='news_detail'),
 ]
 
