@@ -99,27 +99,6 @@
         </div>
       </section>
 
-      <!-- Founders Section - موسسین انجمن -->
-      <section class="mb-10">
-        <div class="text-center mb-16">
-          <h3 class="text-slate-900 dark:text-white text-3xl font-bold mb-4">موسسین انجمن</h3>
-          <p class="text-slate-500 dark:text-slate-400">{{ $t('about.foundersSubtitle') }}</p>
-          <p class="text-slate-600 dark:text-slate-400 mt-2 text-sm">تاریخ تأسیس: ۱۶ آذر ۱۳۹۵</p>
-        </div>
-
-        <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-          <div v-for="(member, index) in founders1395" :key="index" class="group text-center">
-            <div class="relative w-32 h-32 mx-auto mb-3 rounded-full overflow-hidden border-4 border-white dark:border-slate-800 shadow-lg group-hover:border-primary transition-all">
-              <div class="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-                <span class="material-symbols-outlined text-5xl text-primary/40">person</span>
-              </div>
-            </div>
-            <h5 class="text-slate-900 dark:text-white text-base font-bold mb-1">{{ member.name }}</h5>
-            <p class="text-primary font-medium text-sm mb-1">{{ member.position }}</p>
-            <p class="text-slate-500 dark:text-slate-400 text-xs">{{ member.specialty }}</p>
-          </div>
-        </div>
-      </section>
     </div>
   </div>
 </template>

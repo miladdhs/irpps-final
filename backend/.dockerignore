@@ -69,8 +69,8 @@ Thumbs.db
 backups/
 *.json
 !package*.json
-ispp_db.json
-structured_content_complete.json
+!ispp_db.json
+!structured_content_complete.json
 
 # Scripts (keep only essential)
 *.sh
