@@ -12,10 +12,10 @@ const routes = [
   { path: '/about/history', name: 'history', component: () => import('../views/History.vue') },
   { path: '/about/gallery', name: 'gallery', component: () => import('../views/Gallery.vue') },
   { path: '/about/board-members', name: 'board-members', component: () => import('../views/BoardMembers.vue') },
-  // Legacy routes - redirect to new board members page
-  { path: '/about/board-first', redirect: '/about/board-members' },
-  { path: '/about/board-second', redirect: '/about/board-members' },
-  { path: '/about/board-third', redirect: '/about/board-members' },
+  // Legacy routes - preserve the originally selected term
+  { path: '/about/board-first', redirect: { name: 'board-members', query: { period: '1395' } } },
+  { path: '/about/board-second', redirect: { name: 'board-members', query: { period: '1400' } } },
+  { path: '/about/board-third', redirect: { name: 'board-members', query: { period: '1403' } } },
   { path: '/services', name: 'services', component: Services },
   { path: '/news', name: 'news', component: () => import('../views/News.vue') },
   { path: '/events', name: 'events', component: () => import('../views/Events.vue') },
@@ -97,9 +97,9 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const authStore = useAuthStore();
   
-  // Try to fetch profile if not already authenticated
-  if (!authStore.isAuthenticated && !authStore.isLoading) {
-    await authStore.fetchProfile();
+  // Always sync auth state on navigation so login/logout status updates without hard refresh
+  if (!authStore.isLoading) {
+    await authStore.fetchProfile(authStore.hasInitialized);
   }
   
   // Check if route requires authentication
@@ -124,5 +124,3 @@ router.beforeEach(async (to, from, next) => {
 });
 
 export default router;
-
-

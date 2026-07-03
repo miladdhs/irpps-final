@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { computed, ref } from 'vue'
 import { authAPI } from '@/services/api'
 
 export interface User {
@@ -25,23 +25,23 @@ export const useAuthStore = defineStore('auth', () => {
   const isAuthenticated = ref(false)
   const isLoading = ref(false)
   const error = ref<string | null>(null)
+  const hasInitialized = ref(false)
 
   const isAdmin = computed(() => user.value?.is_staff || false)
 
-  // Login
   async function login(username: string, password: string) {
     isLoading.value = true
     error.value = null
+
     try {
       const response = await authAPI.login(username, password)
-      if (response.data.success) {
-        user.value = response.data.user
-        isAuthenticated.value = true
-        return { success: true, message: response.data.message }
-      } else {
+      if (!response.data.success) {
         error.value = response.data.errors
         return { success: false, error: response.data.errors }
       }
+
+      await fetchProfile(true)
+      return { success: true, message: response.data.message }
     } catch (err: any) {
       const errorMessage = err.response?.data?.errors || 'خطا در ورود'
       error.value = errorMessage
@@ -51,7 +51,6 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  // Register
   async function register(data: {
     username: string
     email: string
@@ -63,15 +62,15 @@ export const useAuthStore = defineStore('auth', () => {
   }) {
     isLoading.value = true
     error.value = null
+
     try {
       const response = await authAPI.register(data)
       if (response.data.success) {
-        // Don't auto-login after registration (pending approval)
         return { success: true, message: response.data.message }
-      } else {
-        error.value = response.data.errors
-        return { success: false, error: response.data.errors }
       }
+
+      error.value = response.data.errors
+      return { success: false, error: response.data.errors }
     } catch (err: any) {
       const errorMessage = err.response?.data?.errors || 'خطا در ثبت نام'
       error.value = errorMessage
@@ -81,44 +80,56 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  // Logout
   async function logout() {
     isLoading.value = true
+
     try {
       await authAPI.logout()
-      user.value = null
-      isAuthenticated.value = false
     } catch (err) {
       console.error('Logout error:', err)
     } finally {
+      user.value = null
+      isAuthenticated.value = false
+      hasInitialized.value = true
       isLoading.value = false
     }
   }
 
-  // Get profile
-  async function fetchProfile() {
+  async function fetchProfile(force = false) {
+    if (isLoading.value && !force) {
+      return { success: isAuthenticated.value }
+    }
+
     isLoading.value = true
     error.value = null
+
     try {
       const response = await authAPI.getProfile()
       if (response.data.success) {
         user.value = response.data.user
         isAuthenticated.value = true
+        hasInitialized.value = true
         return { success: true }
       }
+
+      user.value = null
+      isAuthenticated.value = false
+      hasInitialized.value = true
+      return { success: false }
     } catch (err: any) {
       if (err.response?.status !== 401) {
         error.value = 'خطا در دریافت اطلاعات کاربر'
       }
+
       user.value = null
       isAuthenticated.value = false
+      hasInitialized.value = true
       return { success: false }
     } finally {
       isLoading.value = false
     }
   }
 
-  // Update profile
   async function updateProfile(data: {
     first_name?: string
     last_name?: string
@@ -127,12 +138,14 @@ export const useAuthStore = defineStore('auth', () => {
   }) {
     isLoading.value = true
     error.value = null
+
     try {
       const response = await authAPI.updateProfile(data)
       if (response.data.success) {
         user.value = response.data.user
         return { success: true, message: response.data.message }
       }
+      return { success: false, error: response.data.errors }
     } catch (err: any) {
       const errorMessage = err.response?.data?.errors || 'خطا در بروزرسانی پروفایل'
       error.value = errorMessage
@@ -142,10 +155,10 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  // Upload profile image
   async function uploadProfileImage(file: File) {
     isLoading.value = true
     error.value = null
+
     try {
       const response = await authAPI.uploadProfileImage(file)
       if (response.data.success) {
@@ -154,6 +167,7 @@ export const useAuthStore = defineStore('auth', () => {
         }
         return { success: true, message: response.data.message }
       }
+      return { success: false, error: response.data.errors }
     } catch (err: any) {
       const errorMessage = err.response?.data?.errors || 'خطا در آپلود تصویر'
       error.value = errorMessage
@@ -163,10 +177,10 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  // Delete profile image
   async function deleteProfileImage() {
     isLoading.value = true
     error.value = null
+
     try {
       const response = await authAPI.deleteProfileImage()
       if (response.data.success) {
@@ -175,6 +189,7 @@ export const useAuthStore = defineStore('auth', () => {
         }
         return { success: true, message: response.data.message }
       }
+      return { success: false, error: response.data.errors }
     } catch (err: any) {
       const errorMessage = err.response?.data?.errors || 'خطا در حذف تصویر'
       error.value = errorMessage
@@ -184,7 +199,6 @@ export const useAuthStore = defineStore('auth', () => {
     }
   }
 
-  // Update resume
   async function updateResume(data: {
     education?: string
     publications?: string
@@ -196,15 +210,16 @@ export const useAuthStore = defineStore('auth', () => {
   }) {
     isLoading.value = true
     error.value = null
+
     try {
       const response = await authAPI.updateResume(data)
       if (response.data.success) {
-        // Update user with resume data
         if (user.value) {
           Object.assign(user.value, response.data.resume)
         }
         return { success: true, message: response.data.message }
       }
+      return { success: false, error: response.data.errors }
     } catch (err: any) {
       const errorMessage = err.response?.data?.errors || 'خطا در بروزرسانی رزومه'
       error.value = errorMessage
@@ -219,6 +234,7 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated,
     isLoading,
     error,
+    hasInitialized,
     isAdmin,
     login,
     register,

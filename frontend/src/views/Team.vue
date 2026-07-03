@@ -247,9 +247,11 @@ async function fetchMembers() {
     const timestamp = Date.now();
     const apiUrl = getApiUrl(`/api/accounts/members/?t=${timestamp}`);
     const response = await fetch(apiUrl, {
+      credentials: 'include',
+      cache: 'no-store',
       headers: {
         'Accept': 'application/json',
-        'Cache-Control': 'no-cache'
+        'Cache-Control': 'no-cache, no-store, must-revalidate'
       }
     });
 
