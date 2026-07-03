@@ -1,6 +1,7 @@
 from pathlib import Path
 
 from django.contrib.auth import get_user_model
+from django.conf import settings
 from django.core.management import BaseCommand, call_command
 from django.db import transaction
 from django.utils import timezone
@@ -37,7 +38,7 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, **options):
-        base_dir = Path(__file__).resolve().parents[4]
+        base_dir = Path(settings.BASE_DIR)
         users_file = Path(options["users_file"]) if options["users_file"] else base_dir / "ispp_db.json"
         content_file = (
             Path(options["content_file"])
@@ -82,8 +83,9 @@ class Command(BaseCommand):
     def _resolve_content_file(self, base_dir: Path):
         candidates = [
             base_dir / "import_content" / "structured_content_complete.json",
-            base_dir.parent / "frontend" / "public" / "Content" / "structured_content_complete.json",
             base_dir / "structured_content_complete.json",
+            base_dir / "import_content" / "Content" / "structured_content_complete.json",
+            base_dir.parent / "frontend" / "public" / "Content" / "structured_content_complete.json",
             Path("/opt/irpps/src/frontend/public/Content/structured_content_complete.json"),
         ]
         for candidate in candidates:

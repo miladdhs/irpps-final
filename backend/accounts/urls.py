@@ -7,11 +7,14 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout_api'),
     path('profile/', views.profile_view, name='profile_api'),
     path('profile/update/', views.update_profile_view, name='update_profile_api'),
+    path('profile/image/upload/', views.upload_profile_image_view, name='upload_profile_image_api_alias'),
     path('upload-profile-image/', views.upload_profile_image_view, name='upload_profile_image_api'),
+    path('profile/image/delete/', views.delete_profile_image_view, name='delete_profile_image_api_alias'),
     path('delete-profile-image/', views.delete_profile_image_view, name='delete_profile_image_api'),
+    path('profile/resume/update/', views.update_resume_view, name='update_resume_api_alias'),
     path('update-resume/', views.update_resume_view, name='update_resume_api'),
     path('members/', views.members_list_view, name='members_list_api'),
-    path('board-members/', views.board_members_view, name='board_members_api'),
+    path('board-members/', views.board_members_view_v2, name='board_members_api'),
     
     # Membership management endpoints (admin only)
     path('members/pending/', views.pending_members_view, name='pending_members_api'),

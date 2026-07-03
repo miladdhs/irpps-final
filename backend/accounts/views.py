@@ -7,6 +7,7 @@ from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import get_user_model
 import json
 from .forms import CustomUserCreationForm
+from add_board_members import BOARD_MEMBERS_DATA, create_username
 
 User = get_user_model()
 
@@ -41,6 +42,10 @@ def login_view(request):
                         'last_name': user.last_name,
                         'email': user.email,
                         'phone': user.phone,
+                        'is_staff': user.is_staff,
+                        'is_superuser': user.is_superuser,
+                        'approval_status': getattr(user, 'approval_status', None),
+                        'profile_image': user.profile_image.url if user.profile_image else '',
                     }
                 })
             else:
@@ -236,7 +241,10 @@ def members_list_view(request):
         User = get_user_model()
         
         # Get all users from database (exclude superusers/admin)
-        members = User.objects.filter(is_superuser=False).order_by('first_name', 'last_name')
+        members = User.objects.filter(
+            is_superuser=False,
+            is_active=True,
+        ).exclude(username__startswith='system_import').order_by('first_name', 'last_name')
         
         members_data = []
         request_scheme = request.scheme
@@ -645,6 +653,55 @@ def reject_member_view(request, user_id):
             'success': False,
             'errors': 'خطا در پردازش درخواست'
         }, status=400)
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'errors': str(e)
+        }, status=500)
+
+
+@require_http_methods(["GET"])
+def board_members_view_v2(request):
+    """Get board members grouped by period using the canonical config data."""
+    try:
+        result = {}
+
+        for period_key, configured_members in BOARD_MEMBERS_DATA.items():
+            period = configured_members[0]['period'] if configured_members else period_key
+            members_data = []
+
+            for configured_member in configured_members:
+                username = create_username(configured_member['persian_name'])
+                member = User.objects.filter(username=username).first()
+
+                profile_image_url = ''
+                if member and member.profile_image:
+                    try:
+                        profile_image_url = member.profile_image.url
+                        if profile_image_url and not profile_image_url.startswith('/'):
+                            profile_image_url = f"/{profile_image_url}"
+                    except Exception:
+                        profile_image_url = ''
+
+                members_data.append({
+                    'id': member.id if member else None,
+                    'username': username,
+                    'persian_name': configured_member['persian_name'],
+                    'english_name': configured_member['english_name'],
+                    'display_name': configured_member['persian_name'],
+                    'position': configured_member['position'],
+                    'role': configured_member['role'],
+                    'specialty': (member.specialty if member else None) or configured_member['specialty'] or '',
+                    'bio': (member.bio if member else None) or f"{configured_member['position']} - دوره {configured_member['period']}",
+                    'profile_image': profile_image_url,
+                })
+
+            result[period] = members_data
+
+        return JsonResponse({
+            'success': True,
+            'board_members': result,
+        })
     except Exception as e:
         return JsonResponse({
             'success': False,
