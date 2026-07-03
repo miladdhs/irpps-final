@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { computed, ref } from 'vue'
 import { authAPI } from '@/services/api'
+import i18n from '@/i18n'
 
 export interface User {
   id: number
@@ -28,6 +29,7 @@ export const useAuthStore = defineStore('auth', () => {
   const hasInitialized = ref(false)
 
   const isAdmin = computed(() => user.value?.is_staff || false)
+  const t = (fa: string, en: string) => (i18n.global.locale.value === 'fa' ? fa : en)
 
   async function login(username: string, password: string) {
     isLoading.value = true
@@ -43,7 +45,7 @@ export const useAuthStore = defineStore('auth', () => {
       await fetchProfile(true)
       return { success: true, message: response.data.message }
     } catch (err: any) {
-      const errorMessage = err.response?.data?.errors || 'خطا در ورود'
+      const errorMessage = err.response?.data?.errors || t('خطا در ورود', 'Login failed')
       error.value = errorMessage
       return { success: false, error: errorMessage }
     } finally {
@@ -72,7 +74,7 @@ export const useAuthStore = defineStore('auth', () => {
       error.value = response.data.errors
       return { success: false, error: response.data.errors }
     } catch (err: any) {
-      const errorMessage = err.response?.data?.errors || 'خطا در ثبت نام'
+      const errorMessage = err.response?.data?.errors || t('خطا در ثبت نام', 'Registration failed')
       error.value = errorMessage
       return { success: false, error: errorMessage }
     } finally {
@@ -118,7 +120,7 @@ export const useAuthStore = defineStore('auth', () => {
       return { success: false }
     } catch (err: any) {
       if (err.response?.status !== 401) {
-        error.value = 'خطا در دریافت اطلاعات کاربر'
+        error.value = t('خطا در دریافت اطلاعات کاربر', 'Failed to load user profile')
       }
 
       user.value = null
@@ -147,7 +149,7 @@ export const useAuthStore = defineStore('auth', () => {
       }
       return { success: false, error: response.data.errors }
     } catch (err: any) {
-      const errorMessage = err.response?.data?.errors || 'خطا در بروزرسانی پروفایل'
+      const errorMessage = err.response?.data?.errors || t('خطا در بروزرسانی پروفایل', 'Profile update failed')
       error.value = errorMessage
       return { success: false, error: errorMessage }
     } finally {
@@ -169,7 +171,7 @@ export const useAuthStore = defineStore('auth', () => {
       }
       return { success: false, error: response.data.errors }
     } catch (err: any) {
-      const errorMessage = err.response?.data?.errors || 'خطا در آپلود تصویر'
+      const errorMessage = err.response?.data?.errors || t('خطا در آپلود تصویر', 'Image upload failed')
       error.value = errorMessage
       return { success: false, error: errorMessage }
     } finally {
@@ -191,7 +193,7 @@ export const useAuthStore = defineStore('auth', () => {
       }
       return { success: false, error: response.data.errors }
     } catch (err: any) {
-      const errorMessage = err.response?.data?.errors || 'خطا در حذف تصویر'
+      const errorMessage = err.response?.data?.errors || t('خطا در حذف تصویر', 'Image deletion failed')
       error.value = errorMessage
       return { success: false, error: errorMessage }
     } finally {
@@ -221,7 +223,7 @@ export const useAuthStore = defineStore('auth', () => {
       }
       return { success: false, error: response.data.errors }
     } catch (err: any) {
-      const errorMessage = err.response?.data?.errors || 'خطا در بروزرسانی رزومه'
+      const errorMessage = err.response?.data?.errors || t('خطا در بروزرسانی رزومه', 'Resume update failed')
       error.value = errorMessage
       return { success: false, error: errorMessage }
     } finally {

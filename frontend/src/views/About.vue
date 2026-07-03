@@ -1,169 +1,99 @@
 <template>
   <div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
-    <!-- Hero Section -->
-    <div class="relative w-full h-[400px] flex items-center justify-center overflow-hidden">
-      <div class="absolute inset-0 bg-cover bg-center z-0 bg-gradient-to-l from-primary/80 to-slate-900/90"></div>
-      <div class="relative z-10 text-center px-4 max-w-3xl">
-        <h1 class="text-white text-4xl md:text-5xl font-black mb-6">{{ $t('about.title') }}</h1>
-        <p class="text-blue-100 text-lg md:text-xl font-light leading-relaxed">
-          {{ $t('about.subtitle') }}
-        </p>
+    <div class="relative flex h-[400px] w-full items-center justify-center overflow-hidden">
+      <div class="absolute inset-0 z-0 bg-cover bg-center bg-gradient-to-l from-primary/80 to-slate-900/90"></div>
+      <div class="relative z-10 max-w-3xl px-4 text-center">
+        <h1 class="mb-6 text-4xl font-black text-white md:text-5xl">{{ $t('about.title') }}</h1>
+        <p class="text-lg font-light leading-relaxed text-blue-100 md:text-xl">{{ $t('about.subtitle') }}</p>
       </div>
     </div>
 
-    <div class="max-w-[1200px] mx-auto px-6 py-16">
-      <!-- Introduction -->
-      <section class="mb-20 text-center max-w-4xl mx-auto">
-        <h2 class="text-primary text-3xl font-bold mb-8">{{ $t('about.introTitle') }}</h2>
-        <p class="text-slate-600 dark:text-slate-400 text-lg leading-loose">
-          {{ $t('about.introText') }}
-        </p>
+    <div class="mx-auto max-w-[1200px] px-6 py-16">
+      <section class="mx-auto mb-20 max-w-4xl text-center">
+        <h2 class="mb-8 text-3xl font-bold text-primary">{{ $t('about.introTitle') }}</h2>
+        <p class="text-lg leading-loose text-slate-600 dark:text-slate-400">{{ $t('about.introText') }}</p>
       </section>
 
-      <!-- Mission & Vision -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20">
-        <div class="flex flex-col gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 shadow-sm hover:shadow-md transition-shadow">
-          <div class="bg-primary/10 w-14 h-14 rounded-lg flex items-center justify-center text-primary mb-2">
+      <div class="mb-20 grid grid-cols-1 gap-8 md:grid-cols-2">
+        <div class="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-8 shadow-sm transition-shadow hover:shadow-md dark:border-slate-800 dark:bg-slate-900">
+          <div class="mb-2 flex h-14 w-14 items-center justify-center rounded-lg bg-primary/10 text-primary">
             <span class="material-symbols-outlined text-4xl">target</span>
           </div>
-          <h3 class="text-slate-900 dark:text-white text-2xl font-bold">{{ $t('about.missionTitle') }}</h3>
-          <p class="text-slate-600 dark:text-slate-400 text-base leading-relaxed">
-            {{ $t('about.missionDescription') }}
-          </p>
+          <h3 class="text-2xl font-bold text-slate-900 dark:text-white">{{ $t('about.missionTitle') }}</h3>
+          <p class="text-base leading-relaxed text-slate-600 dark:text-slate-400">{{ $t('about.missionDescription') }}</p>
         </div>
-        <div class="flex flex-col gap-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-8 shadow-sm hover:shadow-md transition-shadow">
-          <div class="bg-primary/10 w-14 h-14 rounded-lg flex items-center justify-center text-primary mb-2">
+        <div class="flex flex-col gap-4 rounded-xl border border-slate-200 bg-white p-8 shadow-sm transition-shadow hover:shadow-md dark:border-slate-800 dark:bg-slate-900">
+          <div class="mb-2 flex h-14 w-14 items-center justify-center rounded-lg bg-primary/10 text-primary">
             <span class="material-symbols-outlined text-4xl">visibility</span>
           </div>
-          <h3 class="text-slate-900 dark:text-white text-2xl font-bold">{{ $t('about.visionTitle') }}</h3>
-          <p class="text-slate-600 dark:text-slate-400 text-base leading-relaxed">
-            {{ $t('about.visionDescription') }}
-          </p>
+          <h3 class="text-2xl font-bold text-slate-900 dark:text-white">{{ $t('about.visionTitle') }}</h3>
+          <p class="text-base leading-relaxed text-slate-600 dark:text-slate-400">{{ $t('about.visionDescription') }}</p>
         </div>
       </div>
 
-      <!-- Skills/Expertise Section -->
-      <section class="mb-24 bg-slate-50 dark:bg-slate-900/50 p-10 rounded-2xl border border-slate-200 dark:border-slate-800">
-        <h3 class="text-slate-900 dark:text-white text-2xl font-bold mb-10 text-center">{{ $t('about.expertiseTitle') }}</h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-8">
+      <section class="mb-24 rounded-2xl border border-slate-200 bg-slate-50 p-10 dark:border-slate-800 dark:bg-slate-900/50">
+        <h3 class="mb-10 text-center text-2xl font-bold text-slate-900 dark:text-white">{{ $t('about.expertiseTitle') }}</h3>
+        <div class="grid grid-cols-1 gap-x-16 gap-y-8 md:grid-cols-2">
           <div class="space-y-3">
             <div class="flex justify-between text-sm font-bold">
               <span class="text-slate-700 dark:text-slate-300">{{ $t('about.skill1') }}</span>
-              <span class="text-primary">۸۵٪</span>
+              <span class="text-primary">{{ percentages[0] }}</span>
             </div>
-            <div class="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
-              <div class="bg-primary h-full rounded-full" style="width: 85%"></div>
+            <div class="h-2.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
+              <div class="h-full rounded-full bg-primary" style="width: 85%"></div>
             </div>
           </div>
           <div class="space-y-3">
             <div class="flex justify-between text-sm font-bold">
               <span class="text-slate-700 dark:text-slate-300">{{ $t('about.skill2') }}</span>
-              <span class="text-primary">۹۲٪</span>
+              <span class="text-primary">{{ percentages[1] }}</span>
             </div>
-            <div class="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
-              <div class="bg-primary h-full rounded-full" style="width: 92%"></div>
+            <div class="h-2.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
+              <div class="h-full rounded-full bg-primary" style="width: 92%"></div>
             </div>
           </div>
           <div class="space-y-3">
             <div class="flex justify-between text-sm font-bold">
               <span class="text-slate-700 dark:text-slate-300">{{ $t('about.skill3') }}</span>
-              <span class="text-primary">۷۸٪</span>
+              <span class="text-primary">{{ percentages[2] }}</span>
             </div>
-            <div class="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
-              <div class="bg-primary h-full rounded-full" style="width: 78%"></div>
+            <div class="h-2.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
+              <div class="h-full rounded-full bg-primary" style="width: 78%"></div>
             </div>
           </div>
           <div class="space-y-3">
             <div class="flex justify-between text-sm font-bold">
               <span class="text-slate-700 dark:text-slate-300">{{ $t('about.skill4') }}</span>
-              <span class="text-primary">۸۸٪</span>
+              <span class="text-primary">{{ percentages[3] }}</span>
             </div>
-            <div class="w-full bg-slate-200 dark:bg-slate-700 h-2.5 rounded-full overflow-hidden">
-              <div class="bg-primary h-full rounded-full" style="width: 88%"></div>
+            <div class="h-2.5 w-full overflow-hidden rounded-full bg-slate-200 dark:bg-slate-700">
+              <div class="h-full rounded-full bg-primary" style="width: 88%"></div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Objectives List -->
       <section class="mb-24">
-        <div class="text-center mb-12">
-          <h3 class="text-slate-900 dark:text-white text-3xl font-bold mb-4">{{ $t('about.goalsTitle') }}</h3>
-          <div class="w-20 h-1.5 bg-primary mx-auto rounded-full"></div>
+        <div class="mb-12 text-center">
+          <h3 class="mb-4 text-3xl font-bold text-slate-900 dark:text-white">{{ $t('about.goalsTitle') }}</h3>
+          <div class="mx-auto h-1.5 w-20 rounded-full bg-primary"></div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div v-for="(goal, index) in goals" :key="index" class="flex items-start gap-4 p-4 hover:bg-white dark:hover:bg-slate-900 rounded-lg transition-colors">
-            <span class="material-symbols-outlined text-primary mt-1">check_circle</span>
-            <p class="text-slate-700 dark:text-slate-300 leading-relaxed">{{ $t(`about.goal${index + 1}`) }}</p>
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+          <div v-for="goal in goals" :key="goal" class="flex items-start gap-4 rounded-lg p-4 transition-colors hover:bg-white dark:hover:bg-slate-900">
+            <span class="material-symbols-outlined mt-1 text-primary">check_circle</span>
+            <p class="leading-relaxed text-slate-700 dark:text-slate-300">{{ $t(`about.goal${goal + 1}`) }}</p>
           </div>
         </div>
       </section>
-
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 
-const goals = ref(Array.from({ length: 10 }, (_, i) => i));
-
-// موسسین انجمن - دوره 1395
-const founders1395 = ref([
-  {
-    name: 'دکتر سهیلا خلیل زاده',
-    position: 'رئیس انجمن',
-    specialty: 'فوق تخصص ریه کودکان'
-  },
-  {
-    name: 'دکتر قمر تاج خانبابائی',
-    position: 'نائب رئیس',
-    specialty: 'فوق تخصص ریه کودکان'
-  },
-  {
-    name: 'دکتر محمد رضائی',
-    position: 'دبیر انجمن',
-    specialty: 'فوق تخصص ریه کودکان'
-  },
-  {
-    name: 'دکتر مجید کیوانفر',
-    position: 'خزانه دار',
-    specialty: 'فوق تخصص ریه کودکان'
-  },
-  {
-    name: 'دکتر سید احمد طباطبائی',
-    position: 'عضو هیئت مدیره',
-    specialty: 'فوق تخصص ریه کودکان'
-  },
-  {
-    name: 'دکتر محسن علی سمیر',
-    position: 'عضو هیئت مدیره',
-    specialty: 'فوق تخصص ریه کودکان'
-  },
-  {
-    name: 'دکتر حسینعلی غفاری پور',
-    position: 'عضو هیئت مدیره',
-    specialty: 'فوق تخصص ریه کودکان'
-  },
-  {
-    name: 'دکتر محمد رضا مدرسی',
-    position: 'عضو هیئت مدیره علی البدل',
-    specialty: 'فوق تخصص ریه کودکان'
-  },
-  {
-    name: 'دکتر سید جواد سیدی',
-    position: 'عضو هیئت مدیره علی البدل',
-    specialty: 'فوق تخصص ریه کودکان'
-  },
-  {
-    name: 'دکتر روح الله شیرزادی',
-    position: 'بازرس اصلی',
-    specialty: 'فوق تخصص ریه کودکان'
-  },
-  {
-    name: 'دکتر علیرضا اسدی',
-    position: 'بازرس علی البدل',
-    specialty: 'فوق تخصص ریه کودکان'
-  }
-]);
+const { locale } = useI18n()
+const goals = ref(Array.from({ length: 10 }, (_, i) => i))
+const percentages = computed(() => (locale.value === 'fa' ? ['۸۵٪', '۹۲٪', '۷۸٪', '۸۸٪'] : ['85%', '92%', '78%', '88%']))
 </script>

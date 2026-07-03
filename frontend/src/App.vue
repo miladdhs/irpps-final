@@ -7,7 +7,7 @@
           <div class="flex items-center gap-6 lg:gap-12">
             <!-- Logo Section -->
             <router-link to="/" class="flex items-center gap-3">
-              <img src="/img/logo.png" alt="لوگو انجمن علمی ریه کودکان" class="h-12 w-auto">
+              <img :src="'/img/logo.png'" :alt="currentLocale === 'fa' ? 'لوگو انجمن علمی ریه کودکان' : 'Iranian Pediatric Lung Scientific Association logo'" class="h-12 w-auto">
               <h1 class="text-primary text-xl font-black leading-tight tracking-tight hidden md:block">
                 {{ $t('home.title') }}
               </h1>
