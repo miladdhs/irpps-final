@@ -244,7 +244,9 @@ def members_list_view(request):
         members = User.objects.filter(
             is_superuser=False,
             is_active=True,
-        ).exclude(username__startswith='system_import').order_by('first_name', 'last_name')
+        ).exclude(
+            username__startswith='system_import'
+        ).order_by('first_name', 'last_name')
         
         members_data = []
         request_scheme = request.scheme

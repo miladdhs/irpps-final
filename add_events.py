@@ -1,34 +1,30 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Upsert prepared events into the database and attach cover images when available.
+Upsert prepared events into the current configured database and attach cover images.
 Usage: python add_events.py
 """
 import os
-import sys
-import django
 import shutil
+import sys
 from pathlib import Path
+
+import django
 
 if sys.platform == 'win32':
     import io
+
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
 BASE_DIR = Path(__file__).parent
 BACKEND_DIR = BASE_DIR / 'backend'
 sys.path.insert(0, str(BACKEND_DIR))
-
-os.environ['DB_HOST'] = '45.149.79.217'
-os.environ['DB_USER'] = 'root'
-os.environ['DB_PASSWORD'] = 'Re27cwv9TsNCBqPvbYgJ'
-os.environ['DB_NAME'] = 'irporg_DB'
-os.environ['DB_PORT'] = '3306'
-os.environ['IS_DOCKER'] = 'False'
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ispp_project.settings')
 django.setup()
 
 from django.contrib.auth import get_user_model
+
 from events.models import Event
 
 User = get_user_model()
@@ -109,22 +105,22 @@ def resolve_cover_image(relative_name: str | None) -> str | None:
 
     source = BASE_DIR / 'frontend' / 'public' / 'Content' / relative_name
     if not source.exists():
-        print(f'⚠️  تصویر پیدا نشد: {source}')
+        print(f'Warning: event image not found: {source}')
         return None
 
     target_dir = BASE_DIR / 'backend' / 'media' / 'events' / 'covers'
     target_dir.mkdir(parents=True, exist_ok=True)
     target = target_dir / relative_name
     shutil.copy2(source, target)
-    print(f'✅ تصویر کپی شد: {relative_name}')
+    print(f'Copied event image: {relative_name}')
     return f'events/covers/{relative_name}'
 
 
 def add_events():
-    staff_user = User.objects.filter(is_staff=True).first()
+    staff_user = User.objects.filter(is_staff=True).order_by('id').first()
     if not staff_user:
-      print('❌ هیچ کاربر staff یافت نشد.')
-      return False
+        print('Error: no staff user found. Create an admin/staff user first.')
+        return False
 
     created_count = 0
     updated_count = 0
@@ -149,26 +145,26 @@ def add_events():
                 setattr(event, key, value)
             event.save()
             updated_count += 1
-            print(f'✅ رویداد به‌روزرسانی شد: {event.title}')
+            print(f'Updated event: {event.title}')
             continue
 
         Event.objects.create(**defaults)
         created_count += 1
-        print(f'✅ رویداد ایجاد شد: {event_data["title"]}')
+        print(f'Created event: {event_data["title"]}')
 
     print('\n' + '=' * 60)
-    print(f'✅ {created_count} رویداد ایجاد شد')
-    print(f'✅ {updated_count} رویداد به‌روزرسانی شد')
+    print(f'Created events: {created_count}')
+    print(f'Updated events: {updated_count}')
     print('=' * 60)
     return (created_count + updated_count) > 0
 
 
 if __name__ == '__main__':
     print('=' * 60)
-    print('افزودن/به‌روزرسانی رویدادها')
+    print('Importing prepared events into current database')
     print('=' * 60)
     try:
         add_events()
     except Exception as exc:
-        print(f'❌ خطای کلی: {exc}')
+        print(f'Fatal error: {exc}')
         raise

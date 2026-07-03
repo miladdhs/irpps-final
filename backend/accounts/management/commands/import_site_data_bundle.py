@@ -76,6 +76,13 @@ class Command(BaseCommand):
         else:
             self.stdout.write(self.style.WARNING(f"Content source not found, skipping: {content_file}"))
 
+        self.stdout.write(self.style.WARNING("Importing prepared asset-based news..."))
+        call_command(
+            "import_content_assets_news",
+            author_id=author.id,
+            update=True,
+        )
+
         self.stdout.write(self.style.WARNING("Final record counts:"))
         call_command("inspect_database", format="count")
         self.stdout.write(self.style.SUCCESS("Full site data import bundle finished successfully."))

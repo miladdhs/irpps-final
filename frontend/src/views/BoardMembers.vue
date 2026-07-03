@@ -40,20 +40,20 @@
       </div>
 
       <div v-else class="space-y-16">
-        <div v-for="period in periods" :key="period.value" v-show="activePeriod === period.value" class="animate-fade-in">
+        <div class="animate-fade-in">
           <div class="mb-12 text-center">
             <h2 class="mb-3 text-3xl font-bold text-slate-900 dark:text-white">
-              {{ period.title }}
+              {{ currentPeriod.title }}
             </h2>
-            <p class="text-slate-500 dark:text-slate-400">{{ period.subtitle }}</p>
+            <p class="text-slate-500 dark:text-slate-400">{{ currentPeriod.subtitle }}</p>
           </div>
 
-          <div v-if="membersByPeriod(period.value).length === 0" class="rounded-xl bg-slate-50 p-10 text-center dark:bg-slate-900/50">
+          <div v-if="currentMembers.length === 0" class="rounded-xl bg-slate-50 p-10 text-center dark:bg-slate-900/50">
             <p class="text-slate-500 dark:text-slate-400">{{ emptyText }}</p>
           </div>
 
           <div v-else class="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-4">
-            <div v-for="member in membersByPeriod(period.value)" :key="member.username" class="group text-center">
+            <div v-for="member in currentMembers" :key="member.username" class="group text-center">
               <div class="relative mx-auto mb-4 h-40 w-40 overflow-hidden rounded-full border-4 border-white shadow-lg transition-all group-hover:border-primary dark:border-slate-800">
                 <img
                   v-if="member.profile_image"
@@ -77,9 +77,9 @@
         <div class="flex items-start gap-4">
           <span class="material-symbols-outlined text-3xl text-primary">info</span>
           <div>
-            <h4 class="mb-2 text-lg font-bold text-slate-900 dark:text-white">{{ infoTitle }}</h4>
+            <h4 class="mb-2 text-lg font-bold text-slate-900 dark:text-white">{{ currentPeriod.infoTitle }}</h4>
             <p class="leading-relaxed text-slate-600 dark:text-slate-400">
-              {{ infoBody }}
+              {{ currentPeriod.infoBody }}
             </p>
           </div>
         </div>
@@ -89,9 +89,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { getApiUrl } from '@/utils/api'
 
@@ -113,10 +112,20 @@ type BoardResponse = {
   errors?: string
 }
 
+type PeriodMeta = {
+  value: string
+  label: string
+  title: string
+  subtitle: string
+  infoTitle: string
+  infoBody: string
+}
+
 const { locale } = useI18n()
 const route = useRoute()
 const router = useRouter()
 const validPeriods = ['1403', '1400', '1395'] as const
+
 const getPeriodFromRoute = () => {
   const period = typeof route.query.period === 'string' ? route.query.period : ''
   return validPeriods.includes(period as (typeof validPeriods)[number]) ? period : '1403'
@@ -128,13 +137,13 @@ const boardError = ref<string | null>(null)
 const boardMembers = ref<Record<string, BoardMember[]>>({})
 
 const pageTitle = computed(() => locale.value === 'fa' ? 'اعضای هیئت مدیره' : 'Board Members')
-const pageSubtitle = computed(() => locale.value === 'fa' ? 'هیئت مدیره انجمن علمی ریه کودکان ایران در دوره‌های مختلف' : 'Board members of the Iranian Pediatric Lung Scientific Association across different terms')
+const pageSubtitle = computed(() => (
+  locale.value === 'fa'
+    ? 'هیئت مدیره انجمن علمی ریه کودکان ایران در دوره‌های مختلف'
+    : 'Board members of the Iranian Pediatric Lung Scientific Association across different terms'
+))
 const loadingText = computed(() => locale.value === 'fa' ? 'در حال بارگذاری اعضای هیئت مدیره...' : 'Loading board members...')
 const emptyText = computed(() => locale.value === 'fa' ? 'عضوی برای این دوره ثبت نشده است.' : 'No members are registered for this term.')
-const infoTitle = computed(() => locale.value === 'fa' ? 'درباره هیئت مدیره' : 'About the Board')
-const infoBody = computed(() => locale.value === 'fa'
-  ? 'هیئت مدیره انجمن علمی ریه کودکان ایران از برجسته‌ترین متخصصان و پژوهشگران این حوزه تشکیل شده است. اعضای هیئت مدیره با رأی اعضای انجمن برای دوره‌های مختلف انتخاب می‌شوند.'
-  : 'The board is composed of leading specialists and researchers in pediatric pulmonology. Board members are elected by the association members for each term.')
 
 const roleLabelsEn: Record<string, string> = {
   president: 'President',
@@ -147,26 +156,44 @@ const roleLabelsEn: Record<string, string> = {
   alternate_inspector: 'Alternate Inspector',
 }
 
-const periods = computed(() => [
+const periods = computed<PeriodMeta[]>(() => [
   {
     value: '1403',
     label: locale.value === 'fa' ? 'دوره ۱۴۰۳ (فعلی)' : 'Term 1403 (Current)',
     title: locale.value === 'fa' ? 'هیئت مدیره دوره ۱۴۰۳' : 'Board of Directors - Term 1403',
     subtitle: locale.value === 'fa' ? 'پس از انتخابات دوره جدید' : 'Current elected board members',
+    infoTitle: locale.value === 'fa' ? 'درباره هیئت مدیره دوره ۱۴۰۳' : 'About Term 1403 Board',
+    infoBody: locale.value === 'fa'
+      ? 'اعضای این دوره، هیئت مدیره فعلی انجمن هستند و پس از آخرین انتخابات معرفی شده‌اند.'
+      : 'These members are the current board of the association and were introduced after the latest election.',
   },
   {
     value: '1400',
     label: locale.value === 'fa' ? 'دوره ۱۴۰۰' : 'Term 1400',
     title: locale.value === 'fa' ? 'هیئت مدیره دوره ۱۴۰۰' : 'Board of Directors - Term 1400',
     subtitle: locale.value === 'fa' ? 'اعضای منتخب آن دوره' : 'Members elected for that term',
+    infoTitle: locale.value === 'fa' ? 'درباره هیئت مدیره دوره ۱۴۰۰' : 'About Term 1400 Board',
+    infoBody: locale.value === 'fa'
+      ? 'این فهرست مربوط به اعضای منتخب دوره ۱۴۰۰ است و مستقل از دوره فعلی نمایش داده می‌شود.'
+      : 'This list belongs to the elected members of term 1400 and is shown independently from the current board.',
   },
   {
     value: '1395',
     label: locale.value === 'fa' ? 'مؤسسین (۱۳۹۵)' : 'Founders (1395)',
     title: locale.value === 'fa' ? 'مؤسسین انجمن - دوره ۱۳۹۵' : 'Association Founders - 1395',
     subtitle: locale.value === 'fa' ? 'تاریخ تأسیس: ۱۶ آذر ۱۳۹۵' : 'Foundation term',
+    infoTitle: locale.value === 'fa' ? 'درباره مؤسسین انجمن' : 'About the Founders',
+    infoBody: locale.value === 'fa'
+      ? 'این بخش مربوط به اعضای مؤسس انجمن در زمان تأسیس است و با هیئت مدیره دوره‌های بعدی تفاوت دارد.'
+      : 'This section shows the founding members of the association at the time of establishment and differs from later boards.',
   },
 ])
+
+const currentPeriod = computed(() => {
+  return periods.value.find((period) => period.value === activePeriod.value) || periods.value[0]
+})
+
+const currentMembers = computed(() => boardMembers.value[activePeriod.value] || [])
 
 watch(
   () => route.query.period,
@@ -184,12 +211,11 @@ watch(activePeriod, (period) => {
   }
 })
 
-const membersByPeriod = (period: string) => boardMembers.value[period] || []
-
 const getMemberName = (member: BoardMember) => {
   if (locale.value === 'fa') {
     return member.persian_name || member.display_name || member.english_name || member.username
   }
+
   return member.english_name || member.persian_name || member.display_name || member.username
 }
 
@@ -197,6 +223,7 @@ const getMemberPosition = (member: BoardMember) => {
   if (locale.value === 'fa') {
     return member.position
   }
+
   return roleLabelsEn[member.role || ''] || member.position
 }
 
@@ -211,7 +238,11 @@ const fetchBoardMembers = async () => {
     })
 
     if (!response.ok) {
-      throw new Error(locale.value === 'fa' ? `خطا در دریافت هیئت مدیره (${response.status})` : `Failed to load board members (${response.status})`)
+      throw new Error(
+        locale.value === 'fa'
+          ? `خطا در دریافت هیئت مدیره (${response.status})`
+          : `Failed to load board members (${response.status})`
+      )
     }
 
     const data = (await response.json()) as BoardResponse
@@ -242,6 +273,7 @@ onMounted(() => {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

@@ -1,15 +1,18 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Hide board members from the public members list and upsert prepared events.
+Clean up canonical board-member accounts, then upsert prepared events into the
+current configured database.
 """
 import os
 import sys
-import django
 from pathlib import Path
+
+import django
 
 if sys.platform == 'win32':
     import io
+
     sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding='utf-8')
 
@@ -20,58 +23,58 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ispp_project.settings')
 django.setup()
 
 from django.contrib.auth import get_user_model
+
 from add_events import add_events
+from add_board_members import BOARD_MEMBERS_DATA, create_username
 
 User = get_user_model()
 
-BOARD_MEMBER_USERNAMES = [
-    'board_سهیلا_خلیل_زاده',
-    'board_قمر_تاج_خان_بابائی',
-    'board_محمد_رضائی',
-    'board_مجید_کیوانفر',
-    'board_سید_احمد_طباطبائی',
-    'board_محسن_علی_سمیر',
-    'board_حسینعلی_غفاری_پور',
-    'board_محمد_رضا_مدرسی',
-    'board_سید_جواد_سیدی',
-    'board_روح_الله_شیرزادی',
-    'board_علیرضا_اسدی',
-    'board_امیر_رضائی',
-    'board_علیرضا_عشقی',
-    'board_سید_محمد_رضا_میرکریمی',
-    'board_بابک_قالیباف',
-    'board_سید_حسین_میر_لوحی',
-    'board_لعنت_شاهکار',
-    'board_نازنین_فرحبخش',
-    'board_ذلفا_مدرسی',
-    'board_معصومه_قاسمپور_علمداری',
-]
+BOARD_MEMBER_USERNAMES = sorted({
+    create_username(member["persian_name"])
+    for members in BOARD_MEMBERS_DATA.values()
+    for member in members
+})
 
 
-def hide_board_members():
+def prepare_board_members():
     print('\n' + '=' * 60)
-    print('خارج کردن اعضای هیئت مدیره از لیست عمومی اعضا')
+    print('Preparing board-member accounts')
     print('=' * 60)
 
+    users = User.objects.filter(username__in=BOARD_MEMBER_USERNAMES).order_by('username')
     updated = 0
+    missing = 0
+
     for username in BOARD_MEMBER_USERNAMES:
-        user = User.objects.filter(username=username).first()
+        user = users.filter(username=username).first()
         if not user:
-            print(f'⚠️  کاربر پیدا نشد: {username}')
+            missing += 1
+            print(f'Missing board user: {username}')
             continue
 
-        user.is_active = False
-        user.save(update_fields=['is_active'])
-        updated += 1
-        print(f'✅ غیرفعال شد: {username}')
+        changed_fields = []
+        if not user.is_active:
+            user.is_active = True
+            changed_fields.append('is_active')
+        if not user.is_staff:
+            user.is_staff = True
+            changed_fields.append('is_staff')
 
-    print(f'✅ {updated} عضو از لیست عمومی خارج شد')
+        if changed_fields:
+            user.save(update_fields=changed_fields)
+            updated += 1
+            print(f'Updated board user: {user.username}')
+
+    print(f'Board users expected: {len(BOARD_MEMBER_USERNAMES)}')
+    print(f'Board users found: {users.count()}')
+    print(f'Board users updated: {updated}')
+    print(f'Board users missing: {missing}')
     return True
 
 
 if __name__ == '__main__':
     print('=' * 60)
-    print('پاکسازی اعضا و به‌روزرسانی رویدادها')
+    print('Preparing board users and importing prepared events')
     print('=' * 60)
-    hide_board_members()
+    prepare_board_members()
     add_events()
