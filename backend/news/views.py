@@ -50,12 +50,17 @@ def news_list(request):
         'id': item.id,
         'title': item.title,
         'slug': item.slug,
-        'content': item.content[:200] + '...' if len(item.content) > 200 else item.content,
+        'content': item.content,
+        'short_content': item.short_content or '',
+        'category': item.category or '',
+        'tags': item.tags or '',
+        'source': item.source or '',
         'image': item.image.url if item.image else None,
         'author': item.author.get_full_name() or item.author.username,
         'is_published': item.is_published,
         'views': item.views,
         'created_at': item.created_at.isoformat(),
+        'updated_at': item.updated_at.isoformat(),
     } for item in page_obj]
     
     return JsonResponse({
@@ -85,6 +90,10 @@ def news_detail(request, slug):
             'title': news.title,
             'slug': news.slug,
             'content': news.content,
+            'short_content': news.short_content or '',
+            'category': news.category or '',
+            'tags': news.tags or '',
+            'source': news.source or '',
             'image': news.image.url if news.image else None,
             'author': news.author.get_full_name() or news.author.username,
             'views': news.views,
@@ -136,17 +145,36 @@ def news_create(request):
 @csrf_exempt
 @login_required
 @user_passes_test(is_staff)
-@require_http_methods(["PUT"])
+@require_http_methods(["PUT", "POST"])
 def news_update(request, id):
     """Update news"""
     try:
         news = get_object_or_404(News, id=id)
-        data = json.loads(request.body)
-        
-        news.title = data.get('title', news.title)
-        news.slug = data.get('slug', news.slug)
-        news.content = data.get('content', news.content)
-        news.is_published = data.get('is_published', news.is_published)
+
+        if request.content_type and 'application/json' in request.content_type:
+            data = json.loads(request.body)
+
+            news.title = data.get('title', news.title)
+            news.slug = data.get('slug', news.slug)
+            news.content = data.get('content', news.content)
+            news.short_content = data.get('short_content', news.short_content)
+            news.category = data.get('category', news.category)
+            news.tags = data.get('tags', news.tags)
+            news.source = data.get('source', news.source)
+            news.is_published = data.get('is_published', news.is_published)
+        else:
+            news.title = request.POST.get('title', news.title)
+            news.slug = request.POST.get('slug', news.slug)
+            news.content = request.POST.get('content', news.content)
+            news.short_content = request.POST.get('short_content', news.short_content)
+            news.category = request.POST.get('category', news.category)
+            news.tags = request.POST.get('tags', news.tags)
+            news.source = request.POST.get('source', news.source)
+            news.is_published = request.POST.get('is_published', 'true').lower() == 'true'
+
+            if 'image' in request.FILES:
+                news.image = request.FILES['image']
+
         news.save()
         
         return JsonResponse({

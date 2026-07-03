@@ -250,6 +250,7 @@ const fetchNews = async () => {
   try {
     const response = await fetch(getApiUrl('/api/news/?per_page=100'), {
       credentials: 'include',
+      cache: 'no-store',
     });
 
     if (!response.ok) throw new Error('خطا در دریافت اخبار');
@@ -290,7 +291,7 @@ const saveNews = async () => {
       ? getApiUrl(`/api/news/${editingId.value}/update/`)
       : getApiUrl('/api/news/create/');
     
-    const method = showEditModal.value ? 'PUT' : 'POST';
+    const method = 'POST';
 
     const response = await fetch(url, {
       method,

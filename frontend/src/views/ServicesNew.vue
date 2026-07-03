@@ -17,10 +17,6 @@
               {{ $t('services.subtitle') }}
             </p>
           </div>
-          <button class="flex items-center gap-2 min-w-[160px] cursor-pointer justify-center rounded-xl h-12 px-6 bg-primary/10 text-primary hover:bg-primary/20 transition-all font-bold">
-            <span class="material-symbols-outlined">add_task</span>
-            <span>{{ $t('services.requestButton') }}</span>
-          </button>
         </section>
 
         <!-- Services Grid -->

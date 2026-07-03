@@ -157,7 +157,7 @@
                 <li><router-link class="text-slate-400 hover:text-white transition-colors" to="/team">{{ $t('nav.team') }}</router-link></li>
                 <li><router-link class="text-slate-400 hover:text-white transition-colors" to="/education">{{ $t('nav.education') }}</router-link></li>
                 <li><router-link class="text-slate-400 hover:text-white transition-colors" to="/publications">{{ $t('nav.publications') }}</router-link></li>
-                <li><router-link class="text-slate-400 hover:text-white transition-colors" to="/associations">انجمن‌های علمی</router-link></li>
+                <li><router-link class="text-slate-400 hover:text-white transition-colors" to="/associations">{{ $t('nav.associations') }}</router-link></li>
               </ul>
             </div>
             <div>

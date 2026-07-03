@@ -2,19 +2,17 @@
   <div class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100">
     <div class="relative flex min-h-screen flex-col overflow-x-hidden">
       <main class="mx-auto w-full max-w-[1280px] grow px-6 py-8 lg:px-10">
-        <!-- Header Section -->
         <div class="mb-8 flex flex-col gap-4">
           <h2 class="text-3xl font-black text-slate-900 dark:text-white">{{ $t('news.title') }}</h2>
           <p class="text-slate-500 dark:text-slate-400">{{ $t('news.subtitle') }}</p>
-          
-          <!-- Large Search Bar -->
+
           <div class="mt-4 flex w-full max-w-2xl overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
             <div class="flex flex-1 items-center px-4">
               <span class="material-symbols-outlined text-slate-400">search</span>
-              <input 
+              <input
                 v-model="searchQuery"
-                class="w-full border-none bg-transparent py-4 text-sm focus:ring-0" 
-                :placeholder="$t('news.searchPlaceholder')" 
+                class="w-full border-none bg-transparent py-4 text-sm focus:ring-0"
+                :placeholder="$t('news.searchPlaceholder')"
                 type="text"
               />
             </div>
@@ -24,19 +22,16 @@
           </div>
         </div>
 
-        <!-- Content Grid -->
         <div class="grid grid-cols-1 gap-8 lg:grid-cols-4">
-          <!-- Sidebar -->
           <aside class="flex flex-col gap-8 lg:col-span-1">
-            <!-- Categories Widget -->
             <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
               <h3 class="mb-4 flex items-center gap-2 text-lg font-bold">
                 <span class="material-symbols-outlined text-primary">category</span>
                 {{ $t('news.categories') }}
               </h3>
               <div class="flex flex-col gap-1">
-                <a 
-                  v-for="category in categories" 
+                <a
+                  v-for="category in categories"
                   :key="category.id"
                   class="flex items-center justify-between rounded-lg px-3 py-2 text-sm transition-colors"
                   :class="selectedCategory === category.id ? 'bg-primary/10 text-primary font-bold' : 'text-slate-600 hover:bg-slate-50 dark:text-slate-400 dark:hover:bg-slate-800'"
@@ -49,7 +44,6 @@
               </div>
             </div>
 
-            <!-- Latest News Widget -->
             <div class="rounded-xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
               <h3 class="mb-4 flex items-center gap-2 text-lg font-bold">
                 <span class="material-symbols-outlined text-primary">newsmode</span>
@@ -57,7 +51,7 @@
               </h3>
               <div class="flex flex-col gap-4">
                 <div v-for="item in latestNews" :key="item.id" class="group cursor-pointer">
-                  <p class="text-xs text-slate-400 mb-1">{{ item.date }}</p>
+                  <p class="mb-1 text-xs text-slate-400">{{ item.date }}</p>
                   <h4 class="text-sm font-medium leading-relaxed group-hover:text-primary transition-colors">
                     {{ item.title }}
                   </h4>
@@ -66,42 +60,40 @@
             </div>
           </aside>
 
-          <!-- News List -->
           <div v-if="newsLoading" class="flex flex-col gap-6 lg:col-span-3">
-            <div class="text-center py-12">
-              <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
-              <p class="mt-4 text-slate-500">در حال بارگذاری اخبار...</p>
+            <div class="py-12 text-center">
+              <div class="inline-block h-12 w-12 animate-spin rounded-full border-b-2 border-primary"></div>
+              <p class="mt-4 text-slate-500">{{ $t('services.loadingNews') }}</p>
             </div>
           </div>
 
           <div v-else-if="newsError" class="flex flex-col gap-6 lg:col-span-3">
-            <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl p-6 text-center">
-              <span class="material-symbols-outlined text-red-600 text-4xl mb-2">error</span>
+            <div class="rounded-xl border border-red-200 bg-red-50 p-6 text-center dark:border-red-800 dark:bg-red-900/20">
+              <span class="material-symbols-outlined mb-2 text-4xl text-red-600">error</span>
               <p class="text-red-600 dark:text-red-400">{{ newsError }}</p>
             </div>
           </div>
 
-          <div v-else-if="newsItems.length === 0" class="flex flex-col gap-6 lg:col-span-3">
-            <div class="bg-slate-50 dark:bg-slate-800 rounded-xl p-12 text-center">
-              <span class="material-symbols-outlined text-slate-400 text-5xl mb-4">info</span>
-              <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-2">خبری یافت نشد</h3>
-              <p class="text-slate-500 dark:text-slate-400">در حال حاضر خبری برای نمایش وجود ندارد.</p>
+          <div v-else-if="filteredNewsItems.length === 0" class="flex flex-col gap-6 lg:col-span-3">
+            <div class="rounded-xl bg-slate-50 p-12 text-center dark:bg-slate-800">
+              <span class="material-symbols-outlined mb-4 text-5xl text-slate-400">info</span>
+              <h3 class="mb-2 text-xl font-bold text-slate-900 dark:text-white">{{ $t('services.noNews') }}</h3>
+              <p class="text-slate-500 dark:text-slate-400">{{ $t('services.noNewsDesc') }}</p>
             </div>
           </div>
 
           <div v-else class="flex flex-col gap-6 lg:col-span-3">
-            <!-- News Card -->
-            <article 
-              v-for="news in newsList" 
+            <article
+              v-for="news in newsList"
               :key="news.id"
               class="flex flex-col overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-all hover:shadow-md dark:border-slate-800 dark:bg-slate-900 md:flex-row"
             >
-              <div 
-                class="h-48 w-full shrink-0 bg-cover bg-center md:h-auto md:w-64" 
+              <div
+                class="h-48 w-full shrink-0 bg-cover bg-center md:h-auto md:w-64"
                 :style="`background-image: url('${news.image}')`"
               ></div>
               <div class="flex flex-1 flex-col p-6">
-                <div class="mb-2 flex items-center justify-between">
+                <div class="mb-2 flex items-center justify-between gap-4">
                   <span class="inline-block rounded px-2 py-1 text-xs font-bold" :class="news.categoryClass">
                     {{ news.category }}
                   </span>
@@ -113,14 +105,14 @@
                 <h3 class="mb-3 text-xl font-bold leading-snug text-slate-900 dark:text-white">
                   {{ news.title }}
                 </h3>
-                <p class="mb-6 line-clamp-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                <p class="mb-6 line-clamp-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
                   {{ news.excerpt }}
                 </p>
-                <div class="mt-auto flex items-center justify-between border-t border-slate-100 pt-4 dark:border-slate-800">
+                <div class="mt-auto flex items-center justify-between gap-4 border-t border-slate-100 pt-4 dark:border-slate-800">
                   <span class="text-xs font-medium text-slate-500">{{ $t('news.author') }}: {{ news.author }}</span>
-                  <router-link 
+                  <router-link
                     :to="`/news/${news.slug}`"
-                    class="flex items-center gap-1 text-sm font-bold text-primary hover:gap-2 transition-all"
+                    class="flex items-center gap-1 text-sm font-bold text-primary transition-all hover:gap-2"
                   >
                     {{ $t('news.readMore') }}
                     <span class="material-symbols-outlined text-[18px]">arrow_back</span>
@@ -129,17 +121,16 @@
               </div>
             </article>
 
-            <!-- Pagination -->
             <div v-if="totalPages > 1" class="mt-8 flex items-center justify-center gap-2">
-              <button 
+              <button
                 @click="loadPage(currentPage - 1)"
                 :disabled="!hasPrevPage"
-                class="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                class="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <span class="material-symbols-outlined">chevron_right</span>
               </button>
-              <button 
-                v-for="page in Math.min(totalPages, 5)" 
+              <button
+                v-for="page in Math.min(totalPages, 5)"
                 :key="page"
                 @click="loadPage(page)"
                 :class="currentPage === page ? 'bg-primary text-white' : 'border border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900'"
@@ -147,10 +138,10 @@
               >
                 {{ page }}
               </button>
-              <button 
+              <button
                 @click="loadPage(currentPage + 1)"
                 :disabled="!hasNextPage"
-                class="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                class="flex h-10 w-10 items-center justify-center rounded-lg border border-slate-200 bg-white hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 <span class="material-symbols-outlined">chevron_left</span>
               </button>
@@ -163,7 +154,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { getApiUrl } from '@/utils/api';
 
 type NewsItem = {
@@ -171,6 +163,9 @@ type NewsItem = {
   title: string;
   slug: string;
   content: string;
+  short_content?: string;
+  category?: string;
+  tags?: string;
   image: string | null;
   author: string;
   is_published: boolean;
@@ -178,6 +173,7 @@ type NewsItem = {
   created_at: string;
 };
 
+const { t, locale } = useI18n();
 const searchQuery = ref('');
 const selectedCategory = ref('all');
 const newsItems = ref<NewsItem[]>([]);
@@ -188,47 +184,87 @@ const totalPages = ref(1);
 const hasNextPage = ref(false);
 const hasPrevPage = ref(false);
 
-const categories = ref([
-  { id: 'all', name: 'همه' },
-  { id: 'asthma', name: 'آسم' },
-  { id: 'cf', name: 'فیبروز سیستیک' },
-  { id: 'infections', name: 'عفونت‌های تنفسی' },
-  { id: 'icu', name: 'مراقبت‌های ویژه' },
-  { id: 'congenital', name: 'ناهنجاری‌های مادرزادی' }
-]);
-
 const formatDate = (isoDate: string) => {
   try {
-    return new Date(isoDate).toLocaleDateString('fa-IR');
-  } catch (error) {
+    return new Date(isoDate).toLocaleDateString(locale.value === 'fa' ? 'fa-IR' : 'en-US');
+  } catch {
     return isoDate;
   }
 };
 
-const latestNews = computed(() => {
-  return newsItems.value.slice(0, 3).map(item => ({
-    id: item.id,
-    date: formatDate(item.created_at),
-    title: item.title
-  }));
+const normalizeCategory = (value?: string | null) => (value || '').trim();
+
+const categories = computed(() => {
+  const values = Array.from(
+    new Set(
+      newsItems.value
+        .map((item) => normalizeCategory(item.category))
+        .filter(Boolean),
+    ),
+  );
+
+  return [
+    { id: 'all', name: locale.value === 'fa' ? 'همه' : 'All' },
+    ...values.map((value) => ({ id: value, name: value })),
+  ];
 });
 
-const newsList = computed(() => {
-  return newsItems.value.map(item => ({
+const latestNews = computed(() =>
+  newsItems.value.slice(0, 3).map((item) => ({
+    id: item.id,
+    date: formatDate(item.created_at),
+    title: item.title,
+  })),
+);
+
+const filteredNewsItems = computed(() => {
+  const query = searchQuery.value.trim().toLowerCase();
+
+  return newsItems.value.filter((item) => {
+    const category = normalizeCategory(item.category);
+    const matchesCategory = selectedCategory.value === 'all' || category === selectedCategory.value;
+    if (!matchesCategory) {
+      return false;
+    }
+
+    if (!query) {
+      return true;
+    }
+
+    const haystack = [
+      item.title,
+      item.content,
+      item.short_content || '',
+      category,
+      item.tags || '',
+      item.author,
+    ]
+      .join(' ')
+      .toLowerCase();
+
+    return haystack.includes(query);
+  });
+});
+
+const newsList = computed(() =>
+  filteredNewsItems.value.map((item) => ({
     id: item.id,
     title: item.title,
-    excerpt: item.content,
-    category: 'خبر',
+    excerpt: item.short_content || item.content,
+    category: normalizeCategory(item.category) || t('nav.newsItem'),
     categoryClass: 'bg-primary/10 text-primary',
     date: formatDate(item.created_at),
     author: item.author,
     image: item.image ? getApiUrl(item.image) : '/img/news.png',
-    slug: item.slug
-  }));
-});
+    slug: item.slug,
+  })),
+);
 
 const loadPage = async (page: number) => {
-  if (page < 1 || page > totalPages.value) return;
+  if (page < 1 || page > totalPages.value) {
+    return;
+  }
+
   currentPage.value = page;
   await fetchNews();
   window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -241,26 +277,26 @@ const fetchNews = async () => {
   try {
     const response = await fetch(getApiUrl(`/api/news/?page=${currentPage.value}&per_page=12`), {
       credentials: 'include',
+      cache: 'no-store',
     });
 
     if (response.status === 404) {
       newsItems.value = [];
-      newsLoading.value = false;
       return;
     }
 
     if (!response.ok) {
-      throw new Error(`خطا در دریافت اخبار از سرور (${response.status})`);
+      throw new Error(`Failed to load news (${response.status})`);
     }
 
     const data = await response.json();
 
     if (!data.success || !Array.isArray(data.news)) {
-      throw new Error('ساختار داده اخبار نامعتبر است');
+      throw new Error('Invalid news response');
     }
 
     newsItems.value = data.news;
-    
+
     if (data.pagination) {
       totalPages.value = data.pagination.pages || 1;
       hasNextPage.value = data.pagination.has_next || false;
@@ -268,7 +304,7 @@ const fetchNews = async () => {
     }
   } catch (error: any) {
     console.error('Failed to load news:', error);
-    newsError.value = error.message || 'خطای ناشناخته هنگام دریافت اخبار';
+    newsError.value = error.message || t('common.error');
   } finally {
     newsLoading.value = false;
   }

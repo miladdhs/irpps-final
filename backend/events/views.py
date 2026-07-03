@@ -123,6 +123,26 @@ def _parse_datetime_or_none(value):
     return parsed
 
 
+def _get_event_status(item, start_date=None, end_date=None):
+    """Return derived timing state for public/admin responses."""
+    now = timezone.now()
+    has_ended = bool(end_date and end_date < now)
+    registration_open = item.is_registration_open and not has_ended
+
+    if has_ended:
+        status_code = 'ended'
+    elif registration_open:
+        status_code = 'registration_open'
+    else:
+        status_code = 'registration_closed'
+
+    return {
+        'has_ended': has_ended,
+        'is_registration_open': registration_open,
+        'status_code': status_code,
+    }
+
+
 @require_http_methods(["GET"])
 def event_list(request):
     """Get list of events.
@@ -151,14 +171,14 @@ def event_list(request):
         # Calculate start_date and end_date from event_year and event_month
         start_date, end_date = calculate_event_dates(item.event_year, item.event_month)
         
-        # Use the model's property to check if registration is open
-        is_registration_open = item.is_registration_open
+        status = _get_event_status(item, start_date, end_date)
         
         events_data.append({
             'id': item.id,
             'title': item.title,
             'slug': item.slug,
-            'description': item.description[:200] + '...' if len(item.description) > 200 else item.description,
+            'description': item.description,
+            'short_description': item.short_description or '',
             'event_type': item.get_event_type_display(),
             'event_type_code': item.event_type,
             'image': item.cover_image.url if item.cover_image else (item.image.url if item.image else None),
@@ -171,11 +191,20 @@ def event_list(request):
             'retraining_number': item.retraining_number,
             'max_participants': item.max_participants,
             'price': float(item.price),
+            'organizer': item.organizer or '',
+            'target_audience': item.target_audience or '',
+            'prerequisites': item.prerequisites or '',
+            'agenda': item.agenda or '',
+            'speakers': item.speakers or '',
+            'contact_info': item.contact_info or '',
             'is_published': item.is_published,
             'is_featured': item.is_featured,
-            'is_registration_open': is_registration_open,
+            'is_registration_open': status['is_registration_open'],
+            'has_ended': status['has_ended'],
+            'status_code': status['status_code'],
             'views': item.views,
             'created_at': item.created_at.isoformat(),
+            'updated_at': item.updated_at.isoformat(),
         })
     
     return JsonResponse({
@@ -206,8 +235,7 @@ def event_detail(request, slug):
     # Calculate start_date and end_date from event_year and event_month
     start_date, end_date = calculate_event_dates(event.event_year, event.event_month)
     
-    # Use the model's property to check if registration is open
-    is_registration_open = event.is_registration_open
+    status = _get_event_status(event, start_date, end_date)
     
     return JsonResponse({
         'success': True,
@@ -216,6 +244,7 @@ def event_detail(request, slug):
             'title': event.title,
             'slug': event.slug,
             'description': event.description,
+            'short_description': event.short_description or '',
             'event_type': event.get_event_type_display(),
             'event_type_code': event.event_type,
             'image': event.cover_image.url if event.cover_image else (event.image.url if event.image else None),
@@ -228,11 +257,20 @@ def event_detail(request, slug):
             'retraining_number': event.retraining_number,
             'max_participants': event.max_participants,
             'price': float(event.price),
+            'organizer': event.organizer or '',
+            'target_audience': event.target_audience or '',
+            'prerequisites': event.prerequisites or '',
+            'agenda': event.agenda or '',
+            'speakers': event.speakers or '',
+            'contact_info': event.contact_info or '',
             'is_featured': event.is_featured,
-            'is_registration_open': is_registration_open,
+            'is_registration_open': status['is_registration_open'],
+            'has_ended': status['has_ended'],
+            'status_code': status['status_code'],
             'is_registered': is_registered,
             'views': event.views,
             'created_at': event.created_at.isoformat(),
+            'updated_at': event.updated_at.isoformat(),
         }
     })
 
@@ -246,7 +284,10 @@ def event_register(request, id):
         event = get_object_or_404(Event, id=id, is_published=True)
         
         # Check if registration is open
-        if not event.is_registration_open:
+        start_date, end_date = calculate_event_dates(event.event_year, event.event_month)
+        status = _get_event_status(event, start_date, end_date)
+
+        if not status['is_registration_open']:
             return JsonResponse({
                 'success': False,
                 'errors': 'مهلت ثبت نام به پایان رسیده است'
@@ -387,13 +428,27 @@ def event_update(request, id):
             event.title = data.get('title', event.title)
             event.slug = data.get('slug', event.slug)
             event.description = data.get('description', event.description)
+            event.short_description = data.get('short_description', event.short_description)
             event.event_type = data.get('event_type', event.event_type)
             event.location = data.get('location', event.location)
             event.event_year = data.get('event_year', event.event_year)
             event.event_month = data.get('event_month', event.event_month)
             event.retraining_number = data.get('retraining_number', event.retraining_number)
+            event.organizer = data.get('organizer', event.organizer)
+            event.target_audience = data.get('target_audience', event.target_audience)
+            event.prerequisites = data.get('prerequisites', event.prerequisites)
+            event.agenda = data.get('agenda', event.agenda)
+            event.speakers = data.get('speakers', event.speakers)
+            event.contact_info = data.get('contact_info', event.contact_info)
             event.is_published = data.get('is_published', event.is_published)
             event.is_featured = data.get('is_featured', event.is_featured)
+
+            registration_deadline = data.get('registration_deadline')
+            if registration_deadline in (None, '', 'null'):
+                event.registration_deadline = None
+            elif registration_deadline is not None:
+                from django.utils.dateparse import parse_date
+                event.registration_deadline = parse_date(registration_deadline)
             
             if 'price' in data:
                 event.price = Decimal(str(data['price']))
@@ -404,18 +459,39 @@ def event_update(request, id):
             event.title = request.POST.get('title', event.title)
             event.slug = request.POST.get('slug', event.slug)
             event.description = request.POST.get('description', event.description)
+            event.short_description = request.POST.get('short_description', event.short_description)
             event.event_type = request.POST.get('event_type', event.event_type)
             event.location = request.POST.get('location', event.location)
+            event.organizer = request.POST.get('organizer', event.organizer)
+            event.target_audience = request.POST.get('target_audience', event.target_audience)
+            event.prerequisites = request.POST.get('prerequisites', event.prerequisites)
+            event.agenda = request.POST.get('agenda', event.agenda)
+            event.speakers = request.POST.get('speakers', event.speakers)
+            event.contact_info = request.POST.get('contact_info', event.contact_info)
             
             if request.POST.get('event_year'):
                 event.event_year = int(request.POST.get('event_year'))
             if request.POST.get('event_month'):
                 event.event_month = int(request.POST.get('event_month'))
-            if request.POST.get('retraining_number'):
-                event.retraining_number = request.POST.get('retraining_number')
+            if 'retraining_number' in request.POST:
+                event.retraining_number = request.POST.get('retraining_number') or ''
             
             event.is_published = request.POST.get('is_published', 'true').lower() == 'true'
             event.is_featured = request.POST.get('is_featured', 'false').lower() == 'true'
+
+            registration_deadline = request.POST.get('registration_deadline')
+            if registration_deadline in (None, '', 'null'):
+                event.registration_deadline = None
+            elif registration_deadline is not None:
+                from django.utils.dateparse import parse_date
+                event.registration_deadline = parse_date(registration_deadline)
+
+            max_participants = request.POST.get('max_participants')
+            event.max_participants = int(max_participants) if max_participants not in (None, '', 'null') else None
+
+            price = request.POST.get('price')
+            if price not in (None, '', 'null'):
+                event.price = Decimal(str(price))
             
             if 'cover_image' in request.FILES:
                 event.cover_image = request.FILES['cover_image']

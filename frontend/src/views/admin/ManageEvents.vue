@@ -325,7 +325,9 @@ type EventItem = {
   title: string;
   slug: string;
   description: string;
+  short_description?: string;
   event_type: string;
+  event_type_code?: string;
   retraining_number: string | null;
   image: string | null;
   location: string;
@@ -335,6 +337,10 @@ type EventItem = {
   max_participants: number | null;
   price: number;
   organizer: string;
+  target_audience?: string;
+  prerequisites?: string;
+  agenda?: string;
+  contact_info?: string;
   speakers: string;
   is_published: boolean;
   is_featured: boolean;
@@ -376,6 +382,7 @@ const fetchEvents = async () => {
   try {
     const response = await fetch(getApiUrl('/api/events/?per_page=100'), {
       credentials: 'include',
+      cache: 'no-store',
     });
 
     if (!response.ok) throw new Error('خطا در دریافت رویدادها');
@@ -455,7 +462,7 @@ const editEvent = (event: EventItem) => {
     title: event.title,
     slug: event.slug,
     description: event.description,
-    event_type: event.event_type,
+    event_type: event.event_type_code || 'other',
     retraining_number: event.retraining_number || '',
     location: event.location,
     event_year: event.event_year,
