@@ -1,5 +1,5 @@
 ###################### Backend ?? ???? Python Slim ######################
-FROM python:3.9-slim
+FROM docker.arvancloud.ir/python:3.9-slim
 
 WORKDIR /app
 

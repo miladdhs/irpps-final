@@ -64,7 +64,7 @@ services:
 
   # MySQL Database
   mysql:
-    image: mysql:8.3.0
+    image: docker.arvancloud.ir/mysql:8.3.0
     container_name: irpps-mysql
     environment:
       MYSQL_DATABASE: irporg_DB

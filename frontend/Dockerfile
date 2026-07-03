@@ -1,5 +1,5 @@
 ###################### Build stage ######################
-FROM node:20-alpine AS builder
+FROM docker.arvancloud.ir/node:20-alpine AS builder
 
 WORKDIR /app
 
@@ -13,7 +13,7 @@ RUN npm run build:prod
 
 
 ###################### Runtime stage ######################
-FROM nginx:alpine
+FROM docker.arvancloud.ir/nginx:alpine
 
 RUN apk add --no-cache openssl
 
