@@ -35,6 +35,8 @@ class Command(BaseCommand):
     """
 
     help = "Import data from phpMyAdmin JSON export (ispp_db.json) into current DB (users + news + announcements)."
+    SKIPPED_NEWS_SLUGS = {"2ROOD"}
+    SKIPPED_ANNOUNCEMENT_TITLES = {"دروددددد"}
 
     def add_arguments(self, parser):
         parser.add_argument(
@@ -187,6 +189,9 @@ class Command(BaseCommand):
             news_id = self._parse_int(row.get("id"))
             if not news_id:
                 continue
+            if (row.get("slug") or "").strip() in self.SKIPPED_NEWS_SLUGS:
+                self.stdout.write(self.style.WARNING(f"Skipping bad seed news: {row.get('title') or row.get('slug')}"))
+                continue
 
             author_id = self._parse_int(row.get("author_id"))
 
@@ -234,6 +239,9 @@ class Command(BaseCommand):
         for row in rows:
             ann_id = self._parse_int(row.get("id"))
             if not ann_id:
+                continue
+            if (row.get("title") or "").strip() in self.SKIPPED_ANNOUNCEMENT_TITLES:
+                self.stdout.write(self.style.WARNING(f"Skipping bad seed announcement: {row.get('title')}"))
                 continue
 
             author_id = self._parse_int(row.get("author_id"))

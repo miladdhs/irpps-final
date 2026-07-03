@@ -38,7 +38,7 @@
         <div v-else-if="filteredMembers.length > 0" class="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
           <div v-for="member in filteredMembers" :key="member.id" class="group cursor-pointer rounded-xl border border-slate-200 bg-white p-4 shadow-sm transition-all hover:shadow-lg hover:border-primary/30 dark:border-slate-800 dark:bg-slate-900" @click="openMemberModal(member)">
             <div class="mb-3 aspect-square overflow-hidden rounded-lg bg-slate-100 dark:bg-slate-800">
-              <img v-if="getMemberImage(member)" :src="getMemberImage(member)" :alt="getMemberName(member)" class="h-full w-full object-cover transition-transform group-hover:scale-110" @error="handleImageError($event)" />
+              <img v-if="getMemberImage(member)" :src="getMemberImage(member)" :alt="getMemberName(member)" :data-member-id="member.id" class="h-full w-full object-cover transition-transform group-hover:scale-110" @error="handleImageError($event)" />
               <div v-else class="flex h-full w-full items-center justify-center">
                 <span class="material-symbols-outlined text-4xl text-slate-400">person</span>
               </div>
@@ -96,7 +96,7 @@
         <div class="p-6">
           <div class="mb-6 flex justify-center">
             <div class="h-32 w-32 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
-              <img v-if="getMemberImage(selectedMember)" :src="getMemberImage(selectedMember)" :alt="getMemberName(selectedMember)" class="h-full w-full object-cover" @error="handleImageError($event)" />
+              <img v-if="getMemberImage(selectedMember)" :src="getMemberImage(selectedMember)" :alt="getMemberName(selectedMember)" :data-member-id="selectedMember.id" class="h-full w-full object-cover" @error="handleImageError($event)" />
               <div v-else class="flex h-full w-full items-center justify-center">
                 <span class="material-symbols-outlined text-6xl text-slate-400">person</span>
               </div>
@@ -169,6 +169,7 @@ const memberError = ref<string | null>(null)
 const searchQuery = ref('')
 const selectedMember = ref<Member | null>(null)
 const showModal = ref(false)
+const brokenImages = ref<Set<number>>(new Set())
 
 const copy = computed(() => (locale.value === 'fa'
   ? {
@@ -190,6 +191,9 @@ const getMemberName = (member: Member): string => {
 }
 
 function getMemberImage(member: Member): string | null {
+  if (brokenImages.value.has(member.id)) {
+    return null
+  }
   if (member && member.profile_image && member.profile_image.trim() !== '' && member.profile_image !== 'null' && member.profile_image !== 'undefined') {
     const imageUrl = member.profile_image.trim()
     if (imageUrl.startsWith('http://') || imageUrl.startsWith('https://') || imageUrl.startsWith('/')) {
@@ -202,7 +206,12 @@ function getMemberImage(member: Member): string | null {
 
 function handleImageError(event: Event) {
   const img = event.target as HTMLImageElement
-  img.style.display = 'none'
+  const memberId = Number(img.dataset.memberId || '0')
+  if (memberId) {
+    const next = new Set(brokenImages.value)
+    next.add(memberId)
+    brokenImages.value = next
+  }
 }
 
 async function fetchMembers() {

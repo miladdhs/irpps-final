@@ -83,6 +83,9 @@ class Command(BaseCommand):
             update=True,
         )
 
+        self.stdout.write(self.style.WARNING("Normalizing imported content and assigning default images..."))
+        call_command("normalize_site_data")
+
         self.stdout.write(self.style.WARNING("Final record counts:"))
         call_command("inspect_database", format="count")
         self.stdout.write(self.style.SUCCESS("Full site data import bundle finished successfully."))

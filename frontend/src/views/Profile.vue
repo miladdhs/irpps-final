@@ -1,87 +1,132 @@
 <template>
-  <div class="min-h-screen bg-gray-50 py-12 px-4">
-    <div class="max-w-4xl mx-auto">
-      <!-- Header -->
+  <div class="min-h-screen bg-gray-50 px-4 py-12">
+    <div class="mx-auto max-w-4xl">
       <div class="mb-8">
-        <router-link to="/dashboard" class="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4">
+        <router-link to="/dashboard" class="mb-4 inline-flex items-center gap-2 text-gray-600 hover:text-gray-900">
           <span class="material-symbols-outlined">arrow_back</span>
           بازگشت به داشبورد
         </router-link>
         <h1 class="text-3xl font-bold text-gray-900">پروفایل من</h1>
       </div>
 
-      <!-- Success/Error Messages -->
-      <div v-if="successMessage" class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg mb-6">
+      <div v-if="successMessage" class="mb-6 rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-green-700">
         {{ successMessage }}
       </div>
-      <div v-if="errorMessage" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg mb-6">
+      <div v-if="errorMessage" class="mb-6 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-red-700">
         {{ errorMessage }}
       </div>
 
-      <!-- Profile Info -->
-      <div class="bg-white rounded-2xl shadow-sm p-8 mb-6">
-        <h2 class="text-xl font-bold text-gray-900 mb-6">اطلاعات شخصی</h2>
-        <form @submit.prevent="handleUpdateProfile" class="space-y-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">نام (فارسی)</label>
-              <input
-                v-model="profileForm.first_name"
-                type="text"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      <div class="mb-6 grid gap-6 lg:grid-cols-[320px,1fr]">
+        <div class="rounded-2xl bg-white p-8 shadow-sm">
+          <h2 class="mb-6 text-xl font-bold text-gray-900">عکس پروفایل</h2>
+          <div class="flex flex-col items-center gap-4">
+            <div class="flex h-40 w-40 items-center justify-center overflow-hidden rounded-full bg-gray-100">
+              <img
+                v-if="currentProfileImage && !imageBroken"
+                :src="currentProfileImage"
+                alt="Profile"
+                class="h-full w-full object-cover"
+                @error="handleProfileImageError"
               >
+              <span v-else class="material-symbols-outlined text-7xl text-gray-400">person</span>
             </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">نام کامل (انگلیسی)</label>
-              <input
-                v-model="profileForm.last_name"
-                type="text"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+
+            <input
+              ref="imageInput"
+              type="file"
+              accept="image/*"
+              class="hidden"
+              @change="handleFileSelection"
+            >
+
+            <div class="w-full space-y-3">
+              <button
+                type="button"
+                class="w-full rounded-lg bg-blue-600 px-4 py-3 font-medium text-white transition hover:bg-blue-700 disabled:opacity-50"
+                :disabled="isImageLoading"
+                @click="openFilePicker"
               >
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">ایمیل</label>
-              <input
-                v-model="profileForm.email"
-                type="email"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                {{ isImageLoading ? 'در حال آپلود...' : 'انتخاب یا تغییر عکس' }}
+              </button>
+              <button
+                type="button"
+                class="w-full rounded-lg border border-gray-300 px-4 py-3 font-medium text-gray-700 transition hover:bg-gray-50 disabled:opacity-50"
+                :disabled="isImageLoading || !authStore.user?.profile_image"
+                @click="handleDeleteProfileImage"
               >
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">شماره تماس</label>
-              <input
-                v-model="profileForm.phone"
-                type="tel"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-              >
+                حذف عکس
+              </button>
+              <p class="text-sm text-gray-500">
+                اگر عکس نداشته باشید، آیکون پیش‌فرض در کارت اعضا نمایش داده می‌شود.
+              </p>
             </div>
           </div>
-          <button
-            type="submit"
-            :disabled="isLoading"
-            class="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition disabled:opacity-50"
-          >
-            <span v-if="!isLoading">ذخیره تغییرات</span>
-            <span v-else>در حال ذخیره...</span>
-          </button>
-        </form>
+        </div>
+
+        <div class="rounded-2xl bg-white p-8 shadow-sm">
+          <h2 class="mb-6 text-xl font-bold text-gray-900">اطلاعات شخصی</h2>
+          <form class="space-y-6" @submit.prevent="handleUpdateProfile">
+            <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div>
+                <label class="mb-2 block text-sm font-medium text-gray-700">نام (فارسی)</label>
+                <input
+                  v-model="profileForm.first_name"
+                  type="text"
+                  class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+                >
+              </div>
+              <div>
+                <label class="mb-2 block text-sm font-medium text-gray-700">نام کامل دوم</label>
+                <input
+                  v-model="profileForm.last_name"
+                  type="text"
+                  class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+                >
+              </div>
+              <div>
+                <label class="mb-2 block text-sm font-medium text-gray-700">ایمیل</label>
+                <input
+                  v-model="profileForm.email"
+                  type="email"
+                  class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+                >
+              </div>
+              <div>
+                <label class="mb-2 block text-sm font-medium text-gray-700">شماره تماس</label>
+                <input
+                  v-model="profileForm.phone"
+                  type="tel"
+                  class="w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-transparent focus:ring-2 focus:ring-blue-500"
+                >
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              :disabled="isLoading"
+              class="rounded-lg bg-blue-600 px-6 py-3 font-medium text-white transition hover:bg-blue-700 disabled:opacity-50"
+            >
+              <span v-if="!isLoading">ذخیره تغییرات</span>
+              <span v-else>در حال ذخیره...</span>
+            </button>
+          </form>
+        </div>
       </div>
 
-      <!-- Account Info -->
-      <div class="bg-white rounded-2xl shadow-sm p-8">
-        <h2 class="text-xl font-bold text-gray-900 mb-6">اطلاعات حساب</h2>
+      <div class="rounded-2xl bg-white p-8 shadow-sm">
+        <h2 class="mb-6 text-xl font-bold text-gray-900">اطلاعات حساب</h2>
         <div class="space-y-4">
-          <div class="flex justify-between items-center py-3 border-b border-gray-100">
+          <div class="flex items-center justify-between border-b border-gray-100 py-3">
             <span class="text-gray-600">نام کاربری</span>
             <span class="font-medium">{{ authStore.user?.username }}</span>
           </div>
-          <div class="flex justify-between items-center py-3 border-b border-gray-100">
+          <div class="flex items-center justify-between border-b border-gray-100 py-3">
             <span class="text-gray-600">تاریخ عضویت</span>
             <span class="font-medium">{{ formatDate(authStore.user?.date_joined) }}</span>
           </div>
-          <div class="flex justify-between items-center py-3">
+          <div class="flex items-center justify-between py-3">
             <span class="text-gray-600">نقش</span>
-            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium" :class="authStore.isAdmin ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'">
+            <span class="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium" :class="authStore.isAdmin ? 'bg-purple-100 text-purple-700' : 'bg-blue-100 text-blue-700'">
               {{ authStore.isAdmin ? 'مدیر' : 'کاربر' }}
             </span>
           </div>
@@ -92,7 +137,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 
 const authStore = useAuthStore()
@@ -105,8 +150,11 @@ const profileForm = ref({
 })
 
 const isLoading = ref(false)
+const isImageLoading = ref(false)
 const successMessage = ref('')
 const errorMessage = ref('')
+const imageInput = ref<HTMLInputElement | null>(null)
+const imageBroken = ref(false)
 
 onMounted(() => {
   if (authStore.user) {
@@ -119,6 +167,16 @@ onMounted(() => {
   }
 })
 
+const currentProfileImage = computed(() => {
+  const image = authStore.user?.profile_image
+  if (!image) {
+    return ''
+  }
+  return image.startsWith('http://') || image.startsWith('https://') || image.startsWith('/')
+    ? image
+    : `/${image}`
+})
+
 async function handleUpdateProfile() {
   isLoading.value = true
   successMessage.value = ''
@@ -127,12 +185,59 @@ async function handleUpdateProfile() {
   const result = await authStore.updateProfile(profileForm.value)
 
   if (result.success) {
-    successMessage.value = result.message || 'پروفایل با موفقیت بروزرسانی شد'
+    successMessage.value = result.message || 'پروفایل با موفقیت به‌روزرسانی شد'
   } else {
-    errorMessage.value = result.error || 'خطا در بروزرسانی پروفایل'
+    errorMessage.value = result.error || 'خطا در به‌روزرسانی پروفایل'
   }
 
   isLoading.value = false
+}
+
+function openFilePicker() {
+  imageInput.value?.click()
+}
+
+async function handleFileSelection(event: Event) {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+  if (!file) {
+    return
+  }
+
+  isImageLoading.value = true
+  imageBroken.value = false
+  successMessage.value = ''
+  errorMessage.value = ''
+
+  const result = await authStore.uploadProfileImage(file)
+  if (result.success) {
+    successMessage.value = result.message || 'عکس پروفایل با موفقیت به‌روزرسانی شد'
+  } else {
+    errorMessage.value = result.error || 'خطا در آپلود عکس پروفایل'
+  }
+
+  target.value = ''
+  isImageLoading.value = false
+}
+
+async function handleDeleteProfileImage() {
+  isImageLoading.value = true
+  successMessage.value = ''
+  errorMessage.value = ''
+
+  const result = await authStore.deleteProfileImage()
+  if (result.success) {
+    imageBroken.value = false
+    successMessage.value = result.message || 'عکس پروفایل حذف شد'
+  } else {
+    errorMessage.value = result.error || 'خطا در حذف عکس پروفایل'
+  }
+
+  isImageLoading.value = false
+}
+
+function handleProfileImageError() {
+  imageBroken.value = true
 }
 
 function formatDate(dateString?: string) {

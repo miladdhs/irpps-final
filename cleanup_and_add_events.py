@@ -23,6 +23,7 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ispp_project.settings')
 django.setup()
 
 from django.contrib.auth import get_user_model
+from django.core.management import call_command
 
 from add_events import add_events
 from add_board_members import BOARD_MEMBERS_DATA, create_username
@@ -77,4 +78,5 @@ if __name__ == '__main__':
     print('Preparing board users and importing prepared events')
     print('=' * 60)
     prepare_board_members()
+    call_command('normalize_site_data')
     add_events()

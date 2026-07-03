@@ -8,8 +8,31 @@ from django.contrib.auth import get_user_model
 import json
 from .forms import CustomUserCreationForm
 from add_board_members import BOARD_MEMBERS_DATA, create_username
+from .member_directory import preferred_persian_name, should_hide_from_public_members
 
 User = get_user_model()
+
+
+def serialize_user_payload(user):
+    return {
+        'id': user.id,
+        'username': user.username,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'email': user.email,
+        'phone': user.phone,
+        'date_joined': user.date_joined.isoformat() if user.date_joined else None,
+        'is_staff': user.is_staff,
+        'is_superuser': user.is_superuser,
+        'approval_status': getattr(user, 'approval_status', None),
+        'profile_image': user.profile_image.url if user.profile_image else '',
+        'education': user.education or '',
+        'publications': user.publications or '',
+        'awards': user.awards or '',
+        'certifications': user.certifications or '',
+        'research_interests': user.research_interests or '',
+        'languages': user.languages or '',
+    }
 
 
 @csrf_exempt
@@ -35,18 +58,7 @@ def login_view(request):
                 return JsonResponse({
                     'success': True,
                     'message': 'ورود موفقیت‌آمیز بود',
-                    'user': {
-                        'id': user.id,
-                        'username': user.username,
-                        'first_name': user.first_name,
-                        'last_name': user.last_name,
-                        'email': user.email,
-                        'phone': user.phone,
-                        'is_staff': user.is_staff,
-                        'is_superuser': user.is_superuser,
-                        'approval_status': getattr(user, 'approval_status', None),
-                        'profile_image': user.profile_image.url if user.profile_image else '',
-                    }
+                    'user': serialize_user_payload(user)
                 })
             else:
                 return JsonResponse({
@@ -153,23 +165,7 @@ def profile_view(request):
     user = request.user
     return JsonResponse({
         'success': True,
-        'user': {
-            'id': user.id,
-            'username': user.username,
-            'first_name': user.first_name,
-            'last_name': user.last_name,
-            'email': user.email,
-            'phone': user.phone,
-            'date_joined': user.date_joined.isoformat(),
-            'is_staff': user.is_staff,
-            'profile_image': user.profile_image.url if user.profile_image else '',
-            'education': user.education or '',
-            'publications': user.publications or '',
-            'awards': user.awards or '',
-            'certifications': user.certifications or '',
-            'research_interests': user.research_interests or '',
-            'languages': user.languages or '',
-        }
+        'user': serialize_user_payload(user)
     })
 
 
@@ -210,15 +206,7 @@ def update_profile_view(request):
         return JsonResponse({
             'success': True,
             'message': 'پروفایل با موفقیت به‌روزرسانی شد',
-            'user': {
-                'id': user.id,
-                'username': user.username,
-                'first_name': user.first_name,
-                'last_name': user.last_name,
-                'email': user.email,
-                'phone': user.phone,
-                'date_joined': user.date_joined.isoformat(),
-            }
+            'user': serialize_user_payload(user)
         })
         
     except json.JSONDecodeError:
@@ -240,36 +228,23 @@ def members_list_view(request):
         from django.contrib.auth import get_user_model
         User = get_user_model()
         
-        # Get all users from database (exclude superusers/admin)
-        members = User.objects.filter(
-            is_superuser=False,
-            is_active=True,
-        ).exclude(
-            username__startswith='system_import'
-        ).order_by('first_name', 'last_name')
+        members = User.objects.filter(is_active=True).order_by('first_name', 'last_name')
         
         members_data = []
-        request_scheme = request.scheme
-        request_host = request.get_host()
         for member in members:
-            # Get names (first_name = Persian, last_name = English)
-            persian_name = member.first_name or ''
+            if should_hide_from_public_members(member):
+                continue
+
+            persian_name = preferred_persian_name(member)
             english_name = member.last_name or ''
-            
-            # Use Persian name as display name, fallback to English
             display_name = persian_name or english_name or member.username
-            
-            # Get profile image URL from database for this specific user
             profile_image_url = ''
             if member.profile_image:
                 try:
-                    # Get the URL - Django's .url returns a path starting with /media/
                     profile_image_url = member.profile_image.url
-                    # Ensure it's a proper URL path (starts with /media/)
                     if profile_image_url and not profile_image_url.startswith('/'):
                         profile_image_url = f"/{profile_image_url}"
                 except Exception as e:
-                    # If there's an error getting the URL, use empty string (will use default image)
                     profile_image_url = ''
                     print(f"Error getting profile image for user {member.id}: {e}")
             
