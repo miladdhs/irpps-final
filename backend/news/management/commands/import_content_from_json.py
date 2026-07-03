@@ -65,6 +65,8 @@ class Command(BaseCommand):
             # Try multiple possible paths
             base_dir = Path(settings.BASE_DIR)
             possible_paths = [
+                # Mounted Docker volume path from docker-compose
+                base_dir / 'import_content' / 'structured_content_complete.json',
                 # Docker container path (mounted volume)
                 base_dir.parent / 'frontend' / 'public' / 'Content' / 'structured_content_complete.json',
                 # Local development path

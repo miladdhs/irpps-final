@@ -235,6 +235,18 @@ python manage.py collectstatic --noinput
 
 ### مراحل استقرار
 
+### هشدار مهم درباره از دست رفتن دیتابیس
+
+این پروژه دیتابیس MySQL را داخل یک **Docker named volume** به نام `mysql_data` نگه می‌دارد.  
+اگر روی سرور یکی از این کارها انجام شده باشد، دیتای سایت می‌تواند یک‌باره ناپدید شود:
+
+- اجرای `docker compose down -v`
+- حذف دستی volume های Docker
+- تغییر نام پروژه/مسیر compose به شکلی که Docker یک volume جدید بسازد
+- بالا آمدن stack جدید بدون volume قبلی
+
+برای همین، خود کد پروژه معمولاً باعث پاک شدن همه‌ی اعضا/اخبار/رویدادها نمی‌شود؛ ریسک اصلی اینجا از بین رفتن volume دیتابیس است.
+
 #### 1. تنظیم فایل `.env`
 
 فایل `.env` را در `backend/` ایجاد/ویرایش کنید:
@@ -279,6 +291,8 @@ docker-compose down
 # توقف و حذف volumes (دقت کنید!)
 docker-compose down -v
 ```
+
+`docker compose down -v` دیتابیس را هم حذف می‌کند. این دستور را روی سرور production اجرا نکنید مگر این‌که از backup مطمئن باشید.
 
 #### 4. اجرای Migration ها
 
@@ -325,6 +339,44 @@ docker-compose restart backend
 
 # Rebuild یک service
 docker-compose build --no-cache backend
+```
+
+### بازیابی داده پس از deploy
+
+اگر دیتابیس خالی شده و می‌خواهید داده‌های موجود در فایل‌های پروژه دوباره وارد شوند:
+
+```bash
+chmod +x restore_site_data.sh
+./restore_site_data.sh 1
+```
+
+این اسکریپت:
+
+- `mysql` و `backend` را بالا می‌آورد
+- migration را اجرا می‌کند
+- اعضا/خبر/اطلاعیه را از `backend/ispp_db.json` برمی‌گرداند
+- خبرها و رویدادها را از `frontend/public/Content/structured_content_complete.json` با حالت update وارد می‌کند
+- در انتها تعداد رکوردها را با `inspect_database --format count` نشان می‌دهد
+
+### بکاپ هفتگی خودکار دیتابیس
+
+یک سرویس جدید به نام `db-backup` به compose اضافه شده است. این سرویس:
+
+- هر `168` ساعت یک backup می‌گیرد
+- فایل‌ها را در پوشه‌ی `./backups/mysql/` ذخیره می‌کند
+- backupها را به صورت `sql.gz` نگه می‌دارد
+- فقط 12 backup آخر را حفظ می‌کند
+
+برای فعال شدن:
+
+```bash
+docker compose up -d --build db-backup
+```
+
+برای دیدن لاگ بکاپ:
+
+```bash
+docker compose logs -f db-backup
 ```
 
 ---

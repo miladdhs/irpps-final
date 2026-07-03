@@ -37,6 +37,7 @@ services:
       - backend_static:/app/staticfiles
       - backend_media:/app/media
       - backend_logs:/app/logs
+      - ./frontend/public/Content:/app/import_content:ro
     environment:
       - PYTHONUNBUFFERED=1
       - IS_DOCKER=True
@@ -96,6 +97,29 @@ services:
       - --slow_query_log=0
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
+
+  db-backup:
+    build:
+      context: ./ops/db-backup
+      dockerfile: Dockerfile
+    container_name: irpps-db-backup
+    environment:
+      - DB_HOST=mysql
+      - DB_PORT=3306
+      - DB_NAME=irporg_DB
+      - DB_USER=irporg_admin
+      - DB_PASSWORD=tHPXArRfwrX3WH!*j
+      - BACKUP_DIR=/backups/mysql
+      - BACKUP_INTERVAL_HOURS=168
+      - BACKUP_RETENTION_COUNT=12
+    volumes:
+      - ./backups:/backups
+    depends_on:
+      mysql:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - app-network
 
 networks:
   app-network:
