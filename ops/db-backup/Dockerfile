@@ -1,4 +1,4 @@
-FROM docker.arvancloud.ir/mysql:8.3.0
+FROM mysql:8.3.0
 
 WORKDIR /opt/db-backup
 

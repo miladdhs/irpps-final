@@ -3,10 +3,6 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# NPM mirror ??????
-RUN npm config set registry https://mirror-npm.runflare.com \
-    && npm config set strict-ssl false
-
 COPY package*.json ./
 
 RUN npm install --legacy-peer-deps
@@ -19,8 +15,7 @@ RUN npm run build:prod
 ###################### Runtime stage ######################
 FROM nginx:alpine
 
-RUN sed -i 's|https://dl-cdn.alpinelinux.org/alpine|https://mirror-apk.runflare.com/alpine|g' /etc/apk/repositories \
-    && apk add --no-cache openssl
+RUN apk add --no-cache openssl
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY start-nginx.sh /usr/local/bin/start-nginx.sh
