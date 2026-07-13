@@ -11,6 +11,14 @@ export interface User {
   email: string
   phone: string
   is_staff: boolean
+  city?: string
+  specialty?: string
+  experience?: number
+  bio?: string
+  workplace?: string
+  current_position?: string
+  expertise_areas?: string
+  work_experience?: string
   profile_image?: string
   education?: string
   publications?: string
@@ -137,6 +145,11 @@ export const useAuthStore = defineStore('auth', () => {
     last_name?: string
     email?: string
     phone?: string
+    city?: string
+    specialty?: string
+    workplace?: string
+    current_position?: string
+    experience?: number
   }) {
     isLoading.value = true
     error.value = null
@@ -206,6 +219,13 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   async function updateResume(data: {
+    city?: string
+    specialty?: string
+    workplace?: string
+    current_position?: string
+    expertise_areas?: string
+    work_experience?: string
+    experience?: number
     education?: string
     publications?: string
     awards?: string
@@ -220,7 +240,9 @@ export const useAuthStore = defineStore('auth', () => {
     try {
       const response = await authAPI.updateResume(data)
       if (response.data.success) {
-        if (user.value) {
+        if (response.data.user) {
+          user.value = response.data.user
+        } else if (user.value) {
           Object.assign(user.value, response.data.resume)
         }
         return { success: true, message: response.data.message }

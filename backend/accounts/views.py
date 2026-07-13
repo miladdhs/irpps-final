@@ -1,16 +1,75 @@
-from django.contrib.auth import authenticate, login, logout
+import json
+
+from add_board_members import BOARD_MEMBERS_DATA, create_username
+from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth import get_user_model
-import json
+
 from .forms import CustomUserCreationForm
-from add_board_members import BOARD_MEMBERS_DATA, create_username
 from .member_directory import preferred_persian_name, should_hide_from_public_members
 
 User = get_user_model()
+
+RESUME_FIELD_NAMES = (
+    'city',
+    'specialty',
+    'experience',
+    'bio',
+    'workplace',
+    'current_position',
+    'expertise_areas',
+    'work_experience',
+    'education',
+    'publications',
+    'awards',
+    'certifications',
+    'research_interests',
+    'languages',
+)
+
+
+def _text(value):
+    return value or ''
+
+
+def _profile_image_url(user):
+    if not user.profile_image:
+        return ''
+
+    try:
+        profile_image_url = user.profile_image.url
+        return profile_image_url if profile_image_url.startswith('/') else f'/{profile_image_url}'
+    except Exception:
+        return ''
+
+
+def _resume_payload(user):
+    payload = {
+        'city': _text(user.city),
+        'specialty': _text(user.specialty),
+        'experience': user.experience or 0,
+        'bio': _text(user.bio),
+        'workplace': _text(getattr(user, 'workplace', '')),
+        'current_position': _text(getattr(user, 'current_position', '')),
+        'expertise_areas': _text(getattr(user, 'expertise_areas', '')),
+        'work_experience': _text(getattr(user, 'work_experience', '')),
+        'education': _text(user.education),
+        'publications': _text(user.publications),
+        'awards': _text(user.awards),
+        'certifications': _text(user.certifications),
+        'research_interests': _text(user.research_interests),
+        'languages': _text(user.languages),
+    }
+    payload['filled_sections'] = [
+        key for key, value in payload.items()
+        if key != 'experience' and isinstance(value, str) and value.strip()
+    ]
+    if payload['experience']:
+        payload['filled_sections'].insert(0, 'experience')
+    return payload
 
 
 def serialize_user_payload(user):
@@ -20,85 +79,51 @@ def serialize_user_payload(user):
         'first_name': user.first_name,
         'last_name': user.last_name,
         'email': user.email,
-        'phone': user.phone,
+        'phone': _text(user.phone),
         'date_joined': user.date_joined.isoformat() if user.date_joined else None,
         'is_staff': user.is_staff,
         'is_superuser': user.is_superuser,
         'approval_status': getattr(user, 'approval_status', None),
-        'profile_image': user.profile_image.url if user.profile_image else '',
-        'education': user.education or '',
-        'publications': user.publications or '',
-        'awards': user.awards or '',
-        'certifications': user.certifications or '',
-        'research_interests': user.research_interests or '',
-        'languages': user.languages or '',
+        'profile_image': _profile_image_url(user),
+        **_resume_payload(user),
     }
 
 
 @csrf_exempt
 @require_http_methods(["POST"])
 def login_view(request):
-    """Handle user login"""
     try:
         data = json.loads(request.body)
         username = data.get('username')
         password = data.get('password')
-        
+
         if not username or not password:
-            return JsonResponse({
-                'success': False,
-                'errors': 'نام کاربری و رمز عبور الزامی است'
-            }, status=400)
-        
+            return JsonResponse({'success': False, 'errors': 'نام کاربری و رمز عبور الزامی است'}, status=400)
+
         user = authenticate(request, username=username, password=password)
-        
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return JsonResponse({
-                    'success': True,
-                    'message': 'ورود موفقیت‌آمیز بود',
-                    'user': serialize_user_payload(user)
-                })
-            else:
-                return JsonResponse({
-                    'success': False,
-                    'errors': 'حساب کاربری غیرفعال است'
-                }, status=403)
-        else:
-            return JsonResponse({
-                'success': False,
-                'errors': 'نام کاربری یا رمز عبور اشتباه است'
-            }, status=401)
-            
+        if user is None:
+            return JsonResponse({'success': False, 'errors': 'نام کاربری یا رمز عبور اشتباه است'}, status=401)
+
+        if not user.is_active:
+            return JsonResponse({'success': False, 'errors': 'حساب کاربری غیرفعال است'}, status=403)
+
+        login(request, user)
+        return JsonResponse({'success': True, 'message': 'ورود موفقیت‌آمیز بود', 'user': serialize_user_payload(user)})
     except json.JSONDecodeError:
-        return JsonResponse({
-            'success': False,
-            'errors': 'خطا در پردازش درخواست'
-        }, status=400)
-    except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'errors': str(e)
-        }, status=500)
+        return JsonResponse({'success': False, 'errors': 'خطا در پردازش درخواست'}, status=400)
+    except Exception as exc:
+        return JsonResponse({'success': False, 'errors': str(exc)}, status=500)
 
 
 @csrf_exempt
 @require_http_methods(["POST"])
 def register_view(request):
-    """Handle user registration with approval workflow"""
     try:
         data = json.loads(request.body)
-        
-        # Check if passwords match
         if data.get('password') != data.get('password_confirm'):
-            return JsonResponse({
-                'success': False,
-                'errors': 'رمزهای عبور مطابقت ندارند'
-            }, status=400)
-        
-        # Create form with data
-        form_data = {
+            return JsonResponse({'success': False, 'errors': 'رمزهای عبور مطابقت ندارند'}, status=400)
+
+        form = CustomUserCreationForm({
             'username': data.get('username'),
             'email': data.get('email', ''),
             'phone': data.get('phone', ''),
@@ -106,131 +131,83 @@ def register_view(request):
             'last_name': data.get('last_name'),
             'password1': data.get('password'),
             'password2': data.get('password_confirm'),
-        }
-        
-        form = CustomUserCreationForm(form_data)
-        
-        if form.is_valid():
-            user = form.save(commit=False)
-            # Set user as inactive and pending approval
-            user.is_active = False
-            user.approval_status = 'pending'
-            user.save()
-            
-            # DO NOT login the user automatically
-            return JsonResponse({
-                'success': True,
-                'message': 'درخواست عضویت شما ثبت شد. لطفاً منتظر تایید مدیریت باشید.',
-                'user': {
-                    'id': user.id,
-                    'username': user.username,
-                    'first_name': user.first_name,
-                    'last_name': user.last_name,
-                    'email': user.email,
-                    'phone': user.phone,
-                    'approval_status': user.approval_status,
-                }
-            })
-        else:
+        })
+
+        if not form.is_valid():
             error_messages = []
             for field, errors in form.errors.items():
                 field_label = form.fields.get(field).label if field in form.fields else ''
                 for error in errors:
-                    if field_label:
-                        error_messages.append(f"{field_label}: {error}")
-                    else:
-                        error_messages.append(str(error))
+                    error_messages.append(f'{field_label}: {error}' if field_label else str(error))
+            return JsonResponse({'success': False, 'errors': ' | '.join(error_messages) or 'خطا در ثبت نام'}, status=400)
 
-            return JsonResponse({
-                'success': False,
-                'errors': ' | '.join(error_messages) if error_messages else 'خطا در ثبت نام'
-            }, status=400)
-            
+        user = form.save(commit=False)
+        user.is_active = False
+        user.approval_status = 'pending'
+        user.save()
+
+        return JsonResponse({
+            'success': True,
+            'message': 'درخواست عضویت شما ثبت شد. لطفاً منتظر تایید مدیریت باشید.',
+            'user': {
+                'id': user.id,
+                'username': user.username,
+                'first_name': user.first_name,
+                'last_name': user.last_name,
+                'email': user.email,
+                'phone': user.phone,
+                'approval_status': user.approval_status,
+            },
+        })
     except json.JSONDecodeError:
-        return JsonResponse({
-            'success': False,
-            'errors': 'خطا در پردازش درخواست'
-        }, status=400)
-    except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'errors': str(e)
-        }, status=500)
+        return JsonResponse({'success': False, 'errors': 'خطا در پردازش درخواست'}, status=400)
+    except Exception as exc:
+        return JsonResponse({'success': False, 'errors': str(exc)}, status=500)
 
 
 @login_required
 @require_http_methods(["GET"])
 def profile_view(request):
-    """Get user profile"""
-    user = request.user
-    return JsonResponse({
-        'success': True,
-        'user': serialize_user_payload(user)
-    })
+    return JsonResponse({'success': True, 'user': serialize_user_payload(request.user)})
 
 
 @csrf_exempt
 @require_http_methods(["POST"])
 def logout_view(request):
-    """Handle user logout"""
     logout(request)
-    return JsonResponse({
-        'success': True,
-        'message': 'خروج موفقیت‌آمیز بود'
-    })
+    return JsonResponse({'success': True, 'message': 'خروج موفقیت‌آمیز بود'})
 
 
 @login_required
 @csrf_exempt
 @require_http_methods(["PUT", "PATCH"])
 def update_profile_view(request):
-    """Update user profile"""
     try:
         user = request.user
         data = json.loads(request.body)
-        
-        # Update user fields
-        if 'first_name' in data:
-            user.first_name = data['first_name']
-        if 'last_name' in data:
-            user.last_name = data['last_name']
-        if 'email' in data:
-            user.email = data['email']
-        if 'phone' in data:
-            user.phone = data['phone']
-        
-        # Validate and save
+
+        for field in ('first_name', 'last_name', 'email', 'phone', 'city', 'specialty', 'workplace', 'current_position'):
+            if field in data:
+                setattr(user, field, data[field])
+
+        if 'experience' in data:
+            user.experience = int(data['experience'] or 0)
+
         user.full_clean()
         user.save()
-        
-        return JsonResponse({
-            'success': True,
-            'message': 'پروفایل با موفقیت به‌روزرسانی شد',
-            'user': serialize_user_payload(user)
-        })
-        
+        return JsonResponse({'success': True, 'message': 'پروفایل با موفقیت به‌روزرسانی شد', 'user': serialize_user_payload(user)})
     except json.JSONDecodeError:
-        return JsonResponse({
-            'success': False,
-            'errors': 'خطا در پردازش درخواست'
-        }, status=400)
-    except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'errors': str(e)
-        }, status=500)
+        return JsonResponse({'success': False, 'errors': 'خطا در پردازش درخواست'}, status=400)
+    except Exception as exc:
+        return JsonResponse({'success': False, 'errors': str(exc)}, status=500)
 
 
 @require_http_methods(["GET"])
 def members_list_view(request):
-    """Get list of all members from database"""
     try:
-        from django.contrib.auth import get_user_model
-        User = get_user_model()
-        
         members = User.objects.filter(is_active=True).order_by('first_name', 'last_name')
-        
         members_data = []
+
         for member in members:
             if should_hide_from_public_members(member):
                 continue
@@ -238,336 +215,188 @@ def members_list_view(request):
             persian_name = preferred_persian_name(member)
             english_name = member.last_name or ''
             display_name = persian_name or english_name or member.username
-            profile_image_url = ''
-            if member.profile_image:
-                try:
-                    profile_image_url = member.profile_image.url
-                    if profile_image_url and not profile_image_url.startswith('/'):
-                        profile_image_url = f"/{profile_image_url}"
-                except Exception as e:
-                    profile_image_url = ''
-                    print(f"Error getting profile image for user {member.id}: {e}")
-            
             members_data.append({
                 'id': member.id,
                 'persian_name': persian_name,
                 'english_name': english_name,
                 'display_name': display_name,
-                'email': member.email or '',
-                'phone': member.phone or '',
-                'city': member.city or '',
-                'specialty': member.specialty or '',
-                'experience': member.experience or 0,
-                'rating': float(member.rating) if member.rating else 0.0,
-                'bio': member.bio or '',
-                'profile_image': profile_image_url,
-                'education': member.education or '',
-                'publications': member.publications or '',
-                'awards': member.awards or '',
-                'certifications': member.certifications or '',
-                'research_interests': member.research_interests or '',
-                'languages': member.languages or '',
+                'email': _text(member.email),
+                'phone': _text(member.phone),
+                'profile_image': _profile_image_url(member),
+                **_resume_payload(member),
             })
-        
-        return JsonResponse({
-            'success': True,
-            'members': members_data,
-            'count': len(members_data)
-        })
-        
-    except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'errors': str(e)
-        }, status=500)
+
+        return JsonResponse({'success': True, 'members': members_data, 'count': len(members_data)})
+    except Exception as exc:
+        return JsonResponse({'success': False, 'errors': str(exc)}, status=500)
 
 
 @require_http_methods(["GET"])
 def board_members_view(request):
-    """Get list of board members grouped by period"""
     try:
-        from django.contrib.auth import get_user_model
-        User = get_user_model()
-        
-        # Define board member usernames for each period
         board_members_config = {
             '1395': [
-                'board_سهیلا_خلیل_زاده',
-                'board_قمر_تاج_خانبابائی',
-                'board_محمد_رضائی',
-                'board_مجید_کیوانفر',
-                'board_سید_احمد_طباطبائی',
-                'board_محسن_علی_سمیر',
-                'board_حسینعلی_غفاری_پور',
-                'board_محمد_رضا_مدرسی',
-                'board_سید_جواد_سیدی',
-                'board_روح_الله_شیرزادی',
-                'board_علیرضا_اسدی',
+                'board_Ø³Ù‡ÛŒÙ„Ø§_Ø®Ù„ÛŒÙ„_Ø²Ø§Ø¯Ù‡',
+                'board_Ù‚Ù…Ø±_ØªØ§Ø¬_Ø®Ø§Ù†Ø¨Ø§Ø¨Ø§Ø¦ÛŒ',
+                'board_Ù…Ø­Ù…Ø¯_Ø±Ø¶Ø§Ø¦ÛŒ',
+                'board_Ù…Ø¬ÛŒØ¯_Ú©ÛŒÙˆØ§Ù†ÙØ±',
+                'board_Ø³ÛŒØ¯_Ø§Ø­Ù…Ø¯_Ø·Ø¨Ø§Ø·Ø¨Ø§Ø¦ÛŒ',
+                'board_Ù…Ø­Ø³Ù†_Ø¹Ù„ÛŒ_Ø³Ù…ÛŒØ±',
+                'board_Ø­Ø³ÛŒÙ†Ø¹Ù„ÛŒ_ØºÙØ§Ø±ÛŒ_Ù¾ÙˆØ±',
+                'board_Ù…Ø­Ù…Ø¯_Ø±Ø¶Ø§_Ù…Ø¯Ø±Ø³ÛŒ',
+                'board_Ø³ÛŒØ¯_Ø¬ÙˆØ§Ø¯_Ø³ÛŒØ¯ÛŒ',
+                'board_Ø±ÙˆØ­_Ø§Ù„Ù„Ù‡_Ø´ÛŒØ±Ø²Ø§Ø¯ÛŒ',
+                'board_Ø¹Ù„ÛŒØ±Ø¶Ø§_Ø§Ø³Ø¯ÛŒ',
             ],
             '1400': [
-                'board_مجید_کیوانفر',
-                'board_محمد_رضائی',
-                'board_امیر_رضائی',
-                'board_علیرضا_عشقی',
-                'board_سید_محمد_رضا_میرکریمی',
-                'board_بابک_قالیباف',
-                'board_سید_حسین_میر_لوحی',
-                'board_لعبت_شاهکار',
+                'board_Ù…Ø¬ÛŒØ¯_Ú©ÛŒÙˆØ§Ù†ÙØ±',
+                'board_Ù…Ø­Ù…Ø¯_Ø±Ø¶Ø§Ø¦ÛŒ',
+                'board_Ø§Ù…ÛŒØ±_Ø±Ø¶Ø§Ø¦ÛŒ',
+                'board_Ø¹Ù„ÛŒØ±Ø¶Ø§_Ø¹Ø´Ù‚ÛŒ',
+                'board_Ø³ÛŒØ¯_Ù…Ø­Ù…Ø¯_Ø±Ø¶Ø§_Ù…ÛŒØ±Ú©Ø±ÛŒÙ…ÛŒ',
+                'board_Ø¨Ø§Ø¨Ú©_Ù‚Ø§Ù„ÛŒØ¨Ø§Ù',
+                'board_Ø³ÛŒØ¯_Ø­Ø³ÛŒÙ†_Ù…ÛŒØ±_Ù„ÙˆØ­ÛŒ',
+                'board_Ù„Ø¹Ø¨Øª_Ø´Ø§Ù‡Ú©Ø§Ø±',
             ],
             '1403': [
-                'board_قمر_تاج_خانبابائی',
-                'board_سهیلا_خلیل_زاده',
-                'board_محمد_رضائی',
-                'board_نازنین_فرحبخش',
-                'board_امیر_رضائی',
-                'board_ذلفا_مدرسی',
-                'board_علیرضا_عشقی',
-                'board_معصومه_قاسمپور_علمداری',
-            ]
+                'board_Ù‚Ù…Ø±_ØªØ§Ø¬_Ø®Ø§Ù†Ø¨Ø§Ø¨Ø§Ø¦ÛŒ',
+                'board_Ø³Ù‡ÛŒÙ„Ø§_Ø®Ù„ÛŒÙ„_Ø²Ø§Ø¯Ù‡',
+                'board_Ù…Ø­Ù…Ø¯_Ø±Ø¶Ø§Ø¦ÛŒ',
+                'board_Ù†Ø§Ø²Ù†ÛŒÙ†_ÙØ±Ø­Ø¨Ø®Ø´',
+                'board_Ø§Ù…ÛŒØ±_Ø±Ø¶Ø§Ø¦ÛŒ',
+                'board_Ø°Ù„ÙØ§_Ù…Ø¯Ø±Ø³ÛŒ',
+                'board_Ø¹Ù„ÛŒØ±Ø¶Ø§_Ø¹Ø´Ù‚ÛŒ',
+                'board_Ù…Ø¹ØµÙˆÙ…Ù‡_Ù‚Ø§Ø³Ù…Ù¾ÙˆØ±_Ø¹Ù„Ù…Ø¯Ø§Ø±ÛŒ',
+            ],
         }
-        
+
         result = {}
-        
         for period, usernames in board_members_config.items():
             members = User.objects.filter(username__in=usernames)
-            
-            members_data = []
-            for member in members:
-                persian_name = member.first_name or ''
-                english_name = member.last_name or ''
-                display_name = persian_name or english_name or member.username
-                
-                profile_image_url = ''
-                if member.profile_image:
-                    try:
-                        profile_image_url = member.profile_image.url
-                        if profile_image_url and not profile_image_url.startswith('/'):
-                            profile_image_url = f"/{profile_image_url}"
-                    except Exception as e:
-                        profile_image_url = ''
-                
-                members_data.append({
-                    'id': member.id,
-                    'persian_name': persian_name,
-                    'english_name': english_name,
-                    'display_name': display_name,
-                    'specialty': member.specialty or '',
-                    'bio': member.bio or '',
-                    'profile_image': profile_image_url,
-                })
-            
-            result[period] = members_data
-        
-        return JsonResponse({
-            'success': True,
-            'board_members': result
-        })
-        
-    except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'errors': str(e)
-        }, status=500)
+            result[period] = [{
+                'id': member.id,
+                'persian_name': member.first_name or '',
+                'english_name': member.last_name or '',
+                'display_name': member.first_name or member.last_name or member.username,
+                'specialty': member.specialty or '',
+                'bio': member.bio or '',
+                'profile_image': _profile_image_url(member),
+            } for member in members]
+
+        return JsonResponse({'success': True, 'board_members': result})
+    except Exception as exc:
+        return JsonResponse({'success': False, 'errors': str(exc)}, status=500)
 
 
 @login_required
 @csrf_exempt
 @require_http_methods(["POST"])
 def upload_profile_image_view(request):
-    """Upload profile image"""
     try:
         user = request.user
-        
         if 'profile_image' not in request.FILES:
-            return JsonResponse({
-                'success': False,
-                'errors': 'فایل عکس ارسال نشده است'
-            }, status=400)
-        
+            return JsonResponse({'success': False, 'errors': 'فایل عکس ارسال نشده است'}, status=400)
+
         image_file = request.FILES['profile_image']
-        
-        # Validate image file
         if not image_file.content_type.startswith('image/'):
-            return JsonResponse({
-                'success': False,
-                'errors': 'فایل ارسالی باید یک تصویر باشد'
-            }, status=400)
-        
-        # Save image
+            return JsonResponse({'success': False, 'errors': 'فایل ارسالی باید یک تصویر باشد'}, status=400)
+
         user.profile_image = image_file
         user.save()
-        
-        # Get the URL - Django's .url returns a path starting with /media/
-        profile_image_url = user.profile_image.url
-        # Ensure it's a proper URL path (starts with /media/)
-        if profile_image_url and not profile_image_url.startswith('/'):
-            profile_image_url = f"/{profile_image_url}"
-        
         return JsonResponse({
             'success': True,
             'message': 'عکس پروفایل با موفقیت به‌روزرسانی شد',
-            'profile_image_url': profile_image_url,
+            'profile_image_url': _profile_image_url(user),
             'user': serialize_user_payload(user),
         })
-        
-    except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'errors': str(e)
-        }, status=500)
+    except Exception as exc:
+        return JsonResponse({'success': False, 'errors': str(exc)}, status=500)
 
 
 @login_required
 @csrf_exempt
 @require_http_methods(["DELETE", "POST"])
 def delete_profile_image_view(request):
-    """Delete profile image"""
     try:
         user = request.user
-        
-        # Delete the image file if it exists
         if user.profile_image:
             try:
-                # Try to delete the file, but don't fail if it doesn't exist
                 user.profile_image.delete(save=False)
-            except Exception as file_error:
-                # Log the error but continue
-                print(f"Warning: Could not delete file: {file_error}")
-        
-        # Clear the profile_image field
+            except Exception:
+                pass
         user.profile_image = None
         user.save()
-        
         return JsonResponse({
             'success': True,
             'message': 'عکس پروفایل با موفقیت حذف شد',
             'profile_image_url': '',
             'user': serialize_user_payload(user),
         })
-        
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        return JsonResponse({
-            'success': False,
-            'errors': str(e)
-        }, status=500)
+    except Exception as exc:
+        return JsonResponse({'success': False, 'errors': str(exc)}, status=500)
 
 
 @login_required
 @csrf_exempt
 @require_http_methods(["PUT", "PATCH", "POST"])
 def update_resume_view(request):
-    """Update user resume information"""
     try:
         user = request.user
-        
-        # Handle both JSON and form data
-        if request.content_type == 'application/json':
-            data = json.loads(request.body)
-        else:
-            data = request.POST
-        
-        # Update resume fields
-        if 'education' in data:
-            user.education = data['education']
-        if 'publications' in data:
-            user.publications = data['publications']
-        if 'awards' in data:
-            user.awards = data['awards']
-        if 'certifications' in data:
-            user.certifications = data['certifications']
-        if 'research_interests' in data:
-            user.research_interests = data['research_interests']
-        if 'languages' in data:
-            user.languages = data['languages']
-        if 'bio' in data:
-            user.bio = data['bio']
-        
-        # Validate and save
+        data = json.loads(request.body) if request.content_type == 'application/json' else request.POST
+
+        for field in RESUME_FIELD_NAMES:
+            if field in data:
+                value = data[field]
+                if field == 'experience':
+                    setattr(user, field, int(value or 0))
+                else:
+                    setattr(user, field, value)
+
         user.full_clean()
         user.save()
-        
         return JsonResponse({
             'success': True,
             'message': 'رزومه با موفقیت به‌روزرسانی شد',
-            'resume': {
-                'education': user.education or '',
-                'publications': user.publications or '',
-                'awards': user.awards or '',
-                'certifications': user.certifications or '',
-                'research_interests': user.research_interests or '',
-                'languages': user.languages or '',
-                'bio': user.bio or '',
-            }
+            'resume': _resume_payload(user),
+            'user': serialize_user_payload(user),
         })
-        
     except json.JSONDecodeError:
-        return JsonResponse({
-            'success': False,
-            'errors': 'خطا در پردازش درخواست'
-        }, status=400)
-    except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'errors': str(e)
-        }, status=500)
+        return JsonResponse({'success': False, 'errors': 'خطا در پردازش درخواست'}, status=400)
+    except Exception as exc:
+        return JsonResponse({'success': False, 'errors': str(exc)}, status=500)
 
-
-# Membership Management API Endpoints
 
 @staff_member_required
 @require_http_methods(["GET"])
 def pending_members_view(request):
-    """Get list of pending membership requests (admin only)"""
     try:
-        pending_users = User.objects.filter(
-            approval_status='pending',
-            is_superuser=False
-        ).order_by('-requested_at')
-        
-        members_data = []
-        for user in pending_users:
-            members_data.append({
-                'id': user.id,
-                'username': user.username,
-                'first_name': user.first_name,
-                'last_name': user.last_name,
-                'email': user.email,
-                'phone': user.phone,
-                'city': user.city,
-                'specialty': user.specialty,
-                'experience': user.experience,
-                'bio': user.bio,
-                'requested_at': user.requested_at.isoformat(),
-                'approval_status': user.approval_status,
-            })
-        
-        return JsonResponse({
-            'success': True,
-            'pending_members': members_data,
-            'count': len(members_data)
-        })
-        
-    except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'errors': str(e)
-        }, status=500)
+        pending_users = User.objects.filter(approval_status='pending', is_superuser=False).order_by('-requested_at')
+        members_data = [{
+            'id': user.id,
+            'username': user.username,
+            'first_name': user.first_name,
+            'last_name': user.last_name,
+            'email': user.email,
+            'phone': user.phone,
+            'city': user.city,
+            'specialty': user.specialty,
+            'experience': user.experience,
+            'bio': user.bio,
+            'requested_at': user.requested_at.isoformat(),
+            'approval_status': user.approval_status,
+        } for user in pending_users]
+        return JsonResponse({'success': True, 'pending_members': members_data, 'count': len(members_data)})
+    except Exception as exc:
+        return JsonResponse({'success': False, 'errors': str(exc)}, status=500)
 
 
 @staff_member_required
 @csrf_exempt
 @require_http_methods(["POST"])
 def approve_member_view(request, user_id):
-    """Approve a pending member (admin only)"""
     try:
         user = User.objects.get(id=user_id, approval_status='pending')
-        admin_user = request.user
-        
-        # Approve the user
-        user.approve_membership(admin_user)
-        
+        user.approve_membership(request.user)
         return JsonResponse({
             'success': True,
             'message': f'عضویت {user.first_name} {user.last_name} تایید شد',
@@ -579,36 +408,22 @@ def approve_member_view(request, user_id):
                 'approval_status': user.approval_status,
                 'is_active': user.is_active,
                 'approved_at': user.approved_at.isoformat() if user.approved_at else None,
-            }
+            },
         })
-        
     except User.DoesNotExist:
-        return JsonResponse({
-            'success': False,
-            'errors': 'کاربر یافت نشد یا قبلاً پردازش شده است'
-        }, status=404)
-    except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'errors': str(e)
-        }, status=500)
+        return JsonResponse({'success': False, 'errors': 'کاربر یافت نشد یا قبلاً پردازش شده است'}, status=404)
+    except Exception as exc:
+        return JsonResponse({'success': False, 'errors': str(exc)}, status=500)
 
 
 @staff_member_required
 @csrf_exempt
 @require_http_methods(["POST"])
 def reject_member_view(request, user_id):
-    """Reject a pending member (admin only)"""
     try:
         data = json.loads(request.body) if request.body else {}
-        reason = data.get('reason', '')
-        
         user = User.objects.get(id=user_id, approval_status='pending')
-        admin_user = request.user
-        
-        # Reject the user
-        user.reject_membership(reason, admin_user)
-        
+        user.reject_membership(data.get('reason', ''), request.user)
         return JsonResponse({
             'success': True,
             'message': f'عضویت {user.first_name} {user.last_name} رد شد',
@@ -620,32 +435,20 @@ def reject_member_view(request, user_id):
                 'approval_status': user.approval_status,
                 'is_active': user.is_active,
                 'rejection_reason': user.rejection_reason,
-            }
+            },
         })
-        
     except User.DoesNotExist:
-        return JsonResponse({
-            'success': False,
-            'errors': 'کاربر یافت نشد یا قبلاً پردازش شده است'
-        }, status=404)
+        return JsonResponse({'success': False, 'errors': 'کاربر یافت نشد یا قبلاً پردازش شده است'}, status=404)
     except json.JSONDecodeError:
-        return JsonResponse({
-            'success': False,
-            'errors': 'خطا در پردازش درخواست'
-        }, status=400)
-    except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'errors': str(e)
-        }, status=500)
+        return JsonResponse({'success': False, 'errors': 'خطا در پردازش درخواست'}, status=400)
+    except Exception as exc:
+        return JsonResponse({'success': False, 'errors': str(exc)}, status=500)
 
 
 @require_http_methods(["GET"])
 def board_members_view_v2(request):
-    """Get board members grouped by period using the canonical config data."""
     try:
         result = {}
-
         for period_key, configured_members in BOARD_MEMBERS_DATA.items():
             period = configured_members[0]['period'] if configured_members else period_key
             members_data = []
@@ -653,16 +456,6 @@ def board_members_view_v2(request):
             for configured_member in configured_members:
                 username = create_username(configured_member['persian_name'])
                 member = User.objects.filter(username=username).first()
-
-                profile_image_url = ''
-                if member and member.profile_image:
-                    try:
-                        profile_image_url = member.profile_image.url
-                        if profile_image_url and not profile_image_url.startswith('/'):
-                            profile_image_url = f"/{profile_image_url}"
-                    except Exception:
-                        profile_image_url = ''
-
                 members_data.append({
                     'id': member.id if member else None,
                     'username': username,
@@ -673,17 +466,11 @@ def board_members_view_v2(request):
                     'role': configured_member['role'],
                     'specialty': (member.specialty if member else None) or configured_member['specialty'] or '',
                     'bio': (member.bio if member else None) or f"{configured_member['position']} - دوره {configured_member['period']}",
-                    'profile_image': profile_image_url,
+                    'profile_image': _profile_image_url(member) if member else '',
                 })
 
             result[period] = members_data
 
-        return JsonResponse({
-            'success': True,
-            'board_members': result,
-        })
-    except Exception as e:
-        return JsonResponse({
-            'success': False,
-            'errors': str(e)
-        }, status=500)
+        return JsonResponse({'success': True, 'board_members': result})
+    except Exception as exc:
+        return JsonResponse({'success': False, 'errors': str(exc)}, status=500)

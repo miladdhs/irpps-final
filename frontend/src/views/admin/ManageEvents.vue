@@ -1,313 +1,181 @@
 <template>
-  <div class="min-h-screen bg-gray-50 py-8 px-4">
-    <div class="max-w-7xl mx-auto">
-      <!-- Header -->
-      <div class="flex justify-between items-center mb-8">
+  <div class="min-h-screen bg-slate-50 px-4 py-8">
+    <div class="mx-auto max-w-7xl">
+      <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 class="text-3xl font-bold text-gray-900">مدیریت رویدادها</h1>
-          <p class="text-gray-600 mt-2">افزودن، ویرایش و حذف رویدادها</p>
+          <h1 class="text-3xl font-black text-slate-900">Event Management</h1>
+          <p class="mt-2 text-slate-600">Create, update, and publish events with separate Shamsi registration and event dates.</p>
         </div>
-        <button
-          @click="showAddModal = true"
-          class="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-        >
+        <button @click="showAddModal = true" class="inline-flex items-center gap-2 rounded-2xl bg-slate-900 px-6 py-3 font-semibold text-white transition hover:bg-slate-800">
           <span class="material-symbols-outlined">add</span>
-          افزودن رویداد جدید
+          Add Event
         </button>
       </div>
 
-      <!-- Loading -->
-      <div v-if="loading" class="text-center py-12">
-        <div class="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        <p class="mt-4 text-gray-600">در حال بارگذاری...</p>
+      <div v-if="loading" class="py-20 text-center">
+        <div class="inline-block h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+        <p class="mt-4 text-slate-500">Loading events...</p>
       </div>
 
-      <!-- Error -->
-      <div v-else-if="error" class="bg-red-50 border border-red-200 rounded-lg p-4 text-red-600">
+      <div v-else-if="error" class="rounded-2xl border border-red-200 bg-red-50 p-4 text-red-700">
         {{ error }}
       </div>
 
-      <!-- Events List -->
-      <div v-else class="bg-white rounded-lg shadow overflow-hidden">
-        <table class="min-w-full divide-y divide-gray-200">
-          <thead class="bg-gray-50">
-            <tr>
-              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">تصویر</th>
-              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">عنوان</th>
-              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">نوع</th>
-              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">شماره بازآموزی</th>
-              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">تاریخ</th>
-              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">وضعیت</th>
-              <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">عملیات</th>
+      <div v-else class="overflow-hidden rounded-[28px] border border-slate-200 bg-white shadow-sm">
+        <table class="min-w-full divide-y divide-slate-200">
+          <thead class="bg-slate-50">
+            <tr class="text-left text-xs font-bold uppercase tracking-[0.2em] text-slate-500">
+              <th class="px-6 py-4">Image</th>
+              <th class="px-6 py-4">Title</th>
+              <th class="px-6 py-4">Type</th>
+              <th class="px-6 py-4">Event Date</th>
+              <th class="px-6 py-4">Registration Date</th>
+              <th class="px-6 py-4">Status</th>
+              <th class="px-6 py-4">Actions</th>
             </tr>
           </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <tr v-for="event in eventsList" :key="event.id">
+          <tbody class="divide-y divide-slate-200 bg-white">
+            <tr v-for="event in eventsList" :key="event.id" class="align-top">
               <td class="px-6 py-4">
-                <img 
-                  :src="eventImageUrl(event.image)" 
-                  alt="تصویر رویداد" 
-                  class="w-16 h-16 object-cover rounded"
-                  @error="handleEventImageError"
-                />
+                <img :src="eventImageUrl(event.image)" alt="Event cover" class="h-16 w-16 rounded-2xl object-cover" @error="handleEventImageError">
               </td>
               <td class="px-6 py-4">
-                <div class="text-sm font-medium text-gray-900">{{ event.title }}</div>
-                <div class="text-sm text-gray-500">{{ event.slug }}</div>
+                <div class="font-semibold text-slate-900">{{ event.title }}</div>
+                <div class="mt-1 text-sm text-slate-500">{{ event.slug }}</div>
               </td>
-              <td class="px-6 py-4 text-sm text-gray-900">{{ event.event_type }}</td>
+              <td class="px-6 py-4 text-sm text-slate-700">{{ event.event_type }}</td>
+              <td class="px-6 py-4 text-sm text-slate-700">{{ formatDate(event.event_date) }}</td>
+              <td class="px-6 py-4 text-sm text-slate-700">{{ formatDate(event.registration_date || event.registration_deadline) }}</td>
               <td class="px-6 py-4">
-                <span v-if="event.retraining_number" class="text-sm font-medium text-blue-600">
-                  {{ event.retraining_number }}
-                </span>
-                <span v-else class="text-sm text-gray-400">-</span>
-              </td>
-              <td class="px-6 py-4 text-sm text-gray-500">
-                {{ event.event_year }}/{{ event.event_month }}
-              </td>
-              <td class="px-6 py-4">
-                <span 
-                  :class="event.is_published ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'"
-                  class="px-2 py-1 text-xs font-medium rounded-full"
-                >
-                  {{ event.is_published ? 'منتشر شده' : 'پیش‌نویس' }}
+                <span class="rounded-full px-3 py-1 text-xs font-semibold" :class="event.is_published ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-600'">
+                  {{ event.is_published ? 'Published' : 'Draft' }}
                 </span>
               </td>
-              <td class="px-6 py-4 text-sm font-medium">
-                <button
-                  @click="editEvent(event)"
-                  class="text-blue-600 hover:text-blue-900 ml-4"
-                >
-                  ویرایش
-                </button>
-                <button
-                  @click="deleteEvent(event.id)"
-                  class="text-red-600 hover:text-red-900"
-                >
-                  حذف
-                </button>
+              <td class="px-6 py-4 text-sm font-semibold">
+                <button class="mr-4 text-primary transition hover:text-primary/70" @click="editEvent(event)">Edit</button>
+                <button class="text-red-600 transition hover:text-red-500" @click="deleteEvent(event.id)">Delete</button>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <!-- Add/Edit Modal -->
-      <div
-        v-if="showAddModal || showEditModal"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
-        @click.self="closeModal"
-      >
-        <div class="bg-white rounded-2xl shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-          <div class="flex items-center justify-between p-6 border-b">
-            <h3 class="text-xl font-bold">
-              {{ showEditModal ? 'ویرایش رویداد' : 'افزودن رویداد جدید' }}
-            </h3>
-            <button @click="closeModal" class="text-gray-400 hover:text-gray-600">
+      <div v-if="showAddModal || showEditModal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 p-4" @click.self="closeModal">
+        <div class="max-h-[92vh] w-full max-w-5xl overflow-y-auto rounded-[32px] bg-white shadow-2xl ring-1 ring-slate-200">
+          <div class="sticky top-0 z-10 flex items-center justify-between border-b border-slate-200 bg-white/95 px-6 py-5 backdrop-blur">
+            <div>
+              <h2 class="text-2xl font-black text-slate-900">{{ showEditModal ? 'Edit Event' : 'Create Event' }}</h2>
+              <p class="mt-1 text-sm text-slate-500">Date inputs use the Shamsi date picker and are stored in the database in Gregorian format.</p>
+            </div>
+            <button class="rounded-full p-2 text-slate-500 transition hover:bg-slate-100 hover:text-slate-900" @click="closeModal">
               <span class="material-symbols-outlined">close</span>
             </button>
           </div>
 
-          <form @submit.prevent="saveEvent" class="p-6 space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-2">عنوان رویداد *</label>
-                <input
-                  v-model="formData.title"
-                  type="text"
-                  required
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  placeholder="عنوان رویداد را وارد کنید"
-                />
-              </div>
+          <form class="grid gap-5 p-6 md:grid-cols-2" @submit.prevent="saveEvent">
+            <label class="space-y-2 md:col-span-2">
+              <span class="text-sm font-semibold text-slate-700">Event title</span>
+              <input v-model="formData.title" type="text" required class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/10">
+            </label>
 
-              <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-2">اسلاگ (URL) *</label>
-                <input
-                  v-model="formData.slug"
-                  type="text"
-                  required
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  placeholder="event-slug"
-                />
-              </div>
+            <label class="space-y-2 md:col-span-2">
+              <span class="text-sm font-semibold text-slate-700">Slug</span>
+              <input v-model="formData.slug" type="text" required class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/10">
+            </label>
 
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">نوع رویداد *</label>
-                <select
-                  v-model="formData.event_type"
-                  required
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="congress">کنگره</option>
-                  <option value="conference">کنفرانس</option>
-                  <option value="workshop">کارگاه</option>
-                  <option value="webinar">وبینار</option>
-                  <option value="seminar">سمینار</option>
-                  <option value="other">سایر</option>
-                </select>
-              </div>
+            <label class="space-y-2">
+              <span class="text-sm font-semibold text-slate-700">Event type</span>
+              <select v-model="formData.event_type" required class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/10">
+                <option value="congress">Congress</option>
+                <option value="conference">Conference</option>
+                <option value="workshop">Workshop</option>
+                <option value="webinar">Webinar</option>
+                <option value="seminar">Seminar</option>
+                <option value="other">Other</option>
+              </select>
+            </label>
 
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">شماره بازآموزی</label>
-                <input
-                  v-model="formData.retraining_number"
-                  type="text"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  placeholder="مثال: 1403-RT-001"
-                />
-                <p class="text-xs text-gray-500 mt-1">این شماره به جای دکمه ثبت‌نام نمایش داده می‌شود</p>
-              </div>
+            <label class="space-y-2">
+              <span class="text-sm font-semibold text-slate-700">Retraining number</span>
+              <input v-model="formData.retraining_number" type="text" class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/10">
+            </label>
 
-              <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-2">توضیحات رویداد *</label>
-                <textarea
-                  v-model="formData.description"
-                  rows="8"
-                  required
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  placeholder="توضیحات کامل رویداد را وارد کنید"
-                ></textarea>
-              </div>
+            <label class="space-y-2 md:col-span-2">
+              <span class="text-sm font-semibold text-slate-700">Description</span>
+              <textarea v-model="formData.description" rows="7" required class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/10"></textarea>
+            </label>
 
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">مکان *</label>
-                <input
-                  v-model="formData.location"
-                  type="text"
-                  required
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  placeholder="تهران، مرکز همایش‌ها"
-                />
-              </div>
+            <label class="space-y-2">
+              <span class="text-sm font-semibold text-slate-700">Location</span>
+              <input v-model="formData.location" type="text" required class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/10">
+            </label>
 
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">سال رویداد *</label>
-                <input
-                  v-model.number="formData.event_year"
-                  type="number"
-                  required
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  placeholder="1403"
-                />
-              </div>
+            <label class="space-y-2">
+              <span class="text-sm font-semibold text-slate-700">Organizer</span>
+              <input v-model="formData.organizer" type="text" class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/10">
+            </label>
 
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">ماه رویداد *</label>
-                <select
-                  v-model.number="formData.event_month"
-                  required
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                >
-                  <option :value="1">فروردین</option>
-                  <option :value="2">اردیبهشت</option>
-                  <option :value="3">خرداد</option>
-                  <option :value="4">تیر</option>
-                  <option :value="5">مرداد</option>
-                  <option :value="6">شهریور</option>
-                  <option :value="7">مهر</option>
-                  <option :value="8">آبان</option>
-                  <option :value="9">آذر</option>
-                  <option :value="10">دی</option>
-                  <option :value="11">بهمن</option>
-                  <option :value="12">اسفند</option>
-                </select>
-              </div>
-
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">مهلت ثبت‌نام</label>
-                <input
-                  v-model="formData.registration_deadline"
-                  type="date"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                />
-              </div>
-
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">قیمت (تومان)</label>
-                <input
-                  v-model.number="formData.price"
-                  type="number"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  placeholder="2500000"
-                />
-              </div>
-
-              <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">حداکثر شرکت‌کننده</label>
-                <input
-                  v-model.number="formData.max_participants"
-                  type="number"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  placeholder="200"
-                />
-              </div>
-
-              <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-2">برگزارکننده</label>
-                <input
-                  v-model="formData.organizer"
-                  type="text"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  placeholder="انجمن علمی ریه کودکان"
-                />
-              </div>
-
-              <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-2">سخنرانان</label>
-                <textarea
-                  v-model="formData.speakers"
-                  rows="3"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-                  placeholder="نام سخنرانان و مشخصات آنها"
-                ></textarea>
-              </div>
-
-              <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-2">تصویر رویداد</label>
-                <input
-                  ref="imageInput"
-                  type="file"
-                  accept="image/*"
-                  @change="handleImageSelect"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg"
-                />
-              </div>
-
-              <div class="md:col-span-2 flex gap-4">
-                <label class="flex items-center gap-2">
-                  <input
-                    v-model="formData.is_published"
-                    type="checkbox"
-                    class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <span class="text-sm font-medium text-gray-700">انتشار رویداد</span>
-                </label>
-                <label class="flex items-center gap-2">
-                  <input
-                    v-model="formData.is_featured"
-                    type="checkbox"
-                    class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <span class="text-sm font-medium text-gray-700">رویداد ویژه</span>
-                </label>
-              </div>
+            <div class="space-y-2">
+              <span class="text-sm font-semibold text-slate-700">Event date</span>
+              <date-picker
+                v-model="formData.event_date"
+                format="YYYY-MM-DD"
+                display-format="jYYYY/jMM/jDD"
+                input-class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/10"
+                placeholder="Select event date"
+                :editable="false"
+                color="#0f766e"
+              />
             </div>
 
-            <div class="flex gap-3 justify-end">
-              <button
-                type="button"
-                @click="closeModal"
-                class="px-6 py-3 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 transition"
-              >
-                انصراف
-              </button>
-              <button
-                type="submit"
-                :disabled="saving"
-                class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
-              >
-                {{ saving ? 'در حال ذخیره...' : 'ذخیره رویداد' }}
+            <div class="space-y-2">
+              <span class="text-sm font-semibold text-slate-700">Registration date</span>
+              <date-picker
+                v-model="formData.registration_date"
+                format="YYYY-MM-DD"
+                display-format="jYYYY/jMM/jDD"
+                input-class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/10"
+                placeholder="Select registration date"
+                :editable="false"
+                color="#0f766e"
+              />
+            </div>
+
+            <label class="space-y-2">
+              <span class="text-sm font-semibold text-slate-700">Price</span>
+              <input v-model.number="formData.price" type="number" class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/10">
+            </label>
+
+            <label class="space-y-2">
+              <span class="text-sm font-semibold text-slate-700">Max participants</span>
+              <input v-model.number="formData.max_participants" type="number" class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/10">
+            </label>
+
+            <label class="space-y-2 md:col-span-2">
+              <span class="text-sm font-semibold text-slate-700">Speakers</span>
+              <textarea v-model="formData.speakers" rows="3" class="w-full rounded-2xl border border-slate-300 px-4 py-3 outline-none transition focus:border-primary focus:ring-4 focus:ring-primary/10"></textarea>
+            </label>
+
+            <label class="space-y-2 md:col-span-2">
+              <span class="text-sm font-semibold text-slate-700">Event image</span>
+              <input ref="imageInput" type="file" accept="image/*" class="w-full rounded-2xl border border-slate-300 px-4 py-3" @change="handleImageSelect">
+            </label>
+
+            <div class="md:col-span-2 flex flex-wrap gap-5 rounded-2xl bg-slate-50 px-5 py-4">
+              <label class="inline-flex items-center gap-3 text-sm font-semibold text-slate-700">
+                <input v-model="formData.is_published" type="checkbox" class="h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary">
+                Publish event
+              </label>
+              <label class="inline-flex items-center gap-3 text-sm font-semibold text-slate-700">
+                <input v-model="formData.is_featured" type="checkbox" class="h-4 w-4 rounded border-slate-300 text-primary focus:ring-primary">
+                Featured event
+              </label>
+            </div>
+
+            <div class="md:col-span-2 flex items-center justify-end gap-3 border-t border-slate-200 pt-4">
+              <button type="button" class="rounded-2xl border border-slate-300 px-5 py-3 font-semibold text-slate-700 transition hover:bg-slate-50" @click="closeModal">Cancel</button>
+              <button type="submit" :disabled="saving" class="rounded-2xl bg-slate-900 px-6 py-3 font-semibold text-white transition hover:bg-slate-800 disabled:opacity-50">
+                {{ saving ? 'Saving...' : 'Save Event' }}
               </button>
             </div>
           </form>
@@ -318,158 +186,136 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import { getApiUrl } from '@/utils/api';
-import { DEFAULT_EVENT_IMAGE, resolveImageUrl } from '@/utils/assets';
+import { onMounted, ref } from 'vue'
+import DatePicker from 'vue3-persian-datetime-picker'
+import { getApiUrl } from '@/utils/api'
+import { DEFAULT_EVENT_IMAGE, resolveImageUrl } from '@/utils/assets'
 
 type EventItem = {
-  id: number;
-  title: string;
-  slug: string;
-  description: string;
-  short_description?: string;
-  event_type: string;
-  event_type_code?: string;
-  retraining_number: string | null;
-  image: string | null;
-  location: string;
-  event_month: number;
-  event_year: number;
-  registration_deadline: string | null;
-  max_participants: number | null;
-  price: number;
-  organizer: string;
-  target_audience?: string;
-  prerequisites?: string;
-  agenda?: string;
-  contact_info?: string;
-  speakers: string;
-  is_published: boolean;
-  is_featured: boolean;
-  created_at: string;
-};
+  id: number
+  title: string
+  slug: string
+  description: string
+  event_type: string
+  event_type_code?: string
+  retraining_number: string | null
+  image: string | null
+  location: string
+  event_date: string | null
+  registration_date: string | null
+  registration_deadline: string | null
+  max_participants: number | null
+  price: number
+  organizer: string
+  speakers: string
+  is_published: boolean
+  is_featured: boolean
+}
 
-const eventsList = ref<EventItem[]>([]);
-const loading = ref(true);
-const error = ref<string | null>(null);
-const showAddModal = ref(false);
-const showEditModal = ref(false);
-const saving = ref(false);
-const editingId = ref<number | null>(null);
-const imageInput = ref<HTMLInputElement | null>(null);
-const selectedImage = ref<File | null>(null);
+const eventsList = ref<EventItem[]>([])
+const loading = ref(true)
+const error = ref<string | null>(null)
+const showAddModal = ref(false)
+const showEditModal = ref(false)
+const saving = ref(false)
+const editingId = ref<number | null>(null)
+const imageInput = ref<HTMLInputElement | null>(null)
+const selectedImage = ref<File | null>(null)
 
-const formData = ref({
+const initialFormState = () => ({
   title: '',
   slug: '',
   description: '',
   event_type: 'congress',
   retraining_number: '',
   location: '',
-  event_year: 1403,
-  event_month: 1,
-  registration_deadline: '',
+  event_date: '',
+  registration_date: '',
   price: 0,
   max_participants: null as number | null,
   organizer: '',
   speakers: '',
   is_published: true,
-  is_featured: false
-});
+  is_featured: false,
+})
 
-const eventImageUrl = (image: string | null) => resolveImageUrl(image, DEFAULT_EVENT_IMAGE);
+const formData = ref(initialFormState())
+
+const eventImageUrl = (image: string | null) => resolveImageUrl(image, DEFAULT_EVENT_IMAGE)
 
 function handleEventImageError(event: Event) {
-  const img = event.target as HTMLImageElement;
-  if (img.src.endsWith(DEFAULT_EVENT_IMAGE)) {
-    return;
+  const img = event.target as HTMLImageElement
+  if (!img.src.endsWith(DEFAULT_EVENT_IMAGE)) {
+    img.src = DEFAULT_EVENT_IMAGE
   }
-  img.src = DEFAULT_EVENT_IMAGE;
+}
+
+function formatDate(value: string | null) {
+  if (!value) return '-'
+  return new Intl.DateTimeFormat('en-US', { dateStyle: 'medium' }).format(new Date(value))
 }
 
 const fetchEvents = async () => {
-  loading.value = true;
-  error.value = null;
-
+  loading.value = true
+  error.value = null
   try {
     const response = await fetch(getApiUrl('/api/events/?per_page=100'), {
       credentials: 'include',
       cache: 'no-store',
-    });
-
-    if (!response.ok) throw new Error('خطا در دریافت رویدادها');
-
-    const data = await response.json();
+    })
+    if (!response.ok) throw new Error('Failed to fetch events')
+    const data = await response.json()
     if (data.success) {
-      eventsList.value = data.events;
+      eventsList.value = data.events
     }
   } catch (err: any) {
-    error.value = err.message;
+    error.value = err.message
   } finally {
-    loading.value = false;
+    loading.value = false
   }
-};
+}
 
-const handleImageSelect = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  selectedImage.value = target.files?.[0] || null;
-};
+function handleImageSelect(event: Event) {
+  const target = event.target as HTMLInputElement
+  selectedImage.value = target.files?.[0] || null
+}
 
-const saveEvent = async () => {
-  saving.value = true;
-
+async function saveEvent() {
+  saving.value = true
   try {
-    const formDataToSend = new FormData();
-    formDataToSend.append('title', formData.value.title);
-    formDataToSend.append('slug', formData.value.slug);
-    formDataToSend.append('description', formData.value.description);
-    formDataToSend.append('event_type', formData.value.event_type);
-    formDataToSend.append('retraining_number', formData.value.retraining_number || '');
-    formDataToSend.append('location', formData.value.location);
-    formDataToSend.append('event_year', formData.value.event_year.toString());
-    formDataToSend.append('event_month', formData.value.event_month.toString());
-    formDataToSend.append('registration_deadline', formData.value.registration_deadline || '');
-    formDataToSend.append('price', formData.value.price.toString());
-    formDataToSend.append('max_participants', formData.value.max_participants?.toString() || '');
-    formDataToSend.append('organizer', formData.value.organizer);
-    formDataToSend.append('speakers', formData.value.speakers);
-    formDataToSend.append('is_published', formData.value.is_published.toString());
-    formDataToSend.append('is_featured', formData.value.is_featured.toString());
+    const payload = new FormData()
+    payload.append('title', formData.value.title)
+    payload.append('slug', formData.value.slug)
+    payload.append('description', formData.value.description)
+    payload.append('event_type', formData.value.event_type)
+    payload.append('retraining_number', formData.value.retraining_number || '')
+    payload.append('location', formData.value.location)
+    payload.append('event_date', formData.value.event_date || '')
+    payload.append('registration_date', formData.value.registration_date || '')
+    payload.append('price', String(formData.value.price ?? 0))
+    payload.append('max_participants', formData.value.max_participants?.toString() || '')
+    payload.append('organizer', formData.value.organizer || '')
+    payload.append('speakers', formData.value.speakers || '')
+    payload.append('is_published', String(formData.value.is_published))
+    payload.append('is_featured', String(formData.value.is_featured))
+    if (selectedImage.value) payload.append('cover_image', selectedImage.value)
 
-    if (selectedImage.value) {
-      formDataToSend.append('cover_image', selectedImage.value);
-    }
+    const url = showEditModal.value ? getApiUrl(`/api/events/${editingId.value}/update/`) : getApiUrl('/api/events/create/')
+    const response = await fetch(url, { method: 'POST', credentials: 'include', body: payload })
+    const data = await response.json()
+    if (!data.success) throw new Error(data.errors || 'Failed to save event')
 
-    const url = showEditModal.value 
-      ? getApiUrl(`/api/events/${editingId.value}/update/`)
-      : getApiUrl('/api/events/create/');
-    
-    const method = 'POST';
-
-    const response = await fetch(url, {
-      method,
-      credentials: 'include',
-      body: formDataToSend
-    });
-
-    const data = await response.json();
-
-    if (data.success) {
-      alert(data.message);
-      closeModal();
-      fetchEvents();
-    } else {
-      alert(data.errors || 'خطا در ذخیره رویداد');
-    }
+    closeModal()
+    await fetchEvents()
   } catch (err: any) {
-    alert('خطا در ارتباط با سرور');
+    alert(err.message || 'Server communication failed')
   } finally {
-    saving.value = false;
+    saving.value = false
   }
-};
+}
 
-const editEvent = (event: EventItem) => {
-  editingId.value = event.id;
+function editEvent(event: EventItem) {
+  editingId.value = event.id
   formData.value = {
     title: event.title,
     slug: event.slug,
@@ -477,67 +323,41 @@ const editEvent = (event: EventItem) => {
     event_type: event.event_type_code || 'other',
     retraining_number: event.retraining_number || '',
     location: event.location,
-    event_year: event.event_year,
-    event_month: event.event_month,
-    registration_deadline: event.registration_deadline || '',
+    event_date: event.event_date || '',
+    registration_date: event.registration_date || event.registration_deadline || '',
     price: event.price,
     max_participants: event.max_participants,
     organizer: event.organizer || '',
     speakers: event.speakers || '',
     is_published: event.is_published,
-    is_featured: event.is_featured
-  };
-  showEditModal.value = true;
-};
+    is_featured: event.is_featured,
+  }
+  showEditModal.value = true
+}
 
-const deleteEvent = async (id: number) => {
-  if (!confirm('آیا از حذف این رویداد اطمینان دارید؟')) return;
-
+async function deleteEvent(id: number) {
+  if (!confirm('Delete this event?')) return
   try {
     const response = await fetch(getApiUrl(`/api/events/${id}/delete/`), {
       method: 'DELETE',
-      credentials: 'include'
-    });
-
-    const data = await response.json();
-
-    if (data.success) {
-      alert(data.message);
-      fetchEvents();
-    } else {
-      alert(data.errors || 'خطا در حذف رویداد');
-    }
-  } catch (err) {
-    alert('خطا در ارتباط با سرور');
+      credentials: 'include',
+    })
+    const data = await response.json()
+    if (!data.success) throw new Error(data.errors || 'Failed to delete event')
+    await fetchEvents()
+  } catch (err: any) {
+    alert(err.message || 'Server communication failed')
   }
-};
+}
 
-const closeModal = () => {
-  showAddModal.value = false;
-  showEditModal.value = false;
-  editingId.value = null;
-  selectedImage.value = null;
-  formData.value = {
-    title: '',
-    slug: '',
-    description: '',
-    event_type: 'congress',
-    retraining_number: '',
-    location: '',
-    event_year: 1403,
-    event_month: 1,
-    registration_deadline: '',
-    price: 0,
-    max_participants: null,
-    organizer: '',
-    speakers: '',
-    is_published: true,
-    is_featured: false
-  };
-  if (imageInput.value) imageInput.value.value = '';
-};
+function closeModal() {
+  showAddModal.value = false
+  showEditModal.value = false
+  editingId.value = null
+  selectedImage.value = null
+  formData.value = initialFormState()
+  if (imageInput.value) imageInput.value.value = ''
+}
 
-onMounted(() => {
-  fetchEvents();
-});
+onMounted(fetchEvents)
 </script>

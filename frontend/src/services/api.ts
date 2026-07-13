@@ -78,6 +78,11 @@ export const authAPI = {
     last_name?: string
     email?: string
     phone?: string
+    city?: string
+    specialty?: string
+    workplace?: string
+    current_position?: string
+    experience?: number
   }) => apiClient.put('/accounts/profile/update/', data),
   
   uploadProfileImage: (file: File) => {
@@ -91,6 +96,13 @@ export const authAPI = {
   deleteProfileImage: () => apiClient.post('/accounts/profile/image/delete/'),
   
   updateResume: (data: {
+    city?: string
+    specialty?: string
+    workplace?: string
+    current_position?: string
+    expertise_areas?: string
+    work_experience?: string
+    experience?: number
     education?: string
     publications?: string
     awards?: string
