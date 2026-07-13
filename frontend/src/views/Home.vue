@@ -2,98 +2,57 @@
   <div class="bg-background-light text-slate-900">
     <section class="relative w-full overflow-hidden border-b border-slate-200 bg-slate-950">
       <div
-        v-for="(item, index) in featuredNews"
-        :key="item.id"
+        v-for="(item, index) in featuredSlides"
+        :key="item.key"
         class="absolute inset-0 transition-opacity duration-700"
         :class="activeSlide === index ? 'opacity-100' : 'pointer-events-none opacity-0'"
       >
-        <img :src="resolveImageUrl(item.image, '/img/news.png')" :alt="item.title" class="h-full w-full object-cover">
+        <img :src="item.image" :alt="item.title" class="h-full w-full object-cover">
         <div class="absolute inset-0 bg-[linear-gradient(90deg,rgba(2,6,23,0.94)_0%,rgba(2,6,23,0.78)_45%,rgba(2,6,23,0.46)_100%)]"></div>
         <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(14,165,233,0.26),transparent_32%)]"></div>
       </div>
 
-      <div v-if="!featuredNews.length && !newsLoading" class="absolute inset-0 bg-[linear-gradient(135deg,#0f172a,#111827,#1e293b)]"></div>
+      <div v-if="!featuredSlides.length && !slidesLoading" class="absolute inset-0 bg-[linear-gradient(135deg,#0f172a,#111827,#1e293b)]"></div>
 
       <div class="relative mx-auto flex min-h-[76vh] max-w-[1440px] flex-col justify-end px-4 py-10 md:px-8 lg:min-h-[84vh] lg:px-10 lg:py-14">
-        <div v-if="newsLoading" class="flex min-h-[420px] items-center justify-center">
+        <div v-if="slidesLoading" class="flex min-h-[420px] items-center justify-center">
           <div class="h-14 w-14 animate-spin rounded-full border-4 border-white/30 border-t-white"></div>
         </div>
 
-        <div v-else-if="activeNews" class="grid items-end gap-8 lg:grid-cols-[minmax(0,1.2fr)_430px]">
-          <div class="max-w-4xl">
-            <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold tracking-[0.18em] text-white/90 backdrop-blur-md">
-              <span class="material-symbols-outlined text-sm">newsmode</span>
-              {{ copy.heroBadge }}
-            </div>
-            <h1 class="max-w-4xl text-4xl font-black leading-[1.1] tracking-tight text-white md:text-6xl lg:text-7xl">
-              {{ activeNews.title }}
-            </h1>
-            <p class="mt-5 max-w-3xl text-base leading-8 text-white/82 md:text-lg lg:text-xl">
-              {{ activeNews.short_content || truncateText(stripHtml(activeNews.content), 230) }}
-            </p>
+        <div v-else-if="activeItem" class="max-w-4xl">
+          <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold tracking-[0.18em] text-white/90 backdrop-blur-md">
+            <span class="material-symbols-outlined text-sm">{{ activeItem.icon }}</span>
+            {{ activeItem.badge }}
+          </div>
+          <h1 class="max-w-4xl text-4xl font-black leading-[1.1] tracking-tight text-white md:text-6xl lg:text-7xl">
+            {{ activeItem.title }}
+          </h1>
+          <p class="mt-5 max-w-3xl text-base leading-8 text-white/82 md:text-lg lg:text-xl">
+            {{ activeItem.summary }}
+          </p>
 
-            <div class="mt-7 flex flex-wrap items-center gap-3 text-white/75">
-              <div class="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-4 py-2 backdrop-blur-sm">
-                <span class="material-symbols-outlined text-base">calendar_month</span>
-                {{ formatDate(activeNews.created_at) }}
-              </div>
-              <div class="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-4 py-2 backdrop-blur-sm">
-                <span class="material-symbols-outlined text-base">visibility</span>
-                {{ activeNews.views || 0 }} {{ copy.views }}
-              </div>
-              <div class="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-4 py-2 backdrop-blur-sm">
-                <span class="material-symbols-outlined text-base">article</span>
-                {{ copy.latestNews }}
-              </div>
+          <div class="mt-7 flex flex-wrap items-center gap-3 text-white/75">
+            <div class="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-4 py-2 backdrop-blur-sm">
+              <span class="material-symbols-outlined text-base">calendar_month</span>
+              {{ activeItem.dateLabel }}
             </div>
-
-            <div class="mt-8 flex flex-wrap gap-4">
-              <router-link :to="`/news/${activeNews.slug}`" class="inline-flex h-14 items-center justify-center rounded-2xl bg-primary px-7 text-base font-bold text-white shadow-[0_18px_40px_-16px_rgba(14,165,233,0.8)] transition hover:-translate-y-0.5 hover:bg-primary/90">
-                {{ copy.readNews }}
-              </router-link>
-              <router-link to="/events" class="inline-flex h-14 items-center justify-center rounded-2xl border border-white/20 bg-white/10 px-7 text-base font-bold text-white backdrop-blur-md transition hover:bg-white/16">
-                {{ copy.events }}
-              </router-link>
-              <router-link to="/team" class="inline-flex h-14 items-center justify-center rounded-2xl border border-white/20 bg-transparent px-7 text-base font-bold text-white transition hover:bg-white/10">
-                {{ copy.members }}
-              </router-link>
+            <div v-if="activeItem.secondaryMeta" class="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-4 py-2 backdrop-blur-sm">
+              <span class="material-symbols-outlined text-base">{{ activeItem.secondaryIcon }}</span>
+              {{ activeItem.secondaryMeta }}
             </div>
           </div>
 
-          <div class="rounded-[32px] border border-white/12 bg-white/10 p-4 shadow-2xl backdrop-blur-xl">
-            <div class="mb-4 flex items-center justify-between px-2">
-              <div>
-                <div class="text-xs font-bold tracking-[0.18em] text-white/65">{{ copy.latestThree }}</div>
-                <div class="mt-1 text-lg font-black text-white">{{ copy.featuredUpdates }}</div>
-              </div>
-              <div class="flex gap-2">
-                <button class="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white transition hover:bg-white/16" @click="prevSlide">
-                  <span class="material-symbols-outlined">{{ isRtl ? 'arrow_forward' : 'arrow_back' }}</span>
-                </button>
-                <button class="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/10 text-white transition hover:bg-white/16" @click="nextSlide">
-                  <span class="material-symbols-outlined">{{ isRtl ? 'arrow_back' : 'arrow_forward' }}</span>
-                </button>
-              </div>
-            </div>
+          <div class="mt-8 flex flex-wrap items-center gap-4">
+            <router-link :to="activeItem.href" class="inline-flex h-14 items-center justify-center rounded-2xl bg-primary px-7 text-base font-bold text-white shadow-[0_18px_40px_-16px_rgba(14,165,233,0.8)] transition hover:-translate-y-0.5 hover:bg-primary/90">
+              {{ activeItem.cta }}
+            </router-link>
 
-            <div class="space-y-3">
-              <button
-                v-for="(item, index) in featuredNews"
-                :key="item.id"
-                class="block w-full rounded-[24px] border p-3 text-left transition"
-                :class="activeSlide === index ? 'border-white/20 bg-white/14' : 'border-transparent bg-black/10 hover:border-white/10 hover:bg-white/8'"
-                @click="activeSlide = index"
-              >
-                <div class="grid grid-cols-[96px,1fr] gap-3">
-                  <img :src="resolveImageUrl(item.image, '/img/news.png')" :alt="item.title" class="h-24 w-full rounded-2xl object-cover">
-                  <div class="min-w-0">
-                    <div class="text-[11px] font-bold tracking-[0.2em] text-white/55">0{{ index + 1 }}</div>
-                    <div class="mt-2 line-clamp-2 text-sm font-bold leading-6 text-white">{{ item.title }}</div>
-                    <div class="mt-2 line-clamp-2 text-xs leading-5 text-white/65">
-                      {{ item.short_content || truncateText(stripHtml(item.content), 80) }}
-                    </div>
-                  </div>
-                </div>
+            <div class="flex items-center gap-3">
+              <button class="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/20 bg-white/10 text-white backdrop-blur-md transition hover:bg-white/16" @click="prevSlide" :aria-label="copy.previous">
+                <span class="material-symbols-outlined text-3xl leading-none">{{ isRtl ? 'chevron_right' : 'chevron_left' }}</span>
+              </button>
+              <button class="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/20 bg-white/10 text-white backdrop-blur-md transition hover:bg-white/16" @click="nextSlide" :aria-label="copy.next">
+                <span class="material-symbols-outlined text-3xl leading-none">{{ isRtl ? 'chevron_left' : 'chevron_right' }}</span>
               </button>
             </div>
           </div>
@@ -150,38 +109,6 @@
             <p class="mt-3 leading-7 text-white/72">{{ copy.contactUsText }}</p>
           </router-link>
         </div>
-      </div>
-    </section>
-
-    <section v-if="featuredNews.length" class="mx-auto max-w-[1440px] px-4 py-10 md:px-8 lg:px-10">
-      <div class="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-        <div>
-          <div class="text-sm font-bold tracking-[0.22em] text-primary">{{ copy.newsDigest }}</div>
-          <h2 class="mt-2 text-3xl font-black text-slate-900 md:text-4xl">{{ copy.newsDigestTitle }}</h2>
-        </div>
-        <router-link to="/news" class="inline-flex h-12 items-center justify-center rounded-2xl border border-slate-300 bg-white px-5 text-sm font-bold text-slate-900 transition hover:border-primary hover:text-primary">
-          {{ copy.allNews }}
-        </router-link>
-      </div>
-
-      <div class="grid gap-5 lg:grid-cols-3">
-        <article v-for="item in featuredNews" :key="`digest-${item.id}`" class="overflow-hidden rounded-[30px] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
-          <img :src="resolveImageUrl(item.image, '/img/news.png')" :alt="item.title" class="h-56 w-full object-cover">
-          <div class="p-6">
-            <div class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500">
-              <span class="material-symbols-outlined text-sm">schedule</span>
-              {{ formatDate(item.created_at) }}
-            </div>
-            <h3 class="mt-4 line-clamp-2 text-xl font-black text-slate-900">{{ item.title }}</h3>
-            <p class="mt-3 line-clamp-3 leading-7 text-slate-600">
-              {{ item.short_content || truncateText(stripHtml(item.content), 120) }}
-            </p>
-            <router-link :to="`/news/${item.slug}`" class="mt-5 inline-flex items-center gap-2 text-sm font-bold text-primary transition hover:gap-3">
-              {{ copy.readMore }}
-              <span class="material-symbols-outlined text-base">{{ isRtl ? 'arrow_back' : 'arrow_forward' }}</span>
-            </router-link>
-          </div>
-        </article>
       </div>
     </section>
 
@@ -297,8 +224,8 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { newsAPI } from '@/services/api'
-import { resolveImageUrl } from '@/utils/assets'
+import { eventsAPI, newsAPI } from '@/services/api'
+import { DEFAULT_EVENT_IMAGE, DEFAULT_NEWS_IMAGE, resolveImageUrl } from '@/utils/assets'
 
 interface NewsItem {
   id: number
@@ -311,10 +238,38 @@ interface NewsItem {
   created_at: string
 }
 
+interface EventItem {
+  id: number
+  title: string
+  slug: string
+  description: string
+  short_description?: string
+  image: string | null
+  location: string
+  event_date: string | null
+  registration_date: string | null
+  registration_deadline?: string | null
+}
+
+interface SlideItem {
+  key: string
+  title: string
+  summary: string
+  image: string
+  href: string
+  badge: string
+  icon: string
+  cta: string
+  dateLabel: string
+  secondaryMeta?: string
+  secondaryIcon?: string
+  sortDate: number
+}
+
 const { locale, t } = useI18n()
-const featuredNews = ref<NewsItem[]>([])
+const featuredSlides = ref<SlideItem[]>([])
 const activeSlide = ref(0)
-const newsLoading = ref(true)
+const slidesLoading = ref(true)
 let autoSlideTimer: number | null = null
 
 const isRtl = computed(() => locale.value === 'fa')
@@ -322,18 +277,17 @@ const isRtl = computed(() => locale.value === 'fa')
 const copy = computed(() => (
   locale.value === 'fa'
     ? {
-        heroBadge: 'سه خبر آخر انجمن',
-        views: 'بازدید',
-        latestNews: 'آخرین خبر',
-        readNews: 'مشاهده خبر',
-        readMore: 'ادامه خبر',
-        events: 'رویدادها',
-        members: 'اعضا',
-        latestThree: 'آخرین خبرها',
-        featuredUpdates: 'اسلایدر اخبار',
+        newsBadge: 'خبر',
+        eventBadge: 'رویداد',
+        newsCta: 'مشاهده خبر',
+        eventCta: 'مشاهده رویداد',
+        previous: 'اسلاید قبلی',
+        next: 'اسلاید بعدی',
+        eventDate: 'تاریخ برگزاری',
+        registrationDate: 'تاریخ ثبت‌نام',
         societyName: 'انجمن علمی ریه کودکان ایران',
         emptyHeroTitle: 'صفحه اصلی انجمن آماده نمایش خبرها، رویدادها و مسیرهای اصلی است.',
-        emptyHeroText: 'به‌محض انتشار خبرهای جدید، این اسلایدر به‌صورت خودکار با سه خبر آخر به‌روزرسانی می‌شود.',
+        emptyHeroText: 'با انتشار اخبار و رویدادهای جدید، اسلایدر صفحه اصلی به‌صورت خودکار به‌روزرسانی می‌شود.',
         quickAccess: 'دسترسی سریع',
         upcomingEvents: 'رویدادهای پیش رو',
         upcomingEventsText: 'همایش‌ها، کنگره‌ها و کارگاه‌های جدید را همراه با تاریخ ثبت‌نام و برگزاری ببینید.',
@@ -343,9 +297,6 @@ const copy = computed(() => (
         membersDirectoryText: 'رزومه و اطلاعات اعضای انجمن را در یک ساختار حرفه‌ای و مرتب مرور کنید.',
         contactUs: 'تماس با انجمن',
         contactUsText: 'برای هماهنگی، عضویت، همکاری علمی و پشتیبانی مستقیم با انجمن در ارتباط باشید.',
-        newsDigest: 'مرور سریع',
-        newsDigestTitle: 'خلاصه آخرین خبرها',
-        allNews: 'مشاهده همه اخبار',
         allServices: 'مشاهده همه خدمات',
         visionTitle: 'مرکز علمی، آموزشی و حرفه‌ای برای جامعه ریه کودکان',
         visionText: 'این صفحه اصلی طوری طراحی شده که خبر، دسترسی‌های مهم، معرفی انجمن، خدمات، اعضا و مسیرهای کلیدی را در یک تجربه روشن و حرفه‌ای کنار هم قرار دهد.',
@@ -355,18 +306,17 @@ const copy = computed(() => (
         focus2Text: 'پوشش خبرها، انتشارات، فعالیت‌های پژوهشی و شبکه تخصصی اعضای انجمن.',
       }
     : {
-        heroBadge: 'Latest Society News',
-        views: 'views',
-        latestNews: 'Latest News',
-        readNews: 'Read News',
-        readMore: 'Read More',
-        events: 'Events',
-        members: 'Members',
-        latestThree: 'Latest News',
-        featuredUpdates: 'Featured Updates',
+        newsBadge: 'News',
+        eventBadge: 'Event',
+        newsCta: 'Read News',
+        eventCta: 'View Event',
+        previous: 'Previous slide',
+        next: 'Next slide',
+        eventDate: 'Event Date',
+        registrationDate: 'Registration Date',
         societyName: 'Iranian Pediatric Pulmonology Society',
         emptyHeroTitle: 'The homepage is ready to present news, events, and primary site pathways.',
-        emptyHeroText: 'As soon as new items are published, this slider updates automatically with the latest three news posts.',
+        emptyHeroText: 'As new news and events are published, the homepage slider updates automatically.',
         quickAccess: 'Quick Access',
         upcomingEvents: 'Upcoming Events',
         upcomingEventsText: 'Review new congresses, seminars, and workshops together with registration and event dates.',
@@ -376,9 +326,6 @@ const copy = computed(() => (
         membersDirectoryText: 'Browse structured member profiles and resumes in a professional public directory.',
         contactUs: 'Contact the Society',
         contactUsText: 'Reach the society for membership, scientific collaboration, support, and coordination.',
-        newsDigest: 'Quick Digest',
-        newsDigestTitle: 'A clear view of the latest news',
-        allNews: 'View All News',
         allServices: 'View All Services',
         visionTitle: 'A scientific, educational, and professional center for pediatric pulmonology',
         visionText: 'This homepage is designed to unify latest news, major actions, society introduction, services, members, and key navigation in one clear modern experience.',
@@ -389,7 +336,7 @@ const copy = computed(() => (
       }
 ))
 
-const activeNews = computed(() => featuredNews.value[activeSlide.value] || featuredNews.value[0] || null)
+const activeItem = computed(() => featuredSlides.value[activeSlide.value] || featuredSlides.value[0] || null)
 const stats = computed(() => (locale.value === 'fa' ? ['۵۰+', '۱۰۰۰+', '۲۵', '۱۵'] : ['50+', '1000+', '25', '15']))
 
 const services = computed(() => [
@@ -410,7 +357,7 @@ function truncateText(content: string, limit: number) {
   return `${content.slice(0, limit).trim()}...`
 }
 
-function formatDate(value?: string) {
+function formatDate(value?: string | null) {
   if (!value) return ''
   return new Intl.DateTimeFormat(locale.value === 'fa' ? 'fa-IR' : 'en-US', {
     dateStyle: 'medium',
@@ -418,13 +365,13 @@ function formatDate(value?: string) {
 }
 
 function nextSlide() {
-  if (!featuredNews.value.length) return
-  activeSlide.value = (activeSlide.value + 1) % featuredNews.value.length
+  if (!featuredSlides.value.length) return
+  activeSlide.value = (activeSlide.value + 1) % featuredSlides.value.length
 }
 
 function prevSlide() {
-  if (!featuredNews.value.length) return
-  activeSlide.value = (activeSlide.value - 1 + featuredNews.value.length) % featuredNews.value.length
+  if (!featuredSlides.value.length) return
+  activeSlide.value = (activeSlide.value - 1 + featuredSlides.value.length) % featuredSlides.value.length
 }
 
 function stopAutoSlide() {
@@ -436,29 +383,72 @@ function stopAutoSlide() {
 
 function startAutoSlide() {
   stopAutoSlide()
-  if (featuredNews.value.length > 1) {
+  if (featuredSlides.value.length > 1) {
     autoSlideTimer = window.setInterval(nextSlide, 6500)
   }
 }
 
-async function fetchLatestNews() {
-  newsLoading.value = true
-  try {
-    const response = await newsAPI.getNewsList({ page: 1, per_page: 3 })
-    featuredNews.value = response.data?.news || []
-    activeSlide.value = 0
-    startAutoSlide()
-  } catch (error) {
-    console.error('Failed to load latest news:', error)
-    featuredNews.value = []
-    stopAutoSlide()
-  } finally {
-    newsLoading.value = false
+function mapNewsToSlide(item: NewsItem): SlideItem {
+  return {
+    key: `news-${item.id}`,
+    title: item.title,
+    summary: item.short_content || truncateText(stripHtml(item.content), 230),
+    image: resolveImageUrl(item.image, DEFAULT_NEWS_IMAGE),
+    href: `/news/${item.slug}`,
+    badge: copy.value.newsBadge,
+    icon: 'newsmode',
+    cta: copy.value.newsCta,
+    dateLabel: formatDate(item.created_at),
+    secondaryMeta: item.views ? `${item.views}` : undefined,
+    secondaryIcon: 'visibility',
+    sortDate: new Date(item.created_at).getTime(),
   }
 }
 
-watch(() => featuredNews.value.length, startAutoSlide)
+function mapEventToSlide(item: EventItem): SlideItem {
+  const registrationDate = item.registration_date || item.registration_deadline || ''
+  const eventDate = item.event_date || registrationDate
+  return {
+    key: `event-${item.id}`,
+    title: item.title,
+    summary: item.short_description || truncateText(stripHtml(item.description || ''), 230),
+    image: resolveImageUrl(item.image, DEFAULT_EVENT_IMAGE),
+    href: `/events/${item.slug}`,
+    badge: copy.value.eventBadge,
+    icon: 'event',
+    cta: copy.value.eventCta,
+    dateLabel: `${copy.value.eventDate}: ${formatDate(eventDate)}`,
+    secondaryMeta: registrationDate ? `${copy.value.registrationDate}: ${formatDate(registrationDate)}` : undefined,
+    secondaryIcon: 'edit_calendar',
+    sortDate: new Date(eventDate || Date.now()).getTime(),
+  }
+}
 
-onMounted(fetchLatestNews)
+async function fetchSlides() {
+  slidesLoading.value = true
+  try {
+    const [newsResponse, eventsResponse] = await Promise.all([
+      newsAPI.getNewsList({ page: 1, per_page: 3 }),
+      eventsAPI.getEventsList({ page: 1, per_page: 3 }),
+    ])
+
+    const newsSlides = Array.isArray(newsResponse.data?.news) ? newsResponse.data.news.map(mapNewsToSlide) : []
+    const eventSlides = Array.isArray(eventsResponse.data?.events) ? eventsResponse.data.events.map(mapEventToSlide) : []
+
+    featuredSlides.value = [...newsSlides, ...eventSlides].sort((a, b) => b.sortDate - a.sortDate)
+    activeSlide.value = 0
+    startAutoSlide()
+  } catch (error) {
+    console.error('Failed to load homepage slides:', error)
+    featuredSlides.value = []
+    stopAutoSlide()
+  } finally {
+    slidesLoading.value = false
+  }
+}
+
+watch(() => featuredSlides.value.length, startAutoSlide)
+
+onMounted(fetchSlides)
 onBeforeUnmount(stopAutoSlide)
 </script>

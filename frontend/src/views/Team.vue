@@ -175,9 +175,10 @@ const showModal = ref(false)
 const brokenImages = ref<Set<number>>(new Set())
 const defaultIconBroken = ref(false)
 const { locale } = useI18n()
+const isFa = computed(() => locale.value !== 'en')
 
 const copy = computed(() => (
-  locale.value === 'fa'
+  isFa.value
     ? {
         badge: 'فهرست اعضای انجمن',
         title: 'اعضای انجمن',
@@ -245,7 +246,7 @@ const copy = computed(() => (
 ))
 
 const getMemberName = (member: Member) => {
-  if (locale.value === 'fa') {
+  if (isFa.value) {
     return member.persian_name || member.display_name || member.english_name || copy.value.unknownMember
   }
   return member.english_name || member.display_name || member.persian_name || copy.value.unknownMember

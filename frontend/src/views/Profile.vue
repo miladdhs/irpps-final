@@ -4,7 +4,7 @@
       <div class="mb-8 flex flex-wrap items-center justify-between gap-4">
         <div>
           <router-link to="/dashboard" class="mb-3 inline-flex items-center gap-2 text-sm font-medium text-slate-500 transition hover:text-primary">
-            <span class="material-symbols-outlined text-base">{{ locale === 'fa' ? 'arrow_forward' : 'arrow_back' }}</span>
+            <span class="material-symbols-outlined text-base">{{ isFa ? 'arrow_forward' : 'arrow_back' }}</span>
             {{ copy.back }}
           </router-link>
           <h1 class="text-4xl font-black tracking-tight text-slate-900">{{ copy.pageTitle }}</h1>
@@ -201,6 +201,7 @@ import { resolveImageUrl } from '@/utils/assets'
 
 const authStore = useAuthStore()
 const { locale } = useI18n()
+const isFa = computed(() => locale.value !== 'en')
 
 const profileForm = ref({
   first_name: '',
@@ -236,7 +237,7 @@ const defaultIconBroken = ref(false)
 const showResumeModal = ref(false)
 
 const copy = computed(() => (
-  locale.value === 'fa'
+  isFa.value
     ? {
         back: 'بازگشت به داشبورد',
         pageTitle: 'پروفایل عضو',
@@ -376,7 +377,7 @@ const currentProfileImage = computed(() => {
 const fullName = computed(() => {
   const persian = profileForm.value.first_name?.trim()
   const english = profileForm.value.last_name?.trim()
-  if (locale.value === 'fa') {
+  if (isFa.value) {
     return persian || english || authStore.user?.username || copy.value.member
   }
   return english || persian || authStore.user?.username || copy.value.member
@@ -485,6 +486,6 @@ function handleProfileImageError() {
 
 function formatDate(dateString?: string) {
   if (!dateString) return '-'
-  return new Intl.DateTimeFormat(locale.value === 'fa' ? 'fa-IR' : 'en-US', { dateStyle: 'medium' }).format(new Date(dateString))
+  return new Intl.DateTimeFormat(isFa.value ? 'fa-IR' : 'en-US', { dateStyle: 'medium' }).format(new Date(dateString))
 }
 </script>

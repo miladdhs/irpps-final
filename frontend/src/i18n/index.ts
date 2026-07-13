@@ -10,7 +10,7 @@ const messages = {
 // Get initial locale safely (check if window exists for SSR)
 const getInitialLocale = () => {
   if (typeof window !== 'undefined') {
-    return localStorage.getItem('locale') || 'fa'
+    return localStorage.getItem('locale') === 'en' ? 'en' : 'fa'
   }
   return 'fa'
 }

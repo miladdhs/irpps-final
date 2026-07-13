@@ -210,7 +210,7 @@ const isMobileMenuOpen = ref(false);
 const isAboutSubmenuOpen = ref(false);
 const isNewsSubmenuOpen = ref(false);
 
-const currentLocale = computed(() => locale.value);
+const currentLocale = computed(() => locale.value === 'en' ? 'en' : 'fa');
 
 const isLoggedIn = computed(() => authStore.isAuthenticated);
 const userDisplayName = computed(() => {
@@ -219,7 +219,7 @@ const userDisplayName = computed(() => {
 });
 
 const toggleLanguage = () => {
-  const newLocale = locale.value === 'fa' ? 'en' : 'fa';
+  const newLocale = currentLocale.value === 'fa' ? 'en' : 'fa';
   locale.value = newLocale;
   localStorage.setItem('locale', newLocale);
   
@@ -256,7 +256,8 @@ watch(() => route.path, () => {
 
 onMounted(async () => {
   // Set initial direction and language based on locale
-  const initialLocale = locale.value;
+  const initialLocale = localStorage.getItem('locale') === 'en' ? 'en' : 'fa';
+  locale.value = initialLocale;
   document.documentElement.setAttribute('dir', initialLocale === 'fa' ? 'rtl' : 'ltr');
   document.documentElement.setAttribute('lang', initialLocale);
   
