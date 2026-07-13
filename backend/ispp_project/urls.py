@@ -26,6 +26,12 @@ def spa_view(request):
 
 @never_cache
 @require_http_methods(["GET"])
+def healthcheck_view(request):
+    return HttpResponse("ok", content_type="text/plain")
+
+
+@never_cache
+@require_http_methods(["GET"])
 def serve_media_with_fallback(request, path):
     """Serve media files with fallback to placeholder if file doesn't exist"""
     from django.conf import settings
@@ -74,6 +80,7 @@ def serve_media_with_fallback(request, path):
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('healthz/', healthcheck_view, name='healthcheck'),
     path('api/accounts/', include('accounts.urls')),
     path('api/news/', include('news.urls')),
     path('api/events/', include('events.urls')),

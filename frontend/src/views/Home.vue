@@ -8,20 +8,20 @@
         :class="activeSlide === index ? 'opacity-100' : 'pointer-events-none opacity-0'"
       >
         <img :src="resolveImageUrl(item.image, '/img/news.png')" :alt="item.title" class="h-full w-full object-cover">
-        <div class="absolute inset-0 bg-[linear-gradient(90deg,rgba(2,6,23,0.92)_0%,rgba(2,6,23,0.72)_42%,rgba(2,6,23,0.38)_100%)]"></div>
-        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(14,165,233,0.28),transparent_30%)]"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(90deg,rgba(2,6,23,0.94)_0%,rgba(2,6,23,0.78)_45%,rgba(2,6,23,0.46)_100%)]"></div>
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(14,165,233,0.26),transparent_32%)]"></div>
       </div>
 
       <div v-if="!featuredNews.length && !newsLoading" class="absolute inset-0 bg-[linear-gradient(135deg,#0f172a,#111827,#1e293b)]"></div>
 
-      <div class="relative mx-auto flex min-h-[72vh] max-w-[1440px] flex-col justify-end px-4 py-10 md:px-8 lg:min-h-[82vh] lg:px-10 lg:py-14">
+      <div class="relative mx-auto flex min-h-[76vh] max-w-[1440px] flex-col justify-end px-4 py-10 md:px-8 lg:min-h-[84vh] lg:px-10 lg:py-14">
         <div v-if="newsLoading" class="flex min-h-[420px] items-center justify-center">
           <div class="h-14 w-14 animate-spin rounded-full border-4 border-white/30 border-t-white"></div>
         </div>
 
-        <div v-else-if="activeNews" class="grid items-end gap-8 lg:grid-cols-[minmax(0,1.2fr)_420px]">
+        <div v-else-if="activeNews" class="grid items-end gap-8 lg:grid-cols-[minmax(0,1.2fr)_430px]">
           <div class="max-w-4xl">
-            <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.28em] text-white/90 backdrop-blur-md">
+            <div class="mb-5 inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold tracking-[0.18em] text-white/90 backdrop-blur-md">
               <span class="material-symbols-outlined text-sm">newsmode</span>
               {{ copy.heroBadge }}
             </div>
@@ -41,6 +41,10 @@
                 <span class="material-symbols-outlined text-base">visibility</span>
                 {{ activeNews.views || 0 }} {{ copy.views }}
               </div>
+              <div class="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-4 py-2 backdrop-blur-sm">
+                <span class="material-symbols-outlined text-base">article</span>
+                {{ copy.latestNews }}
+              </div>
             </div>
 
             <div class="mt-8 flex flex-wrap gap-4">
@@ -57,9 +61,9 @@
           </div>
 
           <div class="rounded-[32px] border border-white/12 bg-white/10 p-4 shadow-2xl backdrop-blur-xl">
-            <div class="mb-3 flex items-center justify-between px-2">
+            <div class="mb-4 flex items-center justify-between px-2">
               <div>
-                <div class="text-xs font-bold uppercase tracking-[0.26em] text-white/65">{{ copy.latestThree }}</div>
+                <div class="text-xs font-bold tracking-[0.18em] text-white/65">{{ copy.latestThree }}</div>
                 <div class="mt-1 text-lg font-black text-white">{{ copy.featuredUpdates }}</div>
               </div>
               <div class="flex gap-2">
@@ -83,7 +87,7 @@
                 <div class="grid grid-cols-[96px,1fr] gap-3">
                   <img :src="resolveImageUrl(item.image, '/img/news.png')" :alt="item.title" class="h-24 w-full rounded-2xl object-cover">
                   <div class="min-w-0">
-                    <div class="text-[11px] font-bold uppercase tracking-[0.24em] text-white/55">0{{ index + 1 }}</div>
+                    <div class="text-[11px] font-bold tracking-[0.2em] text-white/55">0{{ index + 1 }}</div>
                     <div class="mt-2 line-clamp-2 text-sm font-bold leading-6 text-white">{{ item.title }}</div>
                     <div class="mt-2 line-clamp-2 text-xs leading-5 text-white/65">
                       {{ item.short_content || truncateText(stripHtml(item.content), 80) }}
@@ -97,8 +101,8 @@
 
         <div v-else class="flex min-h-[420px] items-end">
           <div class="max-w-3xl pb-6 text-white">
-            <div class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.28em] backdrop-blur-md">
-              IRANIAN PEDIATRIC PULMONOLOGY SOCIETY
+            <div class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-4 py-2 text-xs font-bold tracking-[0.18em] backdrop-blur-md">
+              {{ copy.societyName }}
             </div>
             <h1 class="mt-5 text-4xl font-black leading-tight md:text-6xl">{{ copy.emptyHeroTitle }}</h1>
             <p class="mt-4 text-lg leading-8 text-white/78">{{ copy.emptyHeroText }}</p>
@@ -113,7 +117,7 @@
           <router-link to="/events" class="group rounded-[30px] border border-slate-200 bg-white p-6 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.4)] transition hover:-translate-y-1 hover:shadow-[0_35px_70px_-40px_rgba(15,23,42,0.5)]">
             <div class="flex items-center justify-between">
               <span class="material-symbols-outlined text-4xl text-primary">event_upcoming</span>
-              <span class="text-xs font-bold uppercase tracking-[0.24em] text-slate-400">{{ copy.quickAccess }}</span>
+              <span class="text-xs font-bold tracking-[0.2em] text-slate-400">{{ copy.quickAccess }}</span>
             </div>
             <h2 class="mt-6 text-2xl font-black text-slate-900">{{ copy.upcomingEvents }}</h2>
             <p class="mt-3 leading-7 text-slate-600">{{ copy.upcomingEventsText }}</p>
@@ -122,7 +126,7 @@
           <router-link to="/news" class="group rounded-[30px] border border-slate-200 bg-white p-6 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.4)] transition hover:-translate-y-1 hover:shadow-[0_35px_70px_-40px_rgba(15,23,42,0.5)]">
             <div class="flex items-center justify-between">
               <span class="material-symbols-outlined text-4xl text-primary">newspaper</span>
-              <span class="text-xs font-bold uppercase tracking-[0.24em] text-slate-400">{{ copy.quickAccess }}</span>
+              <span class="text-xs font-bold tracking-[0.2em] text-slate-400">{{ copy.quickAccess }}</span>
             </div>
             <h2 class="mt-6 text-2xl font-black text-slate-900">{{ copy.newsroom }}</h2>
             <p class="mt-3 leading-7 text-slate-600">{{ copy.newsroomText }}</p>
@@ -131,7 +135,7 @@
           <router-link to="/team" class="group rounded-[30px] border border-slate-200 bg-white p-6 shadow-[0_30px_60px_-40px_rgba(15,23,42,0.4)] transition hover:-translate-y-1 hover:shadow-[0_35px_70px_-40px_rgba(15,23,42,0.5)]">
             <div class="flex items-center justify-between">
               <span class="material-symbols-outlined text-4xl text-primary">groups</span>
-              <span class="text-xs font-bold uppercase tracking-[0.24em] text-slate-400">{{ copy.quickAccess }}</span>
+              <span class="text-xs font-bold tracking-[0.2em] text-slate-400">{{ copy.quickAccess }}</span>
             </div>
             <h2 class="mt-6 text-2xl font-black text-slate-900">{{ copy.membersDirectory }}</h2>
             <p class="mt-3 leading-7 text-slate-600">{{ copy.membersDirectoryText }}</p>
@@ -140,7 +144,7 @@
           <router-link to="/contact" class="group rounded-[30px] border border-slate-200 bg-[linear-gradient(135deg,#0f172a,#1e293b)] p-6 text-white shadow-[0_30px_60px_-40px_rgba(15,23,42,0.55)] transition hover:-translate-y-1 hover:shadow-[0_35px_70px_-40px_rgba(15,23,42,0.65)]">
             <div class="flex items-center justify-between">
               <span class="material-symbols-outlined text-4xl text-sky-300">support_agent</span>
-              <span class="text-xs font-bold uppercase tracking-[0.24em] text-white/50">{{ copy.quickAccess }}</span>
+              <span class="text-xs font-bold tracking-[0.2em] text-white/50">{{ copy.quickAccess }}</span>
             </div>
             <h2 class="mt-6 text-2xl font-black">{{ copy.contactUs }}</h2>
             <p class="mt-3 leading-7 text-white/72">{{ copy.contactUsText }}</p>
@@ -149,7 +153,39 @@
       </div>
     </section>
 
-    <section class="mx-auto max-w-[1440px] px-4 py-14 md:px-8 lg:px-10">
+    <section v-if="featuredNews.length" class="mx-auto max-w-[1440px] px-4 py-10 md:px-8 lg:px-10">
+      <div class="mb-8 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+        <div>
+          <div class="text-sm font-bold tracking-[0.22em] text-primary">{{ copy.newsDigest }}</div>
+          <h2 class="mt-2 text-3xl font-black text-slate-900 md:text-4xl">{{ copy.newsDigestTitle }}</h2>
+        </div>
+        <router-link to="/news" class="inline-flex h-12 items-center justify-center rounded-2xl border border-slate-300 bg-white px-5 text-sm font-bold text-slate-900 transition hover:border-primary hover:text-primary">
+          {{ copy.allNews }}
+        </router-link>
+      </div>
+
+      <div class="grid gap-5 lg:grid-cols-3">
+        <article v-for="item in featuredNews" :key="`digest-${item.id}`" class="overflow-hidden rounded-[30px] border border-slate-200 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+          <img :src="resolveImageUrl(item.image, '/img/news.png')" :alt="item.title" class="h-56 w-full object-cover">
+          <div class="p-6">
+            <div class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-500">
+              <span class="material-symbols-outlined text-sm">schedule</span>
+              {{ formatDate(item.created_at) }}
+            </div>
+            <h3 class="mt-4 line-clamp-2 text-xl font-black text-slate-900">{{ item.title }}</h3>
+            <p class="mt-3 line-clamp-3 leading-7 text-slate-600">
+              {{ item.short_content || truncateText(stripHtml(item.content), 120) }}
+            </p>
+            <router-link :to="`/news/${item.slug}`" class="mt-5 inline-flex items-center gap-2 text-sm font-bold text-primary transition hover:gap-3">
+              {{ copy.readMore }}
+              <span class="material-symbols-outlined text-base">{{ isRtl ? 'arrow_back' : 'arrow_forward' }}</span>
+            </router-link>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="mx-auto max-w-[1440px] px-4 py-8 md:px-8 lg:px-10">
       <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <div class="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm">
           <span class="material-symbols-outlined text-4xl text-primary">clinical_notes</span>
@@ -177,7 +213,7 @@
     <section class="mx-auto max-w-[1440px] px-4 py-8 md:px-8 lg:px-10">
       <div class="mb-10 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
         <div>
-          <div class="text-sm font-bold uppercase tracking-[0.3em] text-primary">{{ $t('home.servicesTitle') }}</div>
+          <div class="text-sm font-bold tracking-[0.22em] text-primary">{{ $t('home.servicesTitle') }}</div>
           <h2 class="mt-3 text-3xl font-black text-slate-900 md:text-5xl">{{ $t('home.servicesSubtitle') }}</h2>
         </div>
         <router-link to="/services" class="inline-flex h-12 items-center justify-center rounded-2xl border border-slate-300 bg-white px-5 text-sm font-bold text-slate-900 transition hover:border-primary hover:text-primary">
@@ -199,7 +235,7 @@
     <section class="mx-auto max-w-[1440px] px-4 py-14 md:px-8 lg:px-10">
       <div class="grid items-center gap-10 overflow-hidden rounded-[36px] border border-slate-200 bg-[linear-gradient(135deg,#f8fafc_0%,#ffffff_45%,#eef6ff_100%)] p-8 shadow-sm lg:grid-cols-[1fr,0.95fr] lg:p-10">
         <div>
-          <div class="text-sm font-bold uppercase tracking-[0.3em] text-primary">{{ $t('about.badge') }}</div>
+          <div class="text-sm font-bold tracking-[0.22em] text-primary">{{ $t('about.badge') }}</div>
           <h2 class="mt-4 text-3xl font-black leading-tight text-slate-900 md:text-5xl">
             {{ $t('about.heroTitle') }}
             <span class="text-primary">{{ $t('about.heroHighlight') }}</span>
@@ -235,19 +271,19 @@
           <div class="absolute -bottom-16 -left-8 h-52 w-52 rounded-full bg-sky-300/20 blur-3xl"></div>
           <div class="relative z-10 flex h-full flex-col justify-between">
             <div>
-              <div class="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.24em]">
-                IRANIAN PEDIATRIC PULMONOLOGY SOCIETY
+              <div class="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/10 px-4 py-2 text-xs font-bold tracking-[0.18em]">
+                {{ copy.societyName }}
               </div>
               <h3 class="mt-6 text-3xl font-black leading-tight">{{ copy.visionTitle }}</h3>
               <p class="mt-4 leading-8 text-white/80">{{ copy.visionText }}</p>
             </div>
             <div class="grid gap-3 sm:grid-cols-2">
               <div class="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-md">
-                <div class="text-xs font-bold uppercase tracking-[0.2em] text-white/55">{{ copy.focus1Title }}</div>
+                <div class="text-xs font-bold text-white/55">{{ copy.focus1Title }}</div>
                 <div class="mt-2 text-sm leading-7 text-white/84">{{ copy.focus1Text }}</div>
               </div>
               <div class="rounded-2xl border border-white/10 bg-white/10 p-4 backdrop-blur-md">
-                <div class="text-xs font-bold uppercase tracking-[0.2em] text-white/55">{{ copy.focus2Title }}</div>
+                <div class="text-xs font-bold text-white/55">{{ copy.focus2Title }}</div>
                 <div class="mt-2 text-sm leading-7 text-white/84">{{ copy.focus2Text }}</div>
               </div>
             </div>
@@ -288,40 +324,49 @@ const copy = computed(() => (
     ? {
         heroBadge: 'سه خبر آخر انجمن',
         views: 'بازدید',
+        latestNews: 'آخرین خبر',
         readNews: 'مشاهده خبر',
+        readMore: 'ادامه خبر',
         events: 'رویدادها',
         members: 'اعضا',
         latestThree: 'آخرین خبرها',
         featuredUpdates: 'اسلایدر اخبار',
-        emptyHeroTitle: 'خانه انجمن با خبرها، رویدادها و دسترسی‌های اصلی آماده است.',
-        emptyHeroText: 'به‌محض انتشار خبرهای جدید، اسلایدر بالای صفحه به‌صورت خودکار با سه خبر آخر به‌روزرسانی می‌شود.',
+        societyName: 'انجمن علمی ریه کودکان ایران',
+        emptyHeroTitle: 'صفحه اصلی انجمن آماده نمایش خبرها، رویدادها و مسیرهای اصلی است.',
+        emptyHeroText: 'به‌محض انتشار خبرهای جدید، این اسلایدر به‌صورت خودکار با سه خبر آخر به‌روزرسانی می‌شود.',
         quickAccess: 'دسترسی سریع',
         upcomingEvents: 'رویدادهای پیش رو',
-        upcomingEventsText: 'همایش‌ها، کنگره‌ها و کارگاه‌های جدید را با زمان ثبت‌نام و برگزاری ببینید.',
+        upcomingEventsText: 'همایش‌ها، کنگره‌ها و کارگاه‌های جدید را همراه با تاریخ ثبت‌نام و برگزاری ببینید.',
         newsroom: 'اخبار و اطلاعیه‌ها',
-        newsroomText: 'به تازه‌ترین خبرها، اطلاعیه‌ها و گزارش‌های انجمن سریع دسترسی داشته باشید.',
-        membersDirectory: 'دایرکتوری اعضا',
-        membersDirectoryText: 'رزومه و اطلاعات اعضای انجمن را در یک ساختار حرفه‌ای مرور کنید.',
+        newsroomText: 'به تازه‌ترین خبرها، اطلاعیه‌ها و گزارش‌های رسمی انجمن سریع دسترسی داشته باشید.',
+        membersDirectory: 'فهرست اعضا',
+        membersDirectoryText: 'رزومه و اطلاعات اعضای انجمن را در یک ساختار حرفه‌ای و مرتب مرور کنید.',
         contactUs: 'تماس با انجمن',
         contactUsText: 'برای هماهنگی، عضویت، همکاری علمی و پشتیبانی مستقیم با انجمن در ارتباط باشید.',
+        newsDigest: 'مرور سریع',
+        newsDigestTitle: 'خلاصه آخرین خبرها',
+        allNews: 'مشاهده همه اخبار',
         allServices: 'مشاهده همه خدمات',
         visionTitle: 'مرکز علمی، آموزشی و حرفه‌ای برای جامعه ریه کودکان',
-        visionText: 'این صفحه اصلی به‌صورت کامل طراحی شده تا خبر، دسترسی مهم، معرفی انجمن، خدمات، اعضا و مسیرهای کلیدی را در یک تجربه حرفه‌ای و مدرن کنار هم قرار دهد.',
+        visionText: 'این صفحه اصلی طوری طراحی شده که خبر، دسترسی‌های مهم، معرفی انجمن، خدمات، اعضا و مسیرهای کلیدی را در یک تجربه روشن و حرفه‌ای کنار هم قرار دهد.',
         focus1Title: 'تمرکز آموزشی',
         focus1Text: 'برگزاری دوره‌ها، کارگاه‌ها و برنامه‌های بازآموزی برای پزشکان و اعضا.',
         focus2Title: 'تمرکز علمی',
-        focus2Text: 'پوشش اخبار، انتشارات، فعالیت‌های پژوهشی و شبکه تخصصی اعضای انجمن.',
+        focus2Text: 'پوشش خبرها، انتشارات، فعالیت‌های پژوهشی و شبکه تخصصی اعضای انجمن.',
       }
     : {
         heroBadge: 'Latest Society News',
         views: 'views',
+        latestNews: 'Latest News',
         readNews: 'Read News',
+        readMore: 'Read More',
         events: 'Events',
         members: 'Members',
         latestThree: 'Latest News',
         featuredUpdates: 'Featured Updates',
-        emptyHeroTitle: 'The homepage is ready with news, events, and all major access points.',
-        emptyHeroText: 'As soon as new items are published, the top slider updates automatically with the latest three news posts.',
+        societyName: 'Iranian Pediatric Pulmonology Society',
+        emptyHeroTitle: 'The homepage is ready to present news, events, and primary site pathways.',
+        emptyHeroText: 'As soon as new items are published, this slider updates automatically with the latest three news posts.',
         quickAccess: 'Quick Access',
         upcomingEvents: 'Upcoming Events',
         upcomingEventsText: 'Review new congresses, seminars, and workshops together with registration and event dates.',
@@ -331,9 +376,12 @@ const copy = computed(() => (
         membersDirectoryText: 'Browse structured member profiles and resumes in a professional public directory.',
         contactUs: 'Contact the Society',
         contactUsText: 'Reach the society for membership, scientific collaboration, support, and coordination.',
+        newsDigest: 'Quick Digest',
+        newsDigestTitle: 'A clear view of the latest news',
+        allNews: 'View All News',
         allServices: 'View All Services',
         visionTitle: 'A scientific, educational, and professional center for pediatric pulmonology',
-        visionText: 'This homepage is intentionally designed to unify latest news, major actions, society introduction, services, members, and key navigation in one modern experience.',
+        visionText: 'This homepage is designed to unify latest news, major actions, society introduction, services, members, and key navigation in one clear modern experience.',
         focus1Title: 'Education Focus',
         focus1Text: 'Courses, workshops, retraining programs, and practical learning paths for physicians and members.',
         focus2Title: 'Scientific Focus',
