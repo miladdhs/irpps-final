@@ -10,15 +10,15 @@ const messages = {
 // Get initial locale safely (check if window exists for SSR)
 const getInitialLocale = () => {
   if (typeof window !== 'undefined') {
-    return localStorage.getItem('locale') || 'en'
+    return localStorage.getItem('locale') || 'fa'
   }
-  return 'en'
+  return 'fa'
 }
 
 const i18n = createI18n({
   legacy: false,
   locale: getInitialLocale(),
-  fallbackLocale: 'en',
+  fallbackLocale: 'fa',
   messages
 })
 
